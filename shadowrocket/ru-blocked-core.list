@@ -1,24 +1,42 @@
-# Core services that are commonly blocked or degraded in Russia.
+# Core services that are commonly blocked or heavily degraded in Russia.
+# Весь этот трафик нужно строго гнать через VPN.
+
+# Meta / соцсети
 DOMAIN-SUFFIX,instagram.com
 DOMAIN-SUFFIX,cdninstagram.com
 DOMAIN-SUFFIX,threads.net
 DOMAIN-SUFFIX,facebook.com
 DOMAIN-SUFFIX,fbcdn.net
 DOMAIN-SUFFIX,messenger.com
+
+# Twitter / X
 DOMAIN-SUFFIX,twitter.com
 DOMAIN-SUFFIX,x.com
 DOMAIN-SUFFIX,t.co
+
+# Discord
 DOMAIN-SUFFIX,discord.com
 DOMAIN-SUFFIX,discord.gg
 DOMAIN-SUFFIX,discordapp.com
+
+# LinkedIn
 DOMAIN-SUFFIX,linkedin.com
 DOMAIN-SUFFIX,licdn.com
+
+# YouTube / Google-видео
 DOMAIN-SUFFIX,youtube.com
 DOMAIN-SUFFIX,youtu.be
 DOMAIN-SUFFIX,googlevideo.com
 DOMAIN-SUFFIX,ytimg.com
-DOMAIN-SUFFIX,speedtest.net
-DOMAIN-SUFFIX,openai.com
-DOMAIN-SUFFIX,chatgpt.com
-DOMAIN-SUFFIX,anthropic.com
-DOMAIN-SUFFIX,claude.ai
+
+# Независимые медиа / чувствительные ресурсы (ядро)
+DOMAIN-SUFFIX,meduza.io
+DOMAIN-SUFFIX,svoboda.org
+DOMAIN-SUFFIX,currenttime.tv
+DOMAIN-SUFFIX,dozhd.ru
+DOMAIN-SUFFIX,tvrain.tv
+
+# OONI / цензурные исследования
+DOMAIN-SUFFIX,ooni.org
+DOMAIN-SUFFIX,explorer.ooni.org
+DOMAIN-SUFFIX,torproject.org

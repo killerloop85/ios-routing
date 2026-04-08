@@ -1,33 +1,60 @@
-# Russian and local services that should stay direct.
-# Optional broad direct fallback if you want every .ru/.su domain to bypass VPN:
-# DOMAIN-SUFFIX,ru
-# DOMAIN-SUFFIX,su
+# Russian and local services that should stay DIRECT.
+
+# Госуслуги и госорганы
 DOMAIN-SUFFIX,gosuslugi.ru
 DOMAIN-SUFFIX,esia.gosuslugi.ru
 DOMAIN-SUFFIX,nalog.ru
 DOMAIN-SUFFIX,nalog.gov.ru
 DOMAIN-SUFFIX,mos.ru
-DOMAIN-SUFFIX,mironline.ru
-DOMAIN-SUFFIX,sbp.nspk.ru
+DOMAIN-SUFFIX,mosreg.ru
+DOMAIN-SUFFIX,government.ru
+DOMAIN-SUFFIX,kremlin.ru
+DOMAIN-SUFFIX,pfr.gov.ru
+
+# Банки и платежи
 DOMAIN-SUFFIX,sberbank.ru
 DOMAIN-SUFFIX,sber.ru
+DOMAIN-SUFFIX,online.sberbank.ru
 DOMAIN-SUFFIX,vtb.ru
 DOMAIN-SUFFIX,alfabank.ru
 DOMAIN-SUFFIX,tbank.ru
 DOMAIN-SUFFIX,tinkoff.ru
+DOMAIN-SUFFIX,open.ru
+DOMAIN-SUFFIX,raiffeisen.ru
+DOMAIN-SUFFIX,gazprombank.ru
+DOMAIN-SUFFIX,psbank.ru
+DOMAIN-SUFFIX,mironline.ru
+DOMAIN-SUFFIX,sbp.nspk.ru
+
+# Почта и соцсети Рунета
+DOMAIN-SUFFIX,yandex.ru
+DOMAIN-SUFFIX,yandex.net
+DOMAIN-SUFFIX,ya.ru
+DOMAIN-SUFFIX,yastatic.net
+DOMAIN-SUFFIX,mail.ru
+DOMAIN-SUFFIX,vk.com
+DOMAIN-SUFFIX,ok.ru
+
+# Крупные сервисы и маркетплейсы
+DOMAIN-SUFFIX,ozon.ru
+DOMAIN-SUFFIX,wildberries.ru
+DOMAIN-SUFFIX,avito.ru
+DOMAIN-SUFFIX,cian.ru
+DOMAIN-SUFFIX,2gis.ru
+DOMAIN-SUFFIX,pochta.ru
+DOMAIN-SUFFIX,cdek.ru
+DOMAIN-SUFFIX,rzd.ru
+
+# Операторы связи и провайдеры
 DOMAIN-SUFFIX,mts.ru
 DOMAIN-SUFFIX,tele2.ru
 DOMAIN-SUFFIX,beeline.ru
 DOMAIN-SUFFIX,megafon.ru
 DOMAIN-SUFFIX,rostelecom.ru
-DOMAIN-SUFFIX,yandex.ru
-DOMAIN-SUFFIX,ya.ru
-DOMAIN-SUFFIX,mail.ru
-DOMAIN-SUFFIX,vk.com
-DOMAIN-SUFFIX,ok.ru
-DOMAIN-SUFFIX,ozon.ru
-DOMAIN-SUFFIX,wildberries.ru
-DOMAIN-SUFFIX,avito.ru
-DOMAIN-SUFFIX,cdek.ru
-DOMAIN-SUFFIX,pochta.ru
-DOMAIN-SUFFIX,rzd.ru
+DOMAIN-SUFFIX,yota.ru
+DOMAIN-SUFFIX,domru.ru
+DOMAIN-SUFFIX,ertelecom.ru
+
+# Общий fallback для .ru / .su
+DOMAIN-SUFFIX,ru
+DOMAIN-SUFFIX,su
