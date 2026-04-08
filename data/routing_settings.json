@@ -22,7 +22,7 @@
       "priority": 100,
       "notes": "Primary whitelist of domains observed during Russian mobile internet whitelist modes.",
       "exclude_domains": [],
-      "optional": true
+      "optional": false
     },
     {
       "name": "russia-mobile-internet-cidrwhitelist",
@@ -40,7 +40,7 @@
       "priority": 90,
       "notes": "Community-maintained whitelist with explicit host:port entries; parser keeps the hostname part only.",
       "exclude_domains": [],
-      "optional": true
+      "optional": false
     },
     {
       "name": "net4people-bbs-516-pastebin",
@@ -70,7 +70,7 @@
       "priority": 90,
       "notes": "Curated blocked-domain list from re:filter community sources.",
       "exclude_domains": [],
-      "optional": true
+      "optional": false
     },
     {
       "name": "runetfreedom-ru-blocked",
@@ -79,7 +79,7 @@
       "priority": 100,
       "notes": "Release text export of runetfreedom geosite:ru-blocked category.",
       "exclude_domains": [],
-      "optional": true
+      "optional": false
     },
     {
       "name": "vpn-configs-for-russia-bypass",

@@ -28,7 +28,6 @@ DOMAIN-SUFFIX,gitlab.com
 DOMAIN-SUFFIX,bitbucket.org
 DOMAIN-SUFFIX,docker.com
 DOMAIN-SUFFIX,docker.io
-DOMAIN-SUFFIX,hub.docker.com
 DOMAIN-SUFFIX,cloudflare.com
 DOMAIN-SUFFIX,workers.dev
 DOMAIN-SUFFIX,vercel.com

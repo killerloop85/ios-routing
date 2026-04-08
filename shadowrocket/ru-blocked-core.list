@@ -38,5 +38,4 @@ DOMAIN-SUFFIX,tvrain.tv
 
 # OONI / цензурные исследования
 DOMAIN-SUFFIX,ooni.org
-DOMAIN-SUFFIX,explorer.ooni.org
 DOMAIN-SUFFIX,torproject.org

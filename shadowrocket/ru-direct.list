@@ -2,7 +2,6 @@
 
 # Госуслуги и госорганы
 DOMAIN-SUFFIX,gosuslugi.ru
-DOMAIN-SUFFIX,esia.gosuslugi.ru
 DOMAIN-SUFFIX,nalog.ru
 DOMAIN-SUFFIX,nalog.gov.ru
 DOMAIN-SUFFIX,mos.ru
@@ -14,7 +13,6 @@ DOMAIN-SUFFIX,pfr.gov.ru
 # Банки и платежи
 DOMAIN-SUFFIX,sberbank.ru
 DOMAIN-SUFFIX,sber.ru
-DOMAIN-SUFFIX,online.sberbank.ru
 DOMAIN-SUFFIX,vtb.ru
 DOMAIN-SUFFIX,alfabank.ru
 DOMAIN-SUFFIX,tbank.ru
@@ -56,7 +54,6 @@ DOMAIN-SUFFIX,domru.ru
 DOMAIN-SUFFIX,ertelecom.ru
 
 # Бизнес / CRM / Confael
-DOMAIN-SUFFIX,vpn.confael.ru
 DOMAIN-SUFFIX,confael.ru
 DOMAIN-SUFFIX,bitrix24.ru
 DOMAIN-SUFFIX,bitrix24.com

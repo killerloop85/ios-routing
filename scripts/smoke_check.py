@@ -27,10 +27,38 @@ LIST_LINE_RE = re.compile(
 )
 
 
+def find_parent_conflicts(domains: list[str]) -> list[tuple[str, str]]:
+    ordered = sorted(set(domains), key=lambda item: (item.count("."), item))
+    conflicts: list[tuple[str, str]] = []
+    parents: list[str] = []
+    for domain in ordered:
+        for parent in parents:
+            if domain.endswith("." + parent):
+                conflicts.append((parent, domain))
+                break
+        parents.append(domain)
+    return conflicts
+
+
 def validate_json_files() -> None:
     for path in sorted(DATA_DIR.glob("*.json")):
         with path.open("r", encoding="utf-8") as handle:
             json.load(handle)
+
+
+def validate_manual_core_conflicts() -> None:
+    for path in sorted(DATA_DIR.glob("manual_*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        sections = payload.get("sections", {})
+        domains: list[str] = []
+        if isinstance(sections, dict):
+            for section_domains in sections.values():
+                if isinstance(section_domains, list):
+                    domains.extend(str(domain) for domain in section_domains)
+        conflicts = find_parent_conflicts(domains)
+        if conflicts:
+            rendered = ", ".join(f"{parent} -> {child}" for parent, child in conflicts)
+            raise ValueError(f"{path}: manual core parent/subdomain conflicts: {rendered}")
 
 
 def validate_list_file(path: Path) -> None:
@@ -64,6 +92,7 @@ def run_offline_updater() -> None:
 
 def main() -> int:
     validate_json_files()
+    validate_manual_core_conflicts()
     for path in LIST_FILES:
         validate_list_file(path)
     run_offline_updater()

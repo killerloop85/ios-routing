@@ -77,6 +77,26 @@ class RoutingConfig:
     sources: Sequence[Source]
 
 
+def find_parent_conflicts(domains: Iterable[str]) -> list[tuple[str, str]]:
+    ordered = sorted(set(domains), key=lambda item: (item.count("."), item))
+    conflicts: list[tuple[str, str]] = []
+    parents: list[str] = []
+    for domain in ordered:
+        for parent in parents:
+            if domain.endswith("." + parent):
+                conflicts.append((parent, domain))
+                break
+        parents.append(domain)
+    return conflicts
+
+
+def flatten_sections(sections: Dict[str, List[str]]) -> Set[str]:
+    values: Set[str] = set()
+    for domains in sections.values():
+        values.update(domains)
+    return values
+
+
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -92,6 +112,10 @@ def load_manual_list(path: Path) -> ManualList:
         str(section): [str(domain) for domain in domains]
         for section, domains in raw_sections.items()
     }
+    conflicts = find_parent_conflicts(flatten_sections(sections))
+    if conflicts:
+        rendered = ", ".join(f"{parent} -> {child}" for parent, child in conflicts)
+        raise ValueError(f"Manual list contains parent/subdomain conflicts in {path}: {rendered}")
     tail_comment = raw.get("tail_comment")
     tail_domains = [str(item) for item in raw.get("tail_domains", [])]
     return ManualList(
@@ -200,6 +224,26 @@ def fetch_text(source: Source, timeout: float) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
+def matches_exclude(domain: str, patterns: Sequence[str]) -> bool:
+    for pattern in patterns:
+        value = pattern.strip().lower()
+        if not value:
+            continue
+        if "*" in value:
+            regex = "^" + re.escape(value).replace(r"\*", ".*") + "$"
+            if re.fullmatch(regex, domain):
+                return True
+            continue
+        if value.startswith("."):
+            suffix = value[1:]
+            if domain == suffix or domain.endswith("." + suffix):
+                return True
+            continue
+        if domain == value or domain.endswith("." + value):
+            return True
+    return False
+
+
 def add_candidates(
     store: Dict[str, Candidate],
     domains: Iterable[str],
@@ -214,13 +258,6 @@ def add_candidates(
         candidate.source_priorities[source_name] = max(existing_priority, priority)
         if manual:
             candidate.manual = True
-
-
-def flatten_sections(sections: Dict[str, List[str]]) -> Set[str]:
-    values: Set[str] = set()
-    for domains in sections.values():
-        values.update(domains)
-    return values
 
 
 def is_ru_domain(domain: str, manual_direct_domains: Set[str]) -> bool:
@@ -564,10 +601,10 @@ def gather_candidates(
             continue
 
         domains = extract_domains(text)
-        excluded = sorted(domain for domain in domains if domain in set(source.exclude_domains))
+        excluded = sorted(domain for domain in domains if matches_exclude(domain, source.exclude_domains))
         if excluded:
             filtered_domains[source.name] = excluded
-        domains = domains - set(source.exclude_domains)
+        domains = {domain for domain in domains if not matches_exclude(domain, source.exclude_domains)}
         if source.bucket == "direct":
             add_candidates(direct_candidates, domains, source.name, priority=source.priority)
         elif source.bucket == "blocked":

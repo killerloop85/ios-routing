@@ -5,7 +5,6 @@
   "sections": {
     "Госуслуги и госорганы": [
       "gosuslugi.ru",
-      "esia.gosuslugi.ru",
       "nalog.ru",
       "nalog.gov.ru",
       "mos.ru",
@@ -17,7 +16,6 @@
     "Банки и платежи": [
       "sberbank.ru",
       "sber.ru",
-      "online.sberbank.ru",
       "vtb.ru",
       "alfabank.ru",
       "tbank.ru",
@@ -59,7 +57,6 @@
       "ertelecom.ru"
     ],
     "Бизнес / CRM / Confael": [
-      "vpn.confael.ru",
       "confael.ru",
       "bitrix24.ru",
       "bitrix24.com",
