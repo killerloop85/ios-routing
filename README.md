@@ -43,3 +43,9 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
 - `GEOIP,RU,DIRECT` keeps Russian IP traffic direct as a fallback.
 - Automated refresh logic for the three `.list` files is specified in `docs/routing-update-spec.md`.
+
+## Maintenance
+
+- Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`
+- Fetch external sources and preview a diff: `python3 scripts/update_routing_lists.py`
+- Write updated lists to disk: `python3 scripts/update_routing_lists.py --write`
