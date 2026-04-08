@@ -1,0 +1,22 @@
+# Russian and local services that should stay direct.
+DOMAIN-SUFFIX,gosuslugi.ru
+DOMAIN-SUFFIX,esia.gosuslugi.ru
+DOMAIN-SUFFIX,nalog.gov.ru
+DOMAIN-SUFFIX,mos.ru
+DOMAIN-SUFFIX,sberbank.ru
+DOMAIN-SUFFIX,sber.ru
+DOMAIN-SUFFIX,vtb.ru
+DOMAIN-SUFFIX,alfabank.ru
+DOMAIN-SUFFIX,tbank.ru
+DOMAIN-SUFFIX,tinkoff.ru
+DOMAIN-SUFFIX,yandex.ru
+DOMAIN-SUFFIX,ya.ru
+DOMAIN-SUFFIX,mail.ru
+DOMAIN-SUFFIX,vk.com
+DOMAIN-SUFFIX,ok.ru
+DOMAIN-SUFFIX,ozon.ru
+DOMAIN-SUFFIX,wildberries.ru
+DOMAIN-SUFFIX,avito.ru
+DOMAIN-SUFFIX,cdek.ru
+DOMAIN-SUFFIX,pochta.ru
+DOMAIN-SUFFIX,rzd.ru
