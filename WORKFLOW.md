@@ -13,7 +13,7 @@
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
-- `scripts/export_streisand_uri.py` — экспорт Streisand-профилей в import-ready URI
+- `scripts/export_streisand_uri.py` — экспорт стабильного Streisand full-профиля в import-ready URI; split-артефакты требуют явный experimental opt-in
 - `scripts/export_hiddify_rules.py` — экспорт итоговых `.list` в Hiddify JSON
 - `scripts/export_happ_routing.py` — экспорт итоговых `.list` в Happ JSON
 - `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
@@ -37,6 +37,7 @@
 - Тяжёлый `routing-profile-split.json` считать reference-only и не использовать как обычный import-flow.
 - `routing-profile-split-qr.*` тоже считать только диагностическим артефактом, а не рабочим split-профилем.
 - Для практического импорта сейчас держать только `routing-profile-full.*`.
+- Default-команды Streisand должны генерировать только stable full-path; split-профили разрешены только через явный experimental opt-in.
 - Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
 - Happ-слой считать thin export-layer: он нужен как нормализованный routing JSON для Happ UI и не заменяет общий source of truth.
 - `happ/routing-profile-split.json` считать parity-safe профилем.
@@ -108,19 +109,26 @@ python3 scripts/check_regression_domains.py
 python3 scripts/export_streisand_rules.py --offline
 ```
 
-10. Проверить, что safe Streisand URI синхронизированы с профилями.
+10. При необходимости отдельно проверить experimental split-артефакты Streisand.
+
+```bash
+python3 scripts/export_streisand_rules.py --offline --experimental-split
+python3 scripts/export_streisand_uri.py --offline --experimental-split
+```
+
+11. Проверить, что safe Streisand URI синхронизированы с профилями.
 
 ```bash
 python3 scripts/export_streisand_uri.py --offline
 ```
 
-11. Проверить, что Hiddify-экспорт синхронизирован с текущими `.list`.
+12. Проверить, что Hiddify-экспорт синхронизирован с текущими `.list`.
 
 ```bash
 python3 scripts/export_hiddify_rules.py --offline
 ```
 
-12. Проверить, что Happ-экспорт синхронизирован с текущими `.list`.
+13. Проверить, что Happ-экспорт синхронизирован с текущими `.list`.
 
 ```bash
 python3 scripts/export_happ_routing.py --offline
@@ -134,6 +142,7 @@ make update
 make write
 make streisand
 make streisand-uri
+make streisand-experimental
 make streisand-qr
 make hiddify
 make hiddify-check

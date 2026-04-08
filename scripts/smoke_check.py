@@ -138,12 +138,24 @@ def validate_streisand_file(path: Path) -> None:
         priority = payload.get("priority")
         sources = payload.get("sources")
         final_action = payload.get("final_action")
+        stability = str(payload.get("stability", "")).strip()
+        intended_use = str(payload.get("intended_use", "")).strip()
         if not isinstance(priority, list) or not priority:
             raise ValueError(f"{path}: profile is missing non-empty 'priority'")
         if not isinstance(sources, list):
             raise ValueError(f"{path}: profile is missing 'sources' list")
         if final_action != "proxy":
             raise ValueError(f"{path}: profile has unexpected final_action: {final_action}")
+        if path.name == "routing-profile-full.json":
+            if stability != "stable" or intended_use != "production":
+                raise ValueError(f"{path}: full profile must be marked stable/production")
+        elif path.name in {"routing-profile-split.json", "routing-profile-split-qr.json"}:
+            if stability != "experimental":
+                raise ValueError(f"{path}: split profile must be marked experimental")
+            if path.name == "routing-profile-split.json" and intended_use != "reference-only":
+                raise ValueError(f"{path}: heavy split profile must be marked reference-only")
+            if path.name == "routing-profile-split-qr.json" and intended_use != "diagnostic":
+                raise ValueError(f"{path}: compact split profile must be marked diagnostic")
         for rule in rules:
             if not isinstance(rule, dict):
                 raise ValueError(f"{path}: invalid profile rule entry: {rule!r}")
@@ -421,31 +433,39 @@ def run_regression_check() -> None:
 
 
 def run_streisand_export_check() -> None:
-    result = subprocess.run(
+    for command in (
         [sys.executable, str(STREISAND_EXPORTER), "--offline"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr or result.stdout or "streisand export failed")
-    if result.stdout.strip() != "No changes.":
-        raise RuntimeError(f"streisand export is not stable:\n{result.stdout}")
+        [sys.executable, str(STREISAND_EXPORTER), "--offline", "--experimental-split"],
+    ):
+        result = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr or result.stdout or "streisand export failed")
+        if result.stdout.strip() != "No changes.":
+            raise RuntimeError(f"streisand export is not stable:\n{result.stdout}")
 
 
 def run_streisand_uri_export_check() -> None:
-    result = subprocess.run(
+    for command in (
         [sys.executable, str(STREISAND_URI_EXPORTER), "--offline"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr or result.stdout or "streisand URI export failed")
-    if result.stdout.strip() != "No changes.":
-        raise RuntimeError(f"streisand URI export is not stable:\n{result.stdout}")
+        [sys.executable, str(STREISAND_URI_EXPORTER), "--offline", "--experimental-split"],
+    ):
+        result = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr or result.stdout or "streisand URI export failed")
+        if result.stdout.strip() != "No changes.":
+            raise RuntimeError(f"streisand URI export is not stable:\n{result.stdout}")
 
 
 def run_hiddify_export_check() -> None:
@@ -498,6 +518,7 @@ def main() -> int:
     validate_happ_sync()
     run_regression_check()
     print("Smoke check passed.")
+    print("Note: Streisand split artifacts are validated only as experimental local exports; real client behavior is not guaranteed.")
     return 0
 
 

@@ -30,6 +30,11 @@ def parse_args() -> argparse.Namespace:
         const="-",
         help="write a structured JSON report to PATH or stdout with '-'",
     )
+    parser.add_argument(
+        "--experimental-split",
+        action="store_true",
+        help="also generate experimental Streisand split artifacts intended only for diagnostics",
+    )
     return parser.parse_args()
 
 
@@ -76,7 +81,7 @@ def build_bucket_payload(name: str, description: str, domains: list[str], action
     }
 
 
-def build_profile_payloads() -> dict[Path, dict[str, Any]]:
+def build_profile_payloads(include_experimental_split: bool) -> dict[Path, dict[str, Any]]:
     local_entries = [
         "ipcidr:127.0.0.0/8",
         "ipcidr:10.0.0.0/8",
@@ -91,135 +96,12 @@ def build_profile_payloads() -> dict[Path, dict[str, Any]]:
         "geosite:apple",
         "geosite:icloud",
     ]
-    return {
-        STREISAND_DIR / "routing-profile-split.json": {
-            "name": "RU Split Routing",
-            "description": "Direct RU and core domestic traffic, proxy blocked core and foreign services.",
-            "priority": [
-                "local",
-                "ru-blocked-core",
-                "ru-direct",
-                "foreign-services",
-                "final",
-            ],
-            "sources": [
-                "ru-blocked-core",
-                "ru-direct",
-                "foreign-services",
-            ],
-            "final_action": "proxy",
-            "rules": [
-                {
-                    "name": "Local and private",
-                    "entries": local_entries,
-                    "action": "direct",
-                    "bucket": "local",
-                },
-                {
-                    "name": "RU direct domains and GeoIP",
-                    "entries": [
-                        "source:ru-direct",
-                        "geoip:ru",
-                    ],
-                    "action": "direct",
-                    "bucket": "ru-direct",
-                },
-                {
-                    "name": "RU blocked core",
-                    "entries": [
-                        "source:ru-blocked-core",
-                    ],
-                    "action": "proxy",
-                    "bucket": "ru-blocked-core",
-                },
-                {
-                    "name": "Foreign services",
-                    "entries": [
-                        "source:foreign-services",
-                    ],
-                    "action": "proxy",
-                    "bucket": "foreign-services",
-                },
-                {
-                    "name": "Final fallback",
-                    "entries": [
-                        "final",
-                    ],
-                    "action": "proxy",
-                    "bucket": "final",
-                },
-            ],
-        },
-        STREISAND_DIR / "routing-profile-split-qr.json": {
-            "name": "RU Split QR",
-            "description": "Compact split profile optimized for Streisand QR import.",
-            "priority": [
-                "local",
-                "ru-direct",
-                "proxy-core",
-                "final",
-            ],
-            "sources": [],
-            "final_action": "proxy",
-            "rules": [
-                {
-                    "name": "Local and private",
-                    "entries": local_entries,
-                    "action": "direct",
-                    "bucket": "local",
-                },
-                {
-                    "name": "RU direct compact",
-                    "entries": [
-                        "domain:ru",
-                        "domain:su",
-                        "geoip:ru",
-                    ],
-                    "action": "direct",
-                    "bucket": "ru-direct",
-                },
-                {
-                    "name": "Blocked and foreign compact",
-                    "entries": [
-                        "geosite:facebook",
-                        "geosite:instagram",
-                        "geosite:linkedin",
-                        "geosite:openai",
-                        "geosite:google",
-                        "geosite:youtube",
-                        "geosite:twitter",
-                        "domain:discord.com",
-                        "domain:discord.gg",
-                        "domain:discordapp.com",
-                        "domain:claude.ai",
-                        "domain:perplexity.ai",
-                        "domain:figma.com",
-                        "domain:github.com",
-                        "domain:githubusercontent.com",
-                        "domain:cloudflare.com",
-                        "domain:vercel.com",
-                        "domain:notion.so",
-                        "domain:proton.me",
-                        "domain:tutanota.com",
-                        "domain:meduza.io",
-                        "domain:torproject.org",
-                    ],
-                    "action": "proxy",
-                    "bucket": "proxy-core",
-                },
-                {
-                    "name": "Final fallback",
-                    "entries": [
-                        "final",
-                    ],
-                    "action": "proxy",
-                    "bucket": "final",
-                },
-            ],
-        },
+    payloads: dict[Path, dict[str, Any]] = {
         STREISAND_DIR / "routing-profile-full.json": {
             "name": "Full VPN",
             "description": "All non-local traffic through proxy, keeping LAN direct.",
+            "stability": "stable",
+            "intended_use": "production",
             "priority": [
                 "local",
                 "final",
@@ -244,9 +126,144 @@ def build_profile_payloads() -> dict[Path, dict[str, Any]]:
             ],
         },
     }
+    if include_experimental_split:
+        payloads.update(
+            {
+                STREISAND_DIR / "routing-profile-split.json": {
+                    "name": "RU Split Routing",
+                    "description": "Direct RU and core domestic traffic, proxy blocked core and foreign services.",
+                    "stability": "experimental",
+                    "intended_use": "reference-only",
+                    "priority": [
+                        "local",
+                        "ru-blocked-core",
+                        "ru-direct",
+                        "foreign-services",
+                        "final",
+                    ],
+                    "sources": [
+                        "ru-blocked-core",
+                        "ru-direct",
+                        "foreign-services",
+                    ],
+                    "final_action": "proxy",
+                    "rules": [
+                        {
+                            "name": "Local and private",
+                            "entries": local_entries,
+                            "action": "direct",
+                            "bucket": "local",
+                        },
+                        {
+                            "name": "RU direct domains and GeoIP",
+                            "entries": [
+                                "source:ru-direct",
+                                "geoip:ru",
+                            ],
+                            "action": "direct",
+                            "bucket": "ru-direct",
+                        },
+                        {
+                            "name": "RU blocked core",
+                            "entries": [
+                                "source:ru-blocked-core",
+                            ],
+                            "action": "proxy",
+                            "bucket": "ru-blocked-core",
+                        },
+                        {
+                            "name": "Foreign services",
+                            "entries": [
+                                "source:foreign-services",
+                            ],
+                            "action": "proxy",
+                            "bucket": "foreign-services",
+                        },
+                        {
+                            "name": "Final fallback",
+                            "entries": [
+                                "final",
+                            ],
+                            "action": "proxy",
+                            "bucket": "final",
+                        },
+                    ],
+                },
+                STREISAND_DIR / "routing-profile-split-qr.json": {
+                    "name": "RU Split QR",
+                    "description": "Compact split profile optimized for Streisand QR import.",
+                    "stability": "experimental",
+                    "intended_use": "diagnostic",
+                    "priority": [
+                        "local",
+                        "ru-direct",
+                        "proxy-core",
+                        "final",
+                    ],
+                    "sources": [],
+                    "final_action": "proxy",
+                    "rules": [
+                        {
+                            "name": "Local and private",
+                            "entries": local_entries,
+                            "action": "direct",
+                            "bucket": "local",
+                        },
+                        {
+                            "name": "RU direct compact",
+                            "entries": [
+                                "domain:ru",
+                                "domain:su",
+                                "geoip:ru",
+                            ],
+                            "action": "direct",
+                            "bucket": "ru-direct",
+                        },
+                        {
+                            "name": "Blocked and foreign compact",
+                            "entries": [
+                                "geosite:facebook",
+                                "geosite:instagram",
+                                "geosite:linkedin",
+                                "geosite:openai",
+                                "geosite:google",
+                                "geosite:youtube",
+                                "geosite:twitter",
+                                "domain:discord.com",
+                                "domain:discord.gg",
+                                "domain:discordapp.com",
+                                "domain:claude.ai",
+                                "domain:perplexity.ai",
+                                "domain:figma.com",
+                                "domain:github.com",
+                                "domain:githubusercontent.com",
+                                "domain:cloudflare.com",
+                                "domain:vercel.com",
+                                "domain:notion.so",
+                                "domain:proton.me",
+                                "domain:tutanota.com",
+                                "domain:meduza.io",
+                                "domain:torproject.org",
+                            ],
+                            "action": "proxy",
+                            "bucket": "proxy-core",
+                        },
+                        {
+                            "name": "Final fallback",
+                            "entries": [
+                                "final",
+                            ],
+                            "action": "proxy",
+                            "bucket": "final",
+                        },
+                    ],
+                },
+            }
+        )
+    return payloads
 
 
-def build_outputs() -> dict[Path, str]:
+def build_outputs(include_experimental_split: bool) -> dict[Path, str]:
     direct_domains = read_domain_suffix_list(SHADOWROCKET_DIR / "ru-direct.list")
     blocked_domains = read_domain_suffix_list(SHADOWROCKET_DIR / "ru-blocked-core.list")
     foreign_domains = read_domain_suffix_list(SHADOWROCKET_DIR / "foreign-services.list")
@@ -274,11 +291,11 @@ def build_outputs() -> dict[Path, str]:
             bucket="foreign-services",
         ),
     }
-    payloads.update(build_profile_payloads())
+    payloads.update(build_profile_payloads(include_experimental_split=include_experimental_split))
     return {path: render_json(payload) for path, payload in payloads.items()}
 
 
-def build_report(outputs: dict[Path, str], changed_paths: list[Path]) -> dict[str, Any]:
+def build_report(outputs: dict[Path, str], changed_paths: list[Path], include_experimental_split: bool) -> dict[str, Any]:
     rule_counts: dict[str, int] = {}
     profiles: list[str] = []
     for path, content in outputs.items():
@@ -293,6 +310,7 @@ def build_report(outputs: dict[Path, str], changed_paths: list[Path]) -> dict[st
         "changed_files": [path.name for path in changed_paths],
         "rule_counts": rule_counts,
         "profiles": sorted(profiles),
+        "experimental_split_included": include_experimental_split,
     }
 
 
@@ -308,7 +326,7 @@ def write_report(path_value: str, report: dict[str, Any]) -> None:
 
 def main() -> int:
     args = parse_args()
-    outputs = build_outputs()
+    outputs = build_outputs(include_experimental_split=args.experimental_split)
     status_stream = sys.stderr if args.report_json == "-" else sys.stdout
 
     changed_paths: list[Path] = []
@@ -344,7 +362,10 @@ def main() -> int:
             print("No changes.", file=status_stream)
 
     if args.report_json:
-        write_report(args.report_json, build_report(outputs, changed_paths))
+        write_report(
+            args.report_json,
+            build_report(outputs, changed_paths, include_experimental_split=args.experimental_split),
+        )
 
     return 0
 

@@ -17,10 +17,6 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 STREISAND_DIR = ROOT / "streisand"
 
-PROFILE_FILES = (
-    STREISAND_DIR / "routing-profile-split-qr.json",
-    STREISAND_DIR / "routing-profile-full.json",
-)
 BUCKET_FILES = {
     "ru-direct": STREISAND_DIR / "ru-direct.streisand.json",
     "ru-blocked-core": STREISAND_DIR / "ru-blocked-core.streisand.json",
@@ -42,7 +38,19 @@ def parse_args() -> argparse.Namespace:
         const="-",
         help="write a structured JSON report to PATH or stdout with '-'",
     )
+    parser.add_argument(
+        "--experimental-split",
+        action="store_true",
+        help="also export experimental Streisand split URI artifacts intended only for diagnostics",
+    )
     return parser.parse_args()
+
+
+def profile_files(include_experimental_split: bool) -> tuple[Path, ...]:
+    profiles = [STREISAND_DIR / "routing-profile-full.json"]
+    if include_experimental_split:
+        profiles.insert(0, STREISAND_DIR / "routing-profile-split-qr.json")
+    return tuple(profiles)
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -155,16 +163,16 @@ def output_path_for_profile(profile_path: Path) -> Path:
     return STREISAND_DIR / f"{stem}.streisand-uri.txt"
 
 
-def build_outputs() -> dict[Path, str]:
+def build_outputs(include_experimental_split: bool) -> dict[Path, str]:
     bucket_domains = load_bucket_source_domains()
     outputs: dict[Path, str] = {}
-    for profile_path in PROFILE_FILES:
+    for profile_path in profile_files(include_experimental_split=include_experimental_split):
         payload = build_plist_payload(profile_path, bucket_domains)
         outputs[output_path_for_profile(profile_path)] = encode_streisand_uri(payload)
     return outputs
 
 
-def build_report(outputs: dict[Path, str], changed_paths: list[Path]) -> dict[str, Any]:
+def build_report(outputs: dict[Path, str], changed_paths: list[Path], include_experimental_split: bool) -> dict[str, Any]:
     profile_names: dict[str, str] = {}
     for path, content in outputs.items():
         encoded = content.strip().removeprefix("streisand://")
@@ -175,6 +183,7 @@ def build_report(outputs: dict[Path, str], changed_paths: list[Path]) -> dict[st
         "files": [path.name for path in sorted(outputs)],
         "changed_files": [path.name for path in changed_paths],
         "profiles": profile_names,
+        "experimental_split_included": include_experimental_split,
     }
 
 
@@ -190,7 +199,7 @@ def write_report(path_value: str, report: dict[str, Any]) -> None:
 
 def main() -> int:
     args = parse_args()
-    outputs = build_outputs()
+    outputs = build_outputs(include_experimental_split=args.experimental_split)
     status_stream = sys.stderr if args.report_json == "-" else sys.stdout
 
     changed_paths: list[Path] = []
@@ -226,7 +235,10 @@ def main() -> int:
             print("No changes.", file=status_stream)
 
     if args.report_json:
-        write_report(args.report_json, build_report(outputs, changed_paths))
+        write_report(
+            args.report_json,
+            build_report(outputs, changed_paths, include_experimental_split=args.experimental_split),
+        )
 
     return 0
 

@@ -1,6 +1,8 @@
 {
   "name": "Full VPN",
   "description": "All non-local traffic through proxy, keeping LAN direct.",
+  "stability": "stable",
+  "intended_use": "production",
   "priority": [
     "local",
     "final"

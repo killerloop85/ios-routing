@@ -1,6 +1,8 @@
 {
   "name": "RU Split Routing",
   "description": "Direct RU and core domestic traffic, proxy blocked core and foreign services.",
+  "stability": "experimental",
+  "intended_use": "reference-only",
   "priority": [
     "local",
     "ru-blocked-core",

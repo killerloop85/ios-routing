@@ -9,6 +9,7 @@
 - Есть уже подтверждённый полевой кейс, что split-routing в Streisand ведёт себя некорректно: `routing-profile-split-qr` на `ip.ru` показал NL вместо ожидаемого DIRECT/RU.
 - Поэтому любой профиль Streisand нужно подтверждать ручным тестом на реальном клиенте.
 - Тяжёлый `routing-profile-split.json` сохраняется как reference JSON, но больше не публикуется как import-ready URI: практический импортный контур сейчас ограничен `routing-profile-full.*` и `routing-profile-split-qr.*`.
+- Default CLI/export path теперь должен генерировать только `routing-profile-full.*`; split-артефакты собираются только по явному experimental opt-in.
 
 ## Что внутри этих ссылок
 

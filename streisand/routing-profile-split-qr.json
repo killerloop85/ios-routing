@@ -1,6 +1,8 @@
 {
   "name": "RU Split QR",
   "description": "Compact split profile optimized for Streisand QR import.",
+  "stability": "experimental",
+  "intended_use": "diagnostic",
   "priority": [
     "local",
     "ru-direct",

@@ -82,6 +82,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
 - Streisand routing is currently experimental and must be tested manually before real use. Real-device testing already showed that `routing-profile-split-qr` can route `ip.ru` through NL instead of DIRECT, so split-routing is currently not trustworthy in Streisand.
 - Only the Streisand `full` import artifact should be treated as the practical path for now; both split variants remain diagnostic/reference artifacts.
+- The default Streisand export commands generate only the stable full-profile path. Split artifacts require an explicit experimental opt-in.
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.
@@ -96,9 +97,10 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Show available shortcuts: `make help`
 - Run repository smoke checks: `make smoke`
 - Run the fixed regression domain suite: `make regression`
-- Write Streisand JSON and safe URI exports: `make streisand`
-- Write only safe Streisand import URIs: `make streisand-uri`
-- Write compact Streisand split QR artifacts: `make streisand-qr`
+- Write stable Streisand JSON and URI exports: `make streisand`
+- Write only the stable Streisand import URI export: `make streisand-uri`
+- Write experimental Streisand split artifacts too: `make streisand-experimental`
+- Write compact diagnostic Streisand split artifacts: `make streisand-qr`
 - Write Hiddify JSON exports: `make hiddify`
 - Check Hiddify export sync without writing: `make hiddify-check`
 - Write Happ routing exports: `make happ`
@@ -112,7 +114,9 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Run repository smoke checks: `python3 scripts/smoke_check.py`
 - Run the fixed regression domain suite: `python3 scripts/check_regression_domains.py`
 - Write Streisand JSON exports: `python3 scripts/export_streisand_rules.py --write`
-- Write Streisand import URIs: `python3 scripts/export_streisand_uri.py --write`
+- Write experimental Streisand split JSON too: `python3 scripts/export_streisand_rules.py --write --experimental-split`
+- Write the stable Streisand import URI: `python3 scripts/export_streisand_uri.py --write`
+- Write experimental Streisand split URIs too: `python3 scripts/export_streisand_uri.py --write --experimental-split`
 - Write Hiddify JSON exports: `python3 scripts/export_hiddify_rules.py --write`
 - Check Hiddify export sync: `python3 scripts/export_hiddify_rules.py --offline`
 - Write Happ routing exports: `python3 scripts/export_happ_routing.py --write`

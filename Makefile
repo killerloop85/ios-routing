@@ -8,15 +8,16 @@ SMOKE := $(PYTHON) scripts/smoke_check.py
 REGRESSION := $(PYTHON) scripts/check_regression_domains.py
 REPORTS_DIR := reports
 
-.PHONY: help smoke regression streisand streisand-uri streisand-qr hiddify hiddify-check happ happ-check offline update write report-json report-md ci
+.PHONY: help smoke regression streisand streisand-uri streisand-experimental streisand-qr hiddify hiddify-check happ happ-check offline update write report-json report-md ci
 
 help:
 	@printf "Available targets:\n"
 	@printf "  make smoke        Run repository smoke checks\n"
 	@printf "  make regression   Run the fixed regression domain suite\n"
-	@printf "  make streisand    Write Streisand JSON and safe URI exports to disk\n"
-	@printf "  make streisand-uri Write safe Streisand import URI exports to disk\n"
-	@printf "  make streisand-qr Write compact Streisand split QR artifacts to disk\n"
+	@printf "  make streisand    Write stable Streisand JSON and URI exports to disk\n"
+	@printf "  make streisand-uri Write only the stable Streisand import URI export\n"
+	@printf "  make streisand-experimental Write diagnostic Streisand split artifacts too\n"
+	@printf "  make streisand-qr Write compact diagnostic Streisand split artifacts to disk\n"
 	@printf "  make hiddify      Write Hiddify JSON exports to disk\n"
 	@printf "  make hiddify-check Check Hiddify export sync without writing\n"
 	@printf "  make happ         Write Happ routing exports to disk\n"
@@ -41,9 +42,13 @@ streisand:
 streisand-uri:
 	$(STREISAND_URI) --write
 
+streisand-experimental:
+	$(STREISAND) --write --experimental-split
+	$(STREISAND_URI) --write --experimental-split
+
 streisand-qr:
-	$(STREISAND) --write
-	$(STREISAND_URI) --write
+	$(STREISAND) --write --experimental-split
+	$(STREISAND_URI) --write --experimental-split
 
 hiddify:
 	$(HIDDIFY) --write

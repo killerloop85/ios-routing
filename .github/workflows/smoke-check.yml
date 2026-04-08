@@ -23,8 +23,14 @@ jobs:
       - name: Export Streisand rules (offline)
         run: python3 scripts/export_streisand_rules.py --offline
 
-      - name: Export Streisand import URIs (offline)
+      - name: Export Streisand split rules (offline, experimental)
+        run: python3 scripts/export_streisand_rules.py --offline --experimental-split
+
+      - name: Export Streisand import URIs (offline, stable)
         run: python3 scripts/export_streisand_uri.py --offline
+
+      - name: Export Streisand split import URIs (offline, experimental)
+        run: python3 scripts/export_streisand_uri.py --offline --experimental-split
 
       - name: Export Hiddify rules (offline)
         run: python3 scripts/export_hiddify_rules.py --offline

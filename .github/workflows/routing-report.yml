@@ -22,7 +22,9 @@ jobs:
           mkdir -p reports
           python3 scripts/update_routing_lists.py --report-json reports/routing-update.json --report-md reports/routing-update.md > reports/routing-update.diff
           python3 scripts/export_streisand_rules.py --report-json reports/streisand-export.json > reports/streisand-export.diff
+          python3 scripts/export_streisand_rules.py --experimental-split --report-json reports/streisand-experimental-export.json > reports/streisand-experimental-export.diff
           python3 scripts/export_streisand_uri.py --report-json reports/streisand-uri-export.json > reports/streisand-uri-export.diff
+          python3 scripts/export_streisand_uri.py --experimental-split --report-json reports/streisand-uri-experimental-export.json > reports/streisand-uri-experimental-export.diff
           python3 scripts/export_hiddify_rules.py --report-json reports/hiddify-export.json > reports/hiddify-export.diff
           python3 scripts/export_happ_routing.py --report-json reports/happ-export.json > reports/happ-export.diff
 
