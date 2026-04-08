@@ -5,6 +5,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 ## Structure
 
 - `shadowrocket/Universal-Routing.conf` - universal routing-only config without embedded servers
+- `shadowrocket/Vaso-All-VPN-v2.conf` - universal full-tunnel profile without embedded servers
 - `shadowrocket/Vaso-RU-Split-v2.conf` - personal split-routing config with embedded proxy definitions
 - `shadowrocket/ru-blocked-core.list` - domains that should always go through VPN
 - `shadowrocket/ru-direct.list` - Russian domains that should stay direct
@@ -19,6 +20,13 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 3. Make `Universal-Routing.conf` the active config.
 4. Leave your preferred imported server selected as the active proxy.
 
+### Universal full tunnel
+
+1. Import your own server into Shadowrocket from x-ui, URI, or QR.
+2. Import `shadowrocket/Vaso-All-VPN-v2.conf`.
+3. Make `Vaso-All-VPN-v2.conf` the active config.
+4. Leave your preferred imported server selected as the active proxy.
+
 ### Personal config
 
 1. Import `shadowrocket/Vaso-RU-Split-v2.conf`.
@@ -29,6 +37,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 ## Notes
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
+- `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
 - `GEOIP,RU,DIRECT` keeps Russian IP traffic direct as a fallback.
