@@ -33,7 +33,7 @@
 ## Важная пометка по Streisand
 
 - Streisand-слой пока считать experimental.
-- Есть подтверждённый кейс, что routing в самом клиенте Streisand может работать некорректно даже при валидных JSON/URI-артефактах: `ip.ru` на `routing-profile-split-qr` показывает NL вместо DIRECT/RU.
+- Есть уже наблюдавшийся кейс, что routing в самом клиенте Streisand может работать неконсистентно даже при валидных JSON/URI-артефактах: в одном прогоне `ip.ru` на `routing-profile-split-qr` показывал NL вместо DIRECT/RU, но более поздние тесты дали рабочий `split-qr` и рабочий `full`.
 - Любой Streisand-профиль перед практическим использованием нужно проверять вручную на реальном клиенте.
 - До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
 - Тяжёлый `routing-profile-split.json` считать reference-only и не использовать как обычный import-flow.
@@ -159,7 +159,7 @@ make regression
 - `streisand/routing-profile-split-qr.json`
 - `streisand/routing-profile-split-qr.streisand-uri.txt`
 
-После этого всё равно обязательно проверить routing вручную в самом Streisand. До фикса known issue использовать Streisand в реальной работе только через full-profile.
+После этого всё равно обязательно проверить routing вручную в самом Streisand. Пока матрица полевых тестов не пройдена повторяемо, в реальной работе считать full предпочтительным, а split — только диагностическим.
 
 Для ручной проверки в живом клиенте использовать checklist из:
 

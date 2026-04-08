@@ -6,7 +6,8 @@
 
 - Streisand-экспорт в этом репозитории пока считается experimental.
 - JSON, URI и QR-артефакты проходят локальную валидацию и smoke-check, но это ещё не доказывает корректную работу маршрутизации внутри клиента Streisand.
-- Есть уже подтверждённый полевой кейс, что split-routing в Streisand ведёт себя некорректно: `routing-profile-split-qr` на `ip.ru` показал NL вместо ожидаемого DIRECT/RU.
+- Есть уже наблюдавшийся полевой кейс, что split-routing в Streisand может вести себя неконсистентно: в одном прогоне `routing-profile-split-qr` на `ip.ru` показал NL вместо ожидаемого DIRECT/RU.
+- Более поздние тесты на April 9, 2026 показали рабочий `split-qr` и рабочий `full`; на тех же тестах `sweb.ru`, `reg.ru`, `nic.ru` и `yandex` показывали RU на split-сценарии.
 - Поэтому любой профиль Streisand нужно подтверждать ручным тестом на реальном клиенте.
 - Тяжёлый `routing-profile-split.json` сохраняется как reference JSON, но больше не публикуется как import-ready URI: практический импортный контур сейчас ограничен `routing-profile-full.*` и `routing-profile-split-qr.*`.
 - Default CLI/export path теперь должен генерировать только `routing-profile-full.*`; split-артефакты собираются только по явному experimental opt-in.
@@ -100,6 +101,7 @@
 - `routing-profile-full.json` и `routing-profile-full.streisand-uri.txt` — основной рекомендуемый путь для реального клиента Streisand.
 - `routing-profile-split-qr.json` и `routing-profile-split-qr.streisand-uri.txt` — диагностический split-вариант для ручного теста, но не рабочий production-профиль.
 - `routing-profile-split.json` — reference-only JSON для сопровождения policy и диффов, но не для обычного import-flow.
+- На текущем этапе правильнее считать split не “доказанно сломанным”, а “недостаточно подтверждённым и потенциально нестабильным между прогонами”.
 
 ## Как разбирать расхождения
 

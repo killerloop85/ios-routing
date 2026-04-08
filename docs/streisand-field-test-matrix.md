@@ -34,6 +34,12 @@
 
 Для `routing-profile-split-qr.*` ожидаемое поведение считается только диагностическим: оно показывает, как export-layer должен работать по смыслу, но не считается production-гарантией.
 
+Важно:
+
+- матрица нужна именно для повторяемости;
+- если один прогон дал mismatch, а следующий нет, это всё равно полезный результат;
+- такие случаи нужно помечать как `intermittent` в `notes` и сопоставлять по версии клиента и профилю.
+
 | Case | Target | Expected | Why |
 | --- | --- | --- | --- |
 | 1 | `ip.ru` | `DIRECT` | fallback `domain:ru` / `geoip:ru` |
@@ -48,20 +54,23 @@
 | 10 | `vk.com` | `DIRECT` | `ru-direct` |
 | 11 | `confael.ru` | `DIRECT` | manual direct override |
 | 12 | `bitrix24.ru` | `DIRECT` | manual direct override |
-| 13 | `instagram.com` | `PROXY` | blocked core |
-| 14 | `facebook.com` | `PROXY` | blocked core |
-| 15 | `discord.com` | `PROXY` | blocked core / compact proxy-core |
-| 16 | `youtube.com` | `PROXY` | blocked core / compact proxy-core |
-| 17 | `meduza.io` | `PROXY` | blocked core / compact proxy-core |
-| 18 | `torproject.org` | `PROXY` | blocked core / compact proxy-core |
-| 19 | `openai.com` | `PROXY` | foreign-services / compact proxy-core |
-| 20 | `chatgpt.com` | `PROXY` | foreign-services |
-| 21 | `claude.ai` | `PROXY` | foreign-services / compact proxy-core |
-| 22 | `github.com` | `PROXY` | foreign-services / compact proxy-core |
-| 23 | `cloudflare.com` | `PROXY` | foreign-services / compact proxy-core |
-| 24 | `google.com` | `PROXY` | foreign-services / compact proxy-core |
-| 25 | `proton.me` | `PROXY` | foreign-services / compact proxy-core |
-| 26 | `yandex.com` | `PROXY` | falls through to final proxy in normalized core |
+| 13 | `sweb.ru` | `DIRECT` | observed RU in field tests |
+| 14 | `reg.ru` | `DIRECT` | observed RU in field tests |
+| 15 | `nic.ru` | `DIRECT` | observed RU in field tests |
+| 16 | `instagram.com` | `PROXY` | blocked core |
+| 17 | `facebook.com` | `PROXY` | blocked core |
+| 18 | `discord.com` | `PROXY` | blocked core / compact proxy-core |
+| 19 | `youtube.com` | `PROXY` | blocked core / compact proxy-core |
+| 20 | `meduza.io` | `PROXY` | blocked core / compact proxy-core |
+| 21 | `torproject.org` | `PROXY` | blocked core / compact proxy-core |
+| 22 | `openai.com` | `PROXY` | foreign-services / compact proxy-core |
+| 23 | `chatgpt.com` | `PROXY` | foreign-services |
+| 24 | `claude.ai` | `PROXY` | foreign-services / compact proxy-core |
+| 25 | `github.com` | `PROXY` | foreign-services / compact proxy-core |
+| 26 | `cloudflare.com` | `PROXY` | foreign-services / compact proxy-core |
+| 27 | `google.com` | `PROXY` | foreign-services / compact proxy-core |
+| 28 | `proton.me` | `PROXY` | foreign-services / compact proxy-core |
+| 29 | `yandex.com` | `PROXY` | falls through to final proxy in normalized core |
 
 ## Full Expectations
 
@@ -102,6 +111,10 @@
   - Экспорт выглядит логично, но клиент Streisand применяет правила иначе.
   - Подозревать: import parser, precedence между `domain`/`geoip`, игнор части полей, версия клиента.
 
+- `intermittent`
+  - Одни и те же кейсы дают разные результаты между прогонами.
+  - Подозревать: нестабильность клиента, неполное применение профиля, версия/сессия/кеш.
+
 - `transport_issue`
   - Профиль не импортируется, импорт крашится или клиент не сохраняет его корректно.
 
@@ -110,5 +123,5 @@
 Streisand можно считать вышедшим из experimental-статуса только если:
 
 1. Full-profile стабильно проходит базовый checklist на нескольких устройствах/версиях клиента.
-2. Split diagnostic profile проходит матрицу direct/proxy кейсов без ключевых расхождений вроде `ip.ru -> NL`.
+2. Split diagnostic profile проходит матрицу direct/proxy кейсов без ключевых расхождений вроде `ip.ru -> NL`, либо такие расхождения воспроизводимо объяснены.
 3. Все зафиксированные расхождения либо исправлены в export-layer, либо документированы как ограничение клиента.

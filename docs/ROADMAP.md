@@ -3,7 +3,7 @@
 ## Near-Term
 
 - Fix Streisand split-profile import instability and the suspected split URI crash path.
-- Fix confirmed Streisand split-routing mismatch: `ip.ru` on `routing-profile-split-qr` resolves through NL instead of staying DIRECT/RU.
+- Reproduce the previously observed Streisand split-routing mismatch: `ip.ru` on `routing-profile-split-qr` resolved through NL instead of staying DIRECT/RU in one run, but later tests did not reproduce it.
 - Validate Streisand routing behavior on real devices before treating it as production-ready; until then, use only full-profile in practice.
 - Validate Hiddify split/full profiles on real devices and document import caveats if any appear.
 - Define the exit criteria for Streisand experimental status: field-test matrix across profile type, client version, and a fixed direct/proxy domain set must pass without routing mismatches.
@@ -20,7 +20,7 @@
 - Add newly discovered real-world edge cases to `data/regression_domains.json`.
 - Keep parity checks strict across Shadowrocket, Streisand, and Hiddify.
 - Add client-specific regression notes when a backend behaves differently from the normalized policy layer.
-- Record the Streisand `ip.ru -> NL on split-qr` case as a client-behavior exception until the export model or the client behavior is understood.
+- Record the earlier Streisand `ip.ru -> NL on split-qr` observation alongside the later successful runs, so the investigation tracks both failure and non-reproducibility.
 
 ## Streisand Investigation
 

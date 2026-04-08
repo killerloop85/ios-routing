@@ -62,7 +62,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 1. Start with the full-tunnel profile first, not split.
 2. Import the generated full-tunnel `streisand://` artifact.
 3. Confirm that the client imports cleanly and actually routes traffic.
-4. Treat `routing-profile-split.json` and `routing-profile-split-qr.*` as diagnostic artifacts only until the split-routing issue is fixed.
+4. Treat `routing-profile-split.json` and `routing-profile-split-qr.*` as diagnostic artifacts until repeated field tests prove split-routing is stable on real clients.
 
 ### Hiddify
 
@@ -82,7 +82,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
-- Streisand routing is currently experimental and must be tested manually before real use. Real-device testing already showed that `routing-profile-split-qr` can route `ip.ru` through NL instead of DIRECT, so split-routing is currently not trustworthy in Streisand.
+- Streisand routing is currently experimental and must be tested manually before real use. One earlier real-device run showed `ip.ru -> NL` on `routing-profile-split-qr`, but newer tests on April 9, 2026 showed `split-qr` and `full` working, so the current status is inconsistent rather than conclusively broken.
 - Only the Streisand `full` import artifact should be treated as the practical path for now; both split variants remain diagnostic/reference artifacts.
 - The default Streisand export commands generate only the stable full-profile path. Split artifacts require an explicit experimental opt-in.
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
