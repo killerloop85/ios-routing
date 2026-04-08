@@ -28,6 +28,18 @@
       "optional": true
     },
     {
+      "name": "kort0881-russia-whitelist",
+      "url": "https://raw.githubusercontent.com/kort0881/russia-whitelist/main/whitelist.txt",
+      "bucket": "direct",
+      "optional": true
+    },
+    {
+      "name": "net4people-bbs-516-pastebin",
+      "url": "https://pastebin.com/raw/Tdv4CtUc",
+      "bucket": "direct",
+      "optional": true
+    },
+    {
       "name": "ooni-zapret-list",
       "url": "https://raw.githubusercontent.com/1andrevich/ooni-zapret-list/master/resolvers-hosts.txt",
       "bucket": "blocked",
@@ -36,6 +48,12 @@
     {
       "name": "re-filter-lists",
       "url": "https://raw.githubusercontent.com/1andrevich/Re-filter-lists/main/community.lst",
+      "bucket": "blocked",
+      "optional": true
+    },
+    {
+      "name": "runetfreedom-ru-blocked",
+      "url": "https://raw.githubusercontent.com/runetfreedom/russia-blocked-geosite/release/ru-blocked.txt",
       "bucket": "blocked",
       "optional": true
     },
