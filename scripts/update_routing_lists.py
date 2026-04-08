@@ -15,7 +15,6 @@ import re
 import sys
 import urllib.error
 import urllib.request
-from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Set
@@ -135,6 +134,18 @@ def parse_args() -> argparse.Namespace:
         "--strict",
         action="store_true",
         help="fail if any non-optional source cannot be fetched",
+    )
+    parser.add_argument(
+        "--report-json",
+        nargs="?",
+        const="-",
+        help="write a structured JSON report to PATH or stdout with '-'",
+    )
+    parser.add_argument(
+        "--report-md",
+        nargs="?",
+        const="-",
+        help="write a Markdown report to PATH or stdout with '-'",
     )
     return parser.parse_args()
 
@@ -350,6 +361,116 @@ def diff_text(path: Path, new_text: str) -> str:
     )
 
 
+def parse_list_domains(text: str) -> Set[str]:
+    domains: Set[str] = set()
+    for line in text.splitlines():
+        domain = normalize_domain(line)
+        if domain:
+            domains.add(domain)
+    return domains
+
+
+def build_report_item(path: Path, new_text: str) -> dict[str, object]:
+    old_text = path.read_text(encoding="utf-8") if path.exists() else ""
+    old_domains = parse_list_domains(old_text)
+    new_domains = parse_list_domains(new_text)
+    added = sorted(new_domains - old_domains)
+    removed = sorted(old_domains - new_domains)
+    return {
+        "path": str(path.relative_to(ROOT)),
+        "changed": bool(added or removed),
+        "current_count": len(old_domains),
+        "new_count": len(new_domains),
+        "added": added,
+        "removed": removed,
+    }
+
+
+def build_report(outputs: Sequence[tuple[Path, str]], warnings: Sequence[str], args: argparse.Namespace) -> dict[str, object]:
+    files = [build_report_item(path, text) for path, text in outputs]
+    changed_files = sum(1 for item in files if item["changed"])
+    total_added = sum(len(item["added"]) for item in files)
+    total_removed = sum(len(item["removed"]) for item in files)
+    return {
+        "offline": args.offline,
+        "write": args.write,
+        "warnings": list(warnings),
+        "summary": {
+            "files": len(files),
+            "changed_files": changed_files,
+            "total_added": total_added,
+            "total_removed": total_removed,
+        },
+        "files": files,
+    }
+
+
+def render_markdown_report(report: dict[str, object]) -> str:
+    summary = report["summary"]
+    assert isinstance(summary, dict)
+    files = report["files"]
+    assert isinstance(files, list)
+    lines = [
+        "# Routing Update Report",
+        "",
+        f"- Offline: `{report['offline']}`",
+        f"- Write mode: `{report['write']}`",
+        f"- Files checked: `{summary['files']}`",
+        f"- Changed files: `{summary['changed_files']}`",
+        f"- Total added: `{summary['total_added']}`",
+        f"- Total removed: `{summary['total_removed']}`",
+    ]
+
+    warnings = report["warnings"]
+    assert isinstance(warnings, list)
+    if warnings:
+        lines.extend(["", "## Warnings"])
+        lines.extend(f"- {warning}" for warning in warnings)
+
+    for item in files:
+        assert isinstance(item, dict)
+        lines.extend(
+            [
+                "",
+                f"## `{item['path']}`",
+                "",
+                f"- Changed: `{item['changed']}`",
+                f"- Current count: `{item['current_count']}`",
+                f"- New count: `{item['new_count']}`",
+                f"- Added: `{len(item['added'])}`",
+                f"- Removed: `{len(item['removed'])}`",
+            ]
+        )
+        added = item["added"]
+        removed = item["removed"]
+        assert isinstance(added, list)
+        assert isinstance(removed, list)
+        if added:
+            lines.append("")
+            lines.append("Added:")
+            lines.extend(f"- `{domain}`" for domain in added)
+        if removed:
+            lines.append("")
+            lines.append("Removed:")
+            lines.extend(f"- `{domain}`" for domain in removed)
+
+    lines.append("")
+    return "\n".join(lines)
+
+
+def emit_report(path_arg: str | None, payload: str) -> None:
+    if not path_arg:
+        return
+    if path_arg == "-":
+        sys.stdout.write(payload)
+        if not payload.endswith("\n"):
+            sys.stdout.write("\n")
+        return
+    path = Path(path_arg)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(payload, encoding="utf-8")
+
+
 def gather_candidates(args: argparse.Namespace) -> tuple[Dict[str, Candidate], Dict[str, Candidate], Dict[str, Candidate], List[str]]:
     direct_candidates: Dict[str, Candidate] = {}
     blocked_candidates: Dict[str, Candidate] = {}
@@ -391,6 +512,9 @@ def write_if_requested(path: Path, text: str, write: bool) -> None:
 
 def main() -> int:
     args = parse_args()
+    if args.report_json == "-" and args.report_md == "-":
+        raise SystemExit("Only one stdout report can be requested at a time.")
+
     direct_candidates, blocked_candidates, foreign_candidates, warnings = gather_candidates(args)
 
     blocked_domains_for_direct = set(blocked_candidates) - ROUTING_CONFIG.direct_override
@@ -403,22 +527,31 @@ def main() -> int:
         (BLOCKED_PATH, blocked_text),
         (FOREIGN_PATH, foreign_text),
     )
+    report = build_report(outputs, warnings, args)
+
+    diff_stream = sys.stderr if args.report_json == "-" or args.report_md == "-" else sys.stdout
 
     any_changes = False
     for path, text in outputs:
         diff = diff_text(path, text)
         if diff:
             any_changes = True
-            sys.stdout.write(diff)
+            diff_stream.write(diff)
         write_if_requested(path, text, args.write)
 
     if not any_changes:
-        print("No changes.")
+        print("No changes.", file=diff_stream)
 
     if warnings:
-        print("\nWarnings:", file=sys.stderr)
+        warning_stream = sys.stderr
+        print("\nWarnings:", file=warning_stream)
         for warning in warnings:
-            print(f"- {warning}", file=sys.stderr)
+            print(f"- {warning}", file=warning_stream)
+
+    if args.report_json:
+        emit_report(args.report_json, json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    if args.report_md:
+        emit_report(args.report_md, render_markdown_report(report))
 
     return 0
 

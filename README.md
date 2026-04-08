@@ -50,5 +50,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`
 - Fetch external sources and preview a diff: `python3 scripts/update_routing_lists.py`
 - Write updated lists to disk: `python3 scripts/update_routing_lists.py --write`
+- Emit a machine-readable report to stdout: `python3 scripts/update_routing_lists.py --offline --report-json -`
+- Write a Markdown report to a file: `python3 scripts/update_routing_lists.py --report-md reports/routing-update.md`
 - Edit `data/manual_*.json` to change the manual core domains and section order
 - Edit `data/routing_settings.json` to change overrides, limits, TLD policy, or source URLs
