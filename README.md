@@ -13,6 +13,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
 - `data/*.json` - manual core domains, overrides, headers, limits, and source definitions for the updater
 - `.github/workflows/*.yml` - CI smoke checks and scheduled routing reports
+- `Makefile` - short aliases for the most common local maintenance commands
 
 ## Usage
 
@@ -42,6 +43,13 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 
 ## Maintenance
 
+- Show available shortcuts: `make help`
+- Run repository smoke checks: `make smoke`
+- Preview list regeneration without changing files: `make offline`
+- Fetch external sources and preview a diff: `make update`
+- Write updated lists to disk: `make write`
+- Emit a machine-readable report to stdout: `make report-json`
+- Write a Markdown report to a file: `make report-md`
 - Run repository smoke checks: `python3 scripts/smoke_check.py`
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`
 - Fetch external sources and preview a diff: `python3 scripts/update_routing_lists.py`

@@ -8,6 +8,7 @@
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
+- `Makefile` — короткие алиасы для повседневных команд
 
 ## Базовый сценарий обновления списков
 
@@ -61,6 +62,15 @@ python3 scripts/update_routing_lists.py --write
 
 ```bash
 python3 scripts/smoke_check.py
+```
+
+То же самое короткими алиасами:
+
+```bash
+make offline
+make update
+make write
+make smoke
 ```
 
 ## Как менять списки вручную
@@ -151,6 +161,48 @@ git push ssh://git@ssh.github.com:443/killerloop85/ios-routing.git HEAD:main
 - `.github/workflows/routing-report.yml` — weekly/manual запуск апдейтера с сохранением `json`, `md` и `diff` как artifact
 
 ## Быстрые команды
+
+Показать все алиасы:
+
+```bash
+make help
+```
+
+Проверка генерации:
+
+```bash
+make offline
+```
+
+Smoke-check:
+
+```bash
+make smoke
+```
+
+Просмотр diff с сетью:
+
+```bash
+make update
+```
+
+Запись новых `.list`:
+
+```bash
+make write
+```
+
+JSON-отчёт:
+
+```bash
+make report-json
+```
+
+Markdown-отчёт:
+
+```bash
+make report-md
+```
 
 Проверка генерации:
 

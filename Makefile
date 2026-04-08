@@ -1,0 +1,37 @@
+PYTHON ?= python3
+UPDATER := $(PYTHON) scripts/update_routing_lists.py
+SMOKE := $(PYTHON) scripts/smoke_check.py
+REPORTS_DIR := reports
+
+.PHONY: help smoke offline update write report-json report-md ci
+
+help:
+	@printf "Available targets:\n"
+	@printf "  make smoke        Run repository smoke checks\n"
+	@printf "  make offline      Run offline updater preview\n"
+	@printf "  make update       Fetch sources and print diff preview\n"
+	@printf "  make write        Write regenerated lists to disk\n"
+	@printf "  make report-json  Print JSON report to stdout\n"
+	@printf "  make report-md    Write Markdown report to reports/routing-update.md\n"
+	@printf "  make ci           Run the same local checks used by CI\n"
+
+smoke:
+	$(SMOKE)
+
+offline:
+	$(UPDATER) --offline
+
+update:
+	$(UPDATER)
+
+write:
+	$(UPDATER) --write
+
+report-json:
+	$(UPDATER) --report-json -
+
+report-md:
+	mkdir -p $(REPORTS_DIR)
+	$(UPDATER) --report-md $(REPORTS_DIR)/routing-update.md
+
+ci: smoke
