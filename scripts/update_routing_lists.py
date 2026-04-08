@@ -35,6 +35,9 @@ class Source:
     url: str
     bucket: str
     kind: str = "text"
+    priority: int = 50
+    notes: str = ""
+    exclude_domains: tuple[str, ...] = ()
     optional: bool = True
 
 
@@ -42,10 +45,14 @@ class Source:
 class Candidate:
     domain: str
     sources: Set[str] = field(default_factory=set)
+    source_priorities: Dict[str, int] = field(default_factory=dict)
     manual: bool = False
 
-    def score(self) -> tuple[int, int, str]:
-        return (1 if self.manual else 0, len(self.sources), self.domain)
+    def total_priority(self) -> int:
+        return sum(self.source_priorities.values())
+
+    def score(self) -> tuple[int, int, int, str]:
+        return (1 if self.manual else 0, self.total_priority(), len(self.sources), self.domain)
 
 
 DOMAIN_RE = re.compile(r"\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-zа-я0-9-]{2,}\b", re.IGNORECASE)
@@ -104,6 +111,9 @@ def load_routing_config(path: Path) -> RoutingConfig:
             url=str(item["url"]),
             bucket=str(item["bucket"]),
             kind=str(item.get("kind", "text")),
+            priority=int(item.get("priority", 50)),
+            notes=str(item.get("notes", "")),
+            exclude_domains=tuple(str(domain) for domain in item.get("exclude_domains", [])),
             optional=bool(item.get("optional", True)),
         )
         for item in raw.get("sources", [])
@@ -190,10 +200,18 @@ def fetch_text(source: Source, timeout: float) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
-def add_candidates(store: Dict[str, Candidate], domains: Iterable[str], source_name: str, manual: bool = False) -> None:
+def add_candidates(
+    store: Dict[str, Candidate],
+    domains: Iterable[str],
+    source_name: str,
+    manual: bool = False,
+    priority: int = 0,
+) -> None:
     for domain in domains:
         candidate = store.setdefault(domain, Candidate(domain=domain))
         candidate.sources.add(source_name)
+        existing_priority = candidate.source_priorities.get(source_name, 0)
+        candidate.source_priorities[source_name] = max(existing_priority, priority)
         if manual:
             candidate.manual = True
 
@@ -226,7 +244,10 @@ def compact_domains(domains: Iterable[str], always_keep: Set[str] | None = None)
 
 
 def select_top(candidates: Dict[str, Candidate], limit: int, always_keep: Set[str]) -> List[str]:
-    ranked = sorted(candidates.values(), key=lambda item: (-item.score()[0], -item.score()[1], item.domain))
+    ranked = sorted(
+        candidates.values(),
+        key=lambda item: (-item.score()[0], -item.score()[1], -item.score()[2], item.domain),
+    )
     chosen: List[str] = []
     chosen_set: Set[str] = set()
     for candidate in ranked:
@@ -386,7 +407,29 @@ def build_report_item(path: Path, new_text: str) -> dict[str, object]:
     }
 
 
-def build_report(outputs: Sequence[tuple[Path, str]], warnings: Sequence[str], args: argparse.Namespace) -> dict[str, object]:
+def build_sources_report() -> list[dict[str, object]]:
+    sources = []
+    for source in ROUTING_CONFIG.sources:
+        sources.append(
+            {
+                "name": source.name,
+                "bucket": source.bucket,
+                "priority": source.priority,
+                "optional": source.optional,
+                "notes": source.notes,
+                "exclude_domains": list(source.exclude_domains),
+                "url": source.url,
+            }
+        )
+    return sources
+
+
+def build_report(
+    outputs: Sequence[tuple[Path, str]],
+    warnings: Sequence[str],
+    args: argparse.Namespace,
+    filtered_domains: dict[str, list[str]],
+) -> dict[str, object]:
     files = [build_report_item(path, text) for path, text in outputs]
     changed_files = sum(1 for item in files if item["changed"])
     total_added = sum(len(item["added"]) for item in files)
@@ -401,6 +444,8 @@ def build_report(outputs: Sequence[tuple[Path, str]], warnings: Sequence[str], a
             "total_added": total_added,
             "total_removed": total_removed,
         },
+        "sources": build_sources_report(),
+        "filtered_domains": filtered_domains,
         "files": files,
     }
 
@@ -426,6 +471,27 @@ def render_markdown_report(report: dict[str, object]) -> str:
     if warnings:
         lines.extend(["", "## Warnings"])
         lines.extend(f"- {warning}" for warning in warnings)
+
+    sources = report["sources"]
+    assert isinstance(sources, list)
+    if sources:
+        lines.extend(["", "## Sources"])
+        for source in sources:
+            assert isinstance(source, dict)
+            lines.append(
+                f"- `{source['name']}`: bucket=`{source['bucket']}`, priority=`{source['priority']}`, optional=`{source['optional']}`"
+            )
+            if source["notes"]:
+                lines.append(f"  notes: {source['notes']}")
+
+    filtered_domains = report["filtered_domains"]
+    assert isinstance(filtered_domains, dict)
+    if filtered_domains:
+        lines.extend(["", "## Filtered Domains"])
+        for source_name, domains in filtered_domains.items():
+            lines.append(f"- `{source_name}`: {len(domains)} filtered")
+            if domains:
+                lines.append(f"  domains: {', '.join(f'`{domain}`' for domain in domains)}")
 
     for item in files:
         assert isinstance(item, dict)
@@ -471,18 +537,21 @@ def emit_report(path_arg: str | None, payload: str) -> None:
     path.write_text(payload, encoding="utf-8")
 
 
-def gather_candidates(args: argparse.Namespace) -> tuple[Dict[str, Candidate], Dict[str, Candidate], Dict[str, Candidate], List[str]]:
+def gather_candidates(
+    args: argparse.Namespace,
+) -> tuple[Dict[str, Candidate], Dict[str, Candidate], Dict[str, Candidate], List[str], dict[str, list[str]]]:
     direct_candidates: Dict[str, Candidate] = {}
     blocked_candidates: Dict[str, Candidate] = {}
     foreign_candidates: Dict[str, Candidate] = {}
     warnings: List[str] = []
+    filtered_domains: dict[str, list[str]] = {}
 
-    add_candidates(direct_candidates, flatten_sections(MANUAL_DIRECT.sections), "manual-core", manual=True)
-    add_candidates(blocked_candidates, flatten_sections(MANUAL_BLOCKED.sections), "manual-core", manual=True)
-    add_candidates(foreign_candidates, flatten_sections(MANUAL_FOREIGN.sections), "manual-core", manual=True)
+    add_candidates(direct_candidates, flatten_sections(MANUAL_DIRECT.sections), "manual-core", manual=True, priority=1000)
+    add_candidates(blocked_candidates, flatten_sections(MANUAL_BLOCKED.sections), "manual-core", manual=True, priority=1000)
+    add_candidates(foreign_candidates, flatten_sections(MANUAL_FOREIGN.sections), "manual-core", manual=True, priority=1000)
 
     if args.offline:
-        return direct_candidates, blocked_candidates, foreign_candidates, warnings
+        return direct_candidates, blocked_candidates, foreign_candidates, warnings, filtered_domains
 
     for source in ROUTING_CONFIG.sources:
         try:
@@ -495,14 +564,18 @@ def gather_candidates(args: argparse.Namespace) -> tuple[Dict[str, Candidate], D
             continue
 
         domains = extract_domains(text)
+        excluded = sorted(domain for domain in domains if domain in set(source.exclude_domains))
+        if excluded:
+            filtered_domains[source.name] = excluded
+        domains = domains - set(source.exclude_domains)
         if source.bucket == "direct":
-            add_candidates(direct_candidates, domains, source.name)
+            add_candidates(direct_candidates, domains, source.name, priority=source.priority)
         elif source.bucket == "blocked":
-            add_candidates(blocked_candidates, domains, source.name)
+            add_candidates(blocked_candidates, domains, source.name, priority=source.priority)
         elif source.bucket == "foreign":
-            add_candidates(foreign_candidates, domains, source.name)
+            add_candidates(foreign_candidates, domains, source.name, priority=source.priority)
 
-    return direct_candidates, blocked_candidates, foreign_candidates, warnings
+    return direct_candidates, blocked_candidates, foreign_candidates, warnings, filtered_domains
 
 
 def write_if_requested(path: Path, text: str, write: bool) -> None:
@@ -515,7 +588,7 @@ def main() -> int:
     if args.report_json == "-" and args.report_md == "-":
         raise SystemExit("Only one stdout report can be requested at a time.")
 
-    direct_candidates, blocked_candidates, foreign_candidates, warnings = gather_candidates(args)
+    direct_candidates, blocked_candidates, foreign_candidates, warnings, filtered_domains = gather_candidates(args)
 
     blocked_domains_for_direct = set(blocked_candidates) - ROUTING_CONFIG.direct_override
     direct_text = build_direct_list(direct_candidates, blocked_domains_for_direct)
@@ -527,7 +600,7 @@ def main() -> int:
         (BLOCKED_PATH, blocked_text),
         (FOREIGN_PATH, foreign_text),
     )
-    report = build_report(outputs, warnings, args)
+    report = build_report(outputs, warnings, args, filtered_domains)
 
     diff_stream = sys.stderr if args.report_json == "-" or args.report_md == "-" else sys.stdout
 
