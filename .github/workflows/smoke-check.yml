@@ -25,3 +25,6 @@ jobs:
 
       - name: Export Streisand import URIs (offline)
         run: python3 scripts/export_streisand_uri.py --offline
+
+      - name: Export Hiddify rules (offline)
+        run: python3 scripts/export_hiddify_rules.py --offline

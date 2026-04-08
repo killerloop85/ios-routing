@@ -2,11 +2,12 @@ PYTHON ?= python3
 UPDATER := $(PYTHON) scripts/update_routing_lists.py
 STREISAND := $(PYTHON) scripts/export_streisand_rules.py
 STREISAND_URI := $(PYTHON) scripts/export_streisand_uri.py
+HIDDIFY := $(PYTHON) scripts/export_hiddify_rules.py
 SMOKE := $(PYTHON) scripts/smoke_check.py
 REGRESSION := $(PYTHON) scripts/check_regression_domains.py
 REPORTS_DIR := reports
 
-.PHONY: help smoke regression streisand streisand-uri streisand-qr offline update write report-json report-md ci
+.PHONY: help smoke regression streisand streisand-uri streisand-qr hiddify hiddify-check offline update write report-json report-md ci
 
 help:
 	@printf "Available targets:\n"
@@ -15,6 +16,8 @@ help:
 	@printf "  make streisand    Write Streisand JSON and URI exports to disk\n"
 	@printf "  make streisand-uri Write Streisand import URI exports to disk\n"
 	@printf "  make streisand-qr Write compact Streisand split QR artifacts to disk\n"
+	@printf "  make hiddify      Write Hiddify JSON exports to disk\n"
+	@printf "  make hiddify-check Check Hiddify export sync without writing\n"
 	@printf "  make offline      Run offline updater preview\n"
 	@printf "  make update       Fetch sources and print diff preview\n"
 	@printf "  make write        Write regenerated lists to disk\n"
@@ -38,6 +41,12 @@ streisand-uri:
 streisand-qr:
 	$(STREISAND) --write
 	$(STREISAND_URI) --write
+
+hiddify:
+	$(HIDDIFY) --write
+
+hiddify-check:
+	$(HIDDIFY) --offline
 
 offline:
 	$(UPDATER) --offline

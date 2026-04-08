@@ -1,0 +1,301 @@
+{
+  "name": "Foreign Services",
+  "description": "Foreign services that are restricted in Russia or work better through PROXY.",
+  "platform": "hiddify",
+  "rules": [
+    {
+      "type": "domain_suffix",
+      "value": "openai.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "chatgpt.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "anthropic.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "claude.ai",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "perplexity.ai",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "deepl.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "notion.so",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "notion.site",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "figma.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "linear.app",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "slack.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "atlassian.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "trello.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "asana.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "zoom.us",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "github.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "githubusercontent.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "githubassets.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "gitlab.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "bitbucket.org",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "docker.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "docker.io",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cloudflare.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "workers.dev",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "vercel.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "netlify.app",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "herokuapp.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "google.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "googleapis.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "gstatic.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "youtube.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ytimg.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "googlevideo.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "reddit.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "redd.it",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "redditmedia.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "medium.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "substack.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "linkedin.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "proton.me",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "protonmail.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "protonvpn.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tutanota.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "openvpn.net",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "wireguard.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "psiphon.ca",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "lantern.io",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "netflix.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "spotify.com",
+      "outbound": "proxy",
+      "bucket": "foreign-services"
+    }
+  ]
+}

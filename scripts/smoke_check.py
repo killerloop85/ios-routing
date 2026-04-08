@@ -16,9 +16,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
+HIDDIFY_DIR = ROOT / "hiddify"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
 STREISAND_EXPORTER = ROOT / "scripts" / "export_streisand_rules.py"
 STREISAND_URI_EXPORTER = ROOT / "scripts" / "export_streisand_uri.py"
+HIDDIFY_EXPORTER = ROOT / "scripts" / "export_hiddify_rules.py"
 REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
@@ -38,6 +40,13 @@ STREISAND_URI_FILES = (
     STREISAND_DIR / "routing-profile-split.streisand-uri.txt",
     STREISAND_DIR / "routing-profile-split-qr.streisand-uri.txt",
     STREISAND_DIR / "routing-profile-full.streisand-uri.txt",
+)
+HIDDIFY_FILES = (
+    HIDDIFY_DIR / "ru-direct.hiddify.json",
+    HIDDIFY_DIR / "ru-blocked-core.hiddify.json",
+    HIDDIFY_DIR / "foreign-services.hiddify.json",
+    HIDDIFY_DIR / "routing-profile-split.json",
+    HIDDIFY_DIR / "routing-profile-full.json",
 )
 
 LIST_LINE_RE = re.compile(
@@ -206,6 +215,102 @@ def validate_streisand_uri_file(path: Path) -> None:
         raise ValueError(f"{path}: compact QR URI is too large for a practical single QR")
 
 
+def validate_hiddify_file(path: Path) -> None:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path}: top-level object must be a JSON object")
+    if not isinstance(payload.get("name"), str) or not payload["name"].strip():
+        raise ValueError(f"{path}: missing or empty 'name'")
+    if not isinstance(payload.get("description"), str) or not payload["description"].strip():
+        raise ValueError(f"{path}: missing or empty 'description'")
+    if payload.get("platform") != "hiddify":
+        raise ValueError(f"{path}: unexpected platform: {payload.get('platform')!r}")
+    rules = payload.get("rules")
+    if not isinstance(rules, list) or not rules:
+        raise ValueError(f"{path}: 'rules' must be a non-empty list")
+
+    if path.name.endswith(".hiddify.json"):
+        seen: set[str] = set()
+        for rule in rules:
+            if not isinstance(rule, dict):
+                raise ValueError(f"{path}: invalid rule entry: {rule!r}")
+            rule_type = str(rule.get("type", "")).strip()
+            value = str(rule.get("value", "")).strip().lower()
+            outbound = str(rule.get("outbound", "")).strip()
+            bucket = str(rule.get("bucket", "")).strip()
+            if rule_type != "domain_suffix":
+                raise ValueError(f"{path}: unsupported rule type: {rule_type}")
+            if not value:
+                raise ValueError(f"{path}: empty value in rule")
+            if outbound not in {"direct", "proxy", "block"}:
+                raise ValueError(f"{path}: unsupported outbound: {outbound}")
+            if not bucket:
+                raise ValueError(f"{path}: missing bucket for {value or '<empty>'}")
+            if value in seen:
+                raise ValueError(f"{path}: duplicate rule value: {value}")
+            seen.add(value)
+        return
+
+    saw_local_direct = False
+    saw_final_proxy = False
+    for rule in rules:
+        if not isinstance(rule, dict):
+            raise ValueError(f"{path}: invalid profile rule entry: {rule!r}")
+        name = str(rule.get("name", "")).strip()
+        bucket = str(rule.get("bucket", "")).strip()
+        outbound = str(rule.get("outbound", "")).strip()
+        entries = rule.get("entries")
+        if not name:
+            raise ValueError(f"{path}: profile rule is missing 'name'")
+        if not bucket:
+            raise ValueError(f"{path}: profile rule '{name}' is missing bucket")
+        if outbound not in {"direct", "proxy", "block"}:
+            raise ValueError(f"{path}: profile rule '{name}' has unsupported outbound: {outbound}")
+        if not isinstance(entries, list) or not entries:
+            raise ValueError(f"{path}: profile rule '{name}' is missing non-empty 'entries'")
+        if bucket == "local" and outbound == "direct":
+            saw_local_direct = True
+        if bucket == "final" and outbound == "proxy":
+            saw_final_proxy = True
+        for entry in entries:
+            if not isinstance(entry, dict):
+                raise ValueError(f"{path}: profile rule '{name}' has invalid entry: {entry!r}")
+            entry_type = str(entry.get("type", "")).strip()
+            value = str(entry.get("value", "")).strip()
+            if entry_type not in {"domain_suffix", "domain", "ip_cidr", "geoip", "geosite", "final", "source"}:
+                raise ValueError(f"{path}: profile rule '{name}' has unsupported entry type: {entry_type}")
+            if not value:
+                raise ValueError(f"{path}: profile rule '{name}' has empty entry value")
+    if not saw_local_direct:
+        raise ValueError(f"{path}: missing local/private direct block")
+    if not saw_final_proxy:
+        raise ValueError(f"{path}: missing final proxy block")
+
+
+def validate_hiddify_sync() -> None:
+    expected_counts = {
+        HIDDIFY_DIR / "ru-direct.hiddify.json": sum(
+            1 for line in (SHADOWROCKET_DIR / "ru-direct.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ),
+        HIDDIFY_DIR / "ru-blocked-core.hiddify.json": sum(
+            1 for line in (SHADOWROCKET_DIR / "ru-blocked-core.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ),
+        HIDDIFY_DIR / "foreign-services.hiddify.json": sum(
+            1 for line in (SHADOWROCKET_DIR / "foreign-services.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ),
+    }
+    for path, expected_count in expected_counts.items():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        rules = payload.get("rules")
+        if not isinstance(rules, list):
+            raise ValueError(f"{path}: missing rules list for sync check")
+        if len(rules) != expected_count:
+            raise ValueError(f"{path}: rules count {len(rules)} does not match source count {expected_count}")
+
+
 def run_offline_updater() -> None:
     result = subprocess.run(
         [sys.executable, str(UPDATER), "--offline"],
@@ -260,6 +365,20 @@ def run_streisand_uri_export_check() -> None:
         raise RuntimeError(f"streisand URI export is not stable:\n{result.stdout}")
 
 
+def run_hiddify_export_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(HIDDIFY_EXPORTER), "--offline"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "hiddify export failed")
+    if result.stdout.strip() != "No changes.":
+        raise RuntimeError(f"hiddify export is not stable:\n{result.stdout}")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
@@ -268,10 +387,14 @@ def main() -> int:
     run_offline_updater()
     run_streisand_export_check()
     run_streisand_uri_export_check()
+    run_hiddify_export_check()
     for path in STREISAND_FILES:
         validate_streisand_file(path)
     for path in STREISAND_URI_FILES:
         validate_streisand_uri_file(path)
+    for path in HIDDIFY_FILES:
+        validate_hiddify_file(path)
+    validate_hiddify_sync()
     run_regression_check()
     print("Smoke check passed.")
     return 0

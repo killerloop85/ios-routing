@@ -8,14 +8,18 @@
 - `streisand/` — экспортированные JSON-правила и профили для Streisand
 - `streisand/*.streisand-uri.txt` — готовые import-ready `streisand://...` ссылки
 - `streisand/routing-profile-split-qr.*` — компактный split-профиль под QR и нестабильный импорт
+- `hiddify/` — экспортированные JSON-правила и профили для Hiddify
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
 - `scripts/export_streisand_uri.py` — экспорт Streisand-профилей в import-ready URI
+- `scripts/export_hiddify_rules.py` — экспорт итоговых `.list` в Hiddify JSON
 - `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
 - `docs/streisand-profile-notes.md` — заметки по реальным `streisand://` профилям и что из них перенесено в проект
+- `docs/hiddify-routing-spec.md` — ТЗ на thin export-layer для Hiddify
+- `docs/hiddify-profile-notes.md` — заметки по Hiddify-слою и его границам
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `Makefile` — короткие алиасы для повседневных команд
 
@@ -25,6 +29,7 @@
 - Есть подозрение, что routing в самом клиенте Streisand может работать некорректно даже при валидных JSON/URI-артефактах.
 - Любой Streisand-профиль перед практическим использованием нужно проверять вручную на реальном клиенте.
 - До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
+- Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
 
 ## Базовый сценарий обновления списков
 
@@ -98,6 +103,12 @@ python3 scripts/export_streisand_rules.py --offline
 python3 scripts/export_streisand_uri.py --offline
 ```
 
+11. Проверить, что Hiddify-экспорт синхронизирован с текущими `.list`.
+
+```bash
+python3 scripts/export_hiddify_rules.py --offline
+```
+
 То же самое короткими алиасами:
 
 ```bash
@@ -107,6 +118,8 @@ make write
 make streisand
 make streisand-uri
 make streisand-qr
+make hiddify
+make hiddify-check
 make smoke
 make regression
 ```
@@ -164,6 +177,7 @@ python3 -m json.tool data/routing_settings.json >/dev/null
 python3 scripts/update_routing_lists.py --offline
 python3 scripts/export_streisand_rules.py --offline
 python3 scripts/export_streisand_uri.py --offline
+python3 scripts/export_hiddify_rules.py --offline
 python3 scripts/check_regression_domains.py
 python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/smoke_check.py

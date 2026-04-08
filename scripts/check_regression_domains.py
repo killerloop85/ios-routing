@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "regression_domains.json"
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
+HIDDIFY_DIR = ROOT / "hiddify"
 
 DIRECT_PATH = SHADOWROCKET_DIR / "ru-direct.list"
 BLOCKED_PATH = SHADOWROCKET_DIR / "ru-blocked-core.list"
@@ -21,6 +22,9 @@ FOREIGN_PATH = SHADOWROCKET_DIR / "foreign-services.list"
 STREISAND_DIRECT_PATH = STREISAND_DIR / "ru-direct.streisand.json"
 STREISAND_BLOCKED_PATH = STREISAND_DIR / "ru-blocked-core.streisand.json"
 STREISAND_FOREIGN_PATH = STREISAND_DIR / "foreign-services.streisand.json"
+HIDDIFY_DIRECT_PATH = HIDDIFY_DIR / "ru-direct.hiddify.json"
+HIDDIFY_BLOCKED_PATH = HIDDIFY_DIR / "ru-blocked-core.hiddify.json"
+HIDDIFY_FOREIGN_PATH = HIDDIFY_DIR / "foreign-services.hiddify.json"
 
 
 @dataclass(frozen=True)
@@ -95,6 +99,32 @@ def load_streisand_suffixes(path: Path, expected_action: str, expected_bucket: s
     return suffixes
 
 
+def load_hiddify_suffixes(path: Path, expected_outbound: str, expected_bucket: str) -> set[str]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rules = payload.get("rules")
+    if not isinstance(rules, list):
+        raise ValueError(f"{path}: missing 'rules' list")
+
+    suffixes: set[str] = set()
+    for rule in rules:
+        if not isinstance(rule, dict):
+            raise ValueError(f"{path}: invalid rule entry: {rule!r}")
+        rule_type = str(rule.get("type", "")).strip()
+        value = str(rule.get("value", "")).strip().lower()
+        outbound = str(rule.get("outbound", "")).strip()
+        bucket = str(rule.get("bucket", "")).strip()
+        if rule_type != "domain_suffix":
+            raise ValueError(f"{path}: unsupported rule type: {rule_type}")
+        if outbound != expected_outbound:
+            raise ValueError(f"{path}: unexpected outbound for {value}: {outbound}")
+        if bucket != expected_bucket:
+            raise ValueError(f"{path}: unexpected bucket for {value}: {bucket}")
+        if not value:
+            raise ValueError(f"{path}: empty value in rule")
+        suffixes.add(value)
+    return suffixes
+
+
 def main() -> int:
     payload = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     cases = payload.get("cases", [])
@@ -119,6 +149,21 @@ def main() -> int:
         expected_action="proxy",
         expected_bucket="foreign-services",
     )
+    hiddify_direct = load_hiddify_suffixes(
+        HIDDIFY_DIRECT_PATH,
+        expected_outbound="direct",
+        expected_bucket="ru-direct",
+    )
+    hiddify_blocked = load_hiddify_suffixes(
+        HIDDIFY_BLOCKED_PATH,
+        expected_outbound="proxy",
+        expected_bucket="ru-blocked-core",
+    )
+    hiddify_foreign = load_hiddify_suffixes(
+        HIDDIFY_FOREIGN_PATH,
+        expected_outbound="proxy",
+        expected_bucket="foreign-services",
+    )
 
     failures: list[str] = []
     for item in cases:
@@ -136,6 +181,12 @@ def main() -> int:
             direct=streisand_direct,
             foreign=streisand_foreign,
         )
+        actual_hiddify = resolve_domain(
+            domain,
+            blocked=hiddify_blocked,
+            direct=hiddify_direct,
+            foreign=hiddify_foreign,
+        )
         mismatches: list[str] = []
         if actual.bucket != expected_bucket:
             mismatches.append(f"bucket={actual.bucket} expected={expected_bucket}")
@@ -149,6 +200,13 @@ def main() -> int:
             mismatches.append(
                 "streisand="
                 f"{actual_streisand.rule}/{actual_streisand.bucket}/{actual_streisand.matched_suffix or '-'} "
+                "shadowrocket="
+                f"{actual.rule}/{actual.bucket}/{actual.matched_suffix or '-'}"
+            )
+        if actual_hiddify != actual:
+            mismatches.append(
+                "hiddify="
+                f"{actual_hiddify.rule}/{actual_hiddify.bucket}/{actual_hiddify.matched_suffix or '-'} "
                 "shadowrocket="
                 f"{actual.rule}/{actual.bucket}/{actual.matched_suffix or '-'}"
             )

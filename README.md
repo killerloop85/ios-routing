@@ -12,9 +12,12 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `streisand/*.json` - generated Streisand exports built from the same finalized routing lists
 - `streisand/*.streisand-uri.txt` - import-ready `streisand://...` links generated from the JSON profiles
 - `streisand/routing-profile-split-qr.*` - compact split-profile artifacts optimized for QR and fragile import flows
+- `hiddify/*.json` - generated Hiddify exports built from the same finalized routing lists
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
+- `docs/hiddify-routing-spec.md` - technical spec for exporting the same routing policy to Hiddify JSON
+- `docs/hiddify-profile-notes.md` - notes on Hiddify as a thin export layer and what semantics are carried over
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
 - `data/*.json` - manual core domains, overrides, headers, limits, and source definitions for the updater
@@ -43,6 +46,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
 - Streisand routing is currently experimental and must be tested manually before real use. There is an open suspicion that import and/or routing behavior may still be broken on the client side.
+- Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Personal configs with embedded credentials are intentionally not stored in the shared repository.
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
@@ -57,6 +61,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Write Streisand JSON and URI exports: `make streisand`
 - Write only Streisand import URIs: `make streisand-uri`
 - Write compact Streisand split QR artifacts: `make streisand-qr`
+- Write Hiddify JSON exports: `make hiddify`
+- Check Hiddify export sync without writing: `make hiddify-check`
 - Treat Streisand exports as test artifacts until real client validation confirms that routing works as expected
 - Preview list regeneration without changing files: `make offline`
 - Fetch external sources and preview a diff: `make update`
@@ -67,6 +73,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Run the fixed regression domain suite: `python3 scripts/check_regression_domains.py`
 - Write Streisand JSON exports: `python3 scripts/export_streisand_rules.py --write`
 - Write Streisand import URIs: `python3 scripts/export_streisand_uri.py --write`
+- Write Hiddify JSON exports: `python3 scripts/export_hiddify_rules.py --write`
+- Check Hiddify export sync: `python3 scripts/export_hiddify_rules.py --offline`
 - Check Streisand import URI sync: `python3 scripts/export_streisand_uri.py --offline`
 - Check Streisand export sync: `python3 scripts/export_streisand_rules.py --offline`
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`

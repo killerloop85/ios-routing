@@ -1,0 +1,77 @@
+{
+  "name": "Full VPN",
+  "description": "All non-local traffic through proxy, keeping LAN and service traffic direct.",
+  "platform": "hiddify",
+  "priority": [
+    "local",
+    "final"
+  ],
+  "rules": [
+    {
+      "name": "Local and private",
+      "bucket": "local",
+      "outbound": "direct",
+      "entries": [
+        {
+          "type": "ip_cidr",
+          "value": "127.0.0.0/8"
+        },
+        {
+          "type": "ip_cidr",
+          "value": "10.0.0.0/8"
+        },
+        {
+          "type": "ip_cidr",
+          "value": "172.16.0.0/12"
+        },
+        {
+          "type": "ip_cidr",
+          "value": "192.168.0.0/16"
+        },
+        {
+          "type": "ip_cidr",
+          "value": "100.64.0.0/10"
+        },
+        {
+          "type": "geoip",
+          "value": "private"
+        },
+        {
+          "type": "domain",
+          "value": "localhost"
+        },
+        {
+          "type": "domain_suffix",
+          "value": "local"
+        },
+        {
+          "type": "domain",
+          "value": "captive.apple.com"
+        },
+        {
+          "type": "geosite",
+          "value": "private"
+        },
+        {
+          "type": "geosite",
+          "value": "apple"
+        },
+        {
+          "type": "geosite",
+          "value": "icloud"
+        }
+      ]
+    },
+    {
+      "name": "Final fallback",
+      "bucket": "final",
+      "outbound": "proxy",
+      "entries": [
+        {
+          "type": "final",
+          "value": "final"
+        }
+      ]
+    }
+  ]
+}
