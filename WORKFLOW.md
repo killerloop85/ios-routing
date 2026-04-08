@@ -12,6 +12,7 @@
 - `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
+- `docs/streisand-profile-notes.md` — заметки по реальным `streisand://` профилям и что из них перенесено в проект
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `Makefile` — короткие алиасы для повседневных команд
 

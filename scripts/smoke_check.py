@@ -110,6 +110,33 @@ def validate_streisand_file(path: Path) -> None:
     if not isinstance(rules, list):
         raise ValueError(f"{path}: 'rules' must be a list")
 
+    if "routing-profile-" in path.name:
+        priority = payload.get("priority")
+        sources = payload.get("sources")
+        final_action = payload.get("final_action")
+        if not isinstance(priority, list) or not priority:
+            raise ValueError(f"{path}: profile is missing non-empty 'priority'")
+        if not isinstance(sources, list):
+            raise ValueError(f"{path}: profile is missing 'sources' list")
+        if final_action != "proxy":
+            raise ValueError(f"{path}: profile has unexpected final_action: {final_action}")
+        for rule in rules:
+            if not isinstance(rule, dict):
+                raise ValueError(f"{path}: invalid profile rule entry: {rule!r}")
+            name = str(rule.get("name", "")).strip()
+            entries = rule.get("entries")
+            action = str(rule.get("action", "")).strip()
+            bucket = str(rule.get("bucket", "")).strip()
+            if not name:
+                raise ValueError(f"{path}: profile rule is missing 'name'")
+            if not isinstance(entries, list) or not entries:
+                raise ValueError(f"{path}: profile rule '{name}' is missing non-empty 'entries'")
+            if action not in {"direct", "proxy"}:
+                raise ValueError(f"{path}: profile rule '{name}' has unsupported action: {action}")
+            if not bucket:
+                raise ValueError(f"{path}: profile rule '{name}' is missing bucket")
+        return
+
     seen: set[str] = set()
     for rule in rules:
         if not isinstance(rule, dict):

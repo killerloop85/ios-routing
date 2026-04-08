@@ -12,6 +12,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `streisand/*.json` - generated Streisand exports built from the same finalized routing lists
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
+- `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
 - `data/*.json` - manual core domains, overrides, headers, limits, and source definitions for the updater

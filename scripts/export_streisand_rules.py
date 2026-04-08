@@ -77,11 +77,26 @@ def build_bucket_payload(name: str, description: str, domains: list[str], action
 
 
 def build_profile_payloads() -> dict[Path, dict[str, Any]]:
+    local_entries = [
+        "ipcidr:127.0.0.0/8",
+        "ipcidr:10.0.0.0/8",
+        "ipcidr:172.16.0.0/12",
+        "ipcidr:192.168.0.0/16",
+        "ipcidr:100.64.0.0/10",
+        "geoip:private",
+        "domain:localhost",
+        "domain:local",
+        "domain:captive.apple.com",
+        "geosite:private",
+        "geosite:apple",
+        "geosite:icloud",
+    ]
     return {
         STREISAND_DIR / "routing-profile-split.json": {
             "name": "RU Split Routing",
             "description": "Direct RU and core domestic traffic, proxy blocked core and foreign services.",
             "priority": [
+                "local",
                 "ru-blocked-core",
                 "ru-direct",
                 "foreign-services",
@@ -93,6 +108,47 @@ def build_profile_payloads() -> dict[Path, dict[str, Any]]:
                 "foreign-services",
             ],
             "final_action": "proxy",
+            "rules": [
+                {
+                    "name": "Local and private",
+                    "entries": local_entries,
+                    "action": "direct",
+                    "bucket": "local",
+                },
+                {
+                    "name": "RU direct domains and GeoIP",
+                    "entries": [
+                        "source:ru-direct",
+                        "geoip:ru",
+                    ],
+                    "action": "direct",
+                    "bucket": "ru-direct",
+                },
+                {
+                    "name": "RU blocked core",
+                    "entries": [
+                        "source:ru-blocked-core",
+                    ],
+                    "action": "proxy",
+                    "bucket": "ru-blocked-core",
+                },
+                {
+                    "name": "Foreign services",
+                    "entries": [
+                        "source:foreign-services",
+                    ],
+                    "action": "proxy",
+                    "bucket": "foreign-services",
+                },
+                {
+                    "name": "Final fallback",
+                    "entries": [
+                        "final",
+                    ],
+                    "action": "proxy",
+                    "bucket": "final",
+                },
+            ],
         },
         STREISAND_DIR / "routing-profile-full.json": {
             "name": "Full VPN",
@@ -103,6 +159,22 @@ def build_profile_payloads() -> dict[Path, dict[str, Any]]:
             ],
             "sources": [],
             "final_action": "proxy",
+            "rules": [
+                {
+                    "name": "Local and private",
+                    "entries": local_entries,
+                    "action": "direct",
+                    "bucket": "local",
+                },
+                {
+                    "name": "Final fallback",
+                    "entries": [
+                        "final",
+                    ],
+                    "action": "proxy",
+                    "bucket": "final",
+                },
+            ],
         },
     }
 

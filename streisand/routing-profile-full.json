@@ -6,5 +6,34 @@
     "final"
   ],
   "sources": [],
-  "final_action": "proxy"
+  "final_action": "proxy",
+  "rules": [
+    {
+      "name": "Local and private",
+      "entries": [
+        "ipcidr:127.0.0.0/8",
+        "ipcidr:10.0.0.0/8",
+        "ipcidr:172.16.0.0/12",
+        "ipcidr:192.168.0.0/16",
+        "ipcidr:100.64.0.0/10",
+        "geoip:private",
+        "domain:localhost",
+        "domain:local",
+        "domain:captive.apple.com",
+        "geosite:private",
+        "geosite:apple",
+        "geosite:icloud"
+      ],
+      "action": "direct",
+      "bucket": "local"
+    },
+    {
+      "name": "Final fallback",
+      "entries": [
+        "final"
+      ],
+      "action": "proxy",
+      "bucket": "final"
+    }
+  ]
 }
