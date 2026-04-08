@@ -7,7 +7,9 @@
 - `shadowrocket/` — готовые `.conf` и итоговые `.list` для Shadowrocket
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
+- `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
+- `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `Makefile` — короткие алиасы для повседневных команд
 
 ## Базовый сценарий обновления списков
@@ -64,6 +66,12 @@ python3 scripts/update_routing_lists.py --write
 python3 scripts/smoke_check.py
 ```
 
+8. Прогнать фиксированный набор регрессионных доменов.
+
+```bash
+python3 scripts/check_regression_domains.py
+```
+
 То же самое короткими алиасами:
 
 ```bash
@@ -71,6 +79,7 @@ make offline
 make update
 make write
 make smoke
+make regression
 ```
 
 ## Как менять списки вручную
@@ -117,6 +126,7 @@ python3 scripts/update_routing_lists.py --offline --write
 ```bash
 python3 -m json.tool data/routing_settings.json >/dev/null
 python3 scripts/update_routing_lists.py --offline
+python3 scripts/check_regression_domains.py
 python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/smoke_check.py
 ```
@@ -180,6 +190,12 @@ Smoke-check:
 make smoke
 ```
 
+Regression-check:
+
+```bash
+make regression
+```
+
 Просмотр diff с сетью:
 
 ```bash
@@ -216,6 +232,12 @@ Smoke-check:
 python3 scripts/smoke_check.py
 ```
 
+Regression-check:
+
+```bash
+python3 scripts/check_regression_domains.py
+```
+
 Просмотр diff с сетью:
 
 ```bash
@@ -246,3 +268,4 @@ python3 scripts/update_routing_lists.py --report-md reports/routing-update.md
 - `shadowrocket/*.list` лучше не редактировать напрямую, если хочешь сохранить совместимость с генератором
 - После любых ручных правок в `data/` лучше прогонять `--offline --write`
 - Для community-источников шум лучше убирать через `exclude_domains`, а не точечными хаками в коде
+- Регрессионный набор лежит в `data/regression_domains.json`, а правила сопровождения коротко зафиксированы в `docs/routing-dev-heuristics.md`

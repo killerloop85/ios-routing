@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
+REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
     SHADOWROCKET_DIR / "ru-direct.list",
@@ -90,12 +91,25 @@ def run_offline_updater() -> None:
         raise RuntimeError(f"offline updater is not stable:\n{result.stdout}")
 
 
+def run_regression_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(REGRESSION_CHECK)],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "regression check failed")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
     for path in LIST_FILES:
         validate_list_file(path)
     run_offline_updater()
+    run_regression_check()
     print("Smoke check passed.")
     return 0
 

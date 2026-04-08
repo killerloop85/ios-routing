@@ -1,0 +1,478 @@
+{
+  "header": [
+    "Regression domains for validating Shadowrocket routing buckets.",
+    "These cases are checked against the generated .list files plus FINAL,PROXY fallback."
+  ],
+  "cases": [
+    {
+      "domain": "gosuslugi.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "gosuslugi.ru",
+      "notes": "Core state services should stay direct."
+    },
+    {
+      "domain": "nalog.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "nalog.ru"
+    },
+    {
+      "domain": "mos.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "mos.ru"
+    },
+    {
+      "domain": "sberbank.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "sberbank.ru"
+    },
+    {
+      "domain": "tinkoff.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "tinkoff.ru"
+    },
+    {
+      "domain": "vtb.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "vtb.ru"
+    },
+    {
+      "domain": "mironline.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "mironline.ru"
+    },
+    {
+      "domain": "sbp.nspk.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "sbp.nspk.ru"
+    },
+    {
+      "domain": "yandex.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "yandex.ru"
+    },
+    {
+      "domain": "ya.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "ya.ru"
+    },
+    {
+      "domain": "mail.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "mail.ru"
+    },
+    {
+      "domain": "vk.com",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "vk.com"
+    },
+    {
+      "domain": "ok.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "ok.ru"
+    },
+    {
+      "domain": "ozon.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "ozon.ru"
+    },
+    {
+      "domain": "wildberries.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "wildberries.ru"
+    },
+    {
+      "domain": "avito.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "avito.ru"
+    },
+    {
+      "domain": "rzd.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "rzd.ru"
+    },
+    {
+      "domain": "mts.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "mts.ru"
+    },
+    {
+      "domain": "tele2.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "tele2.ru"
+    },
+    {
+      "domain": "beeline.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "beeline.ru"
+    },
+    {
+      "domain": "megafon.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "megafon.ru"
+    },
+    {
+      "domain": "rostelecom.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "rostelecom.ru"
+    },
+    {
+      "domain": "confael.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "confael.ru"
+    },
+    {
+      "domain": "bitrix24.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "bitrix24.ru"
+    },
+    {
+      "domain": "bitrix24.com",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "bitrix24.com",
+      "notes": "Explicit business override for Bitrix24."
+    },
+    {
+      "domain": "bitrix.info",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "bitrix.info",
+      "notes": "Explicit business override for Bitrix24."
+    },
+    {
+      "domain": "instagram.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "instagram.com"
+    },
+    {
+      "domain": "facebook.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "facebook.com"
+    },
+    {
+      "domain": "threads.net",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "threads.net"
+    },
+    {
+      "domain": "fbcdn.net",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "fbcdn.net"
+    },
+    {
+      "domain": "twitter.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "twitter.com"
+    },
+    {
+      "domain": "x.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "x.com"
+    },
+    {
+      "domain": "t.co",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "t.co"
+    },
+    {
+      "domain": "discord.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "discord.com"
+    },
+    {
+      "domain": "discord.gg",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "discord.gg"
+    },
+    {
+      "domain": "discordapp.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "discordapp.com"
+    },
+    {
+      "domain": "linkedin.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "linkedin.com"
+    },
+    {
+      "domain": "licdn.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "licdn.com"
+    },
+    {
+      "domain": "youtube.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "youtube.com"
+    },
+    {
+      "domain": "youtu.be",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "youtu.be"
+    },
+    {
+      "domain": "googlevideo.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "googlevideo.com"
+    },
+    {
+      "domain": "ytimg.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "ytimg.com"
+    },
+    {
+      "domain": "meduza.io",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "meduza.io"
+    },
+    {
+      "domain": "svoboda.org",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "svoboda.org"
+    },
+    {
+      "domain": "currenttime.tv",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "currenttime.tv"
+    },
+    {
+      "domain": "dozhd.ru",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "dozhd.ru"
+    },
+    {
+      "domain": "tvrain.tv",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "tvrain.tv"
+    },
+    {
+      "domain": "ooni.org",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "ooni.org"
+    },
+    {
+      "domain": "torproject.org",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "torproject.org"
+    },
+    {
+      "domain": "openai.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "openai.com"
+    },
+    {
+      "domain": "chatgpt.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "chatgpt.com"
+    },
+    {
+      "domain": "anthropic.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "anthropic.com"
+    },
+    {
+      "domain": "claude.ai",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "claude.ai"
+    },
+    {
+      "domain": "perplexity.ai",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "perplexity.ai"
+    },
+    {
+      "domain": "notion.so",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "notion.so"
+    },
+    {
+      "domain": "figma.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "figma.com"
+    },
+    {
+      "domain": "linear.app",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "linear.app"
+    },
+    {
+      "domain": "slack.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "slack.com"
+    },
+    {
+      "domain": "github.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "github.com"
+    },
+    {
+      "domain": "githubusercontent.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "githubusercontent.com"
+    },
+    {
+      "domain": "cloudflare.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "cloudflare.com"
+    },
+    {
+      "domain": "vercel.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "vercel.com"
+    },
+    {
+      "domain": "google.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "google.com"
+    },
+    {
+      "domain": "googleapis.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "googleapis.com"
+    },
+    {
+      "domain": "gstatic.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "gstatic.com"
+    },
+    {
+      "domain": "proton.me",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "proton.me"
+    },
+    {
+      "domain": "protonmail.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "protonmail.com"
+    },
+    {
+      "domain": "tutanota.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "tutanota.com"
+    },
+    {
+      "domain": "netflix.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "netflix.com"
+    },
+    {
+      "domain": "spotify.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "spotify.com"
+    },
+    {
+      "domain": "yandex.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "FINAL",
+      "notes": "Must not leak into the RU whitelist."
+    },
+    {
+      "domain": "yandex.com.tr",
+      "expected_bucket": "PROXY",
+      "expected_rule": "FINAL",
+      "notes": "Must not leak into the RU whitelist."
+    },
+    {
+      "domain": "sub.gosuslugi.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "gosuslugi.ru",
+      "notes": "Parent suffix inheritance without explicit subdomain entries."
+    },
+    {
+      "domain": "online.sberbank.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "sberbank.ru",
+      "notes": "Parent suffix inheritance without explicit subdomain entries."
+    },
+    {
+      "domain": "vpn.confael.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "confael.ru",
+      "notes": "Parent suffix inheritance without explicit subdomain entries."
+    },
+    {
+      "domain": "fallback-check-example.ru",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "ru",
+      "notes": "Generic .ru fallback should stay direct."
+    },
+    {
+      "domain": "fallback-check-example.su",
+      "expected_bucket": "DIRECT",
+      "expected_rule": "ru-direct",
+      "expected_suffix": "su",
+      "notes": "Generic .su fallback should stay direct."
+    }
+  ]
+}
