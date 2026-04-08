@@ -6,9 +6,11 @@
 
 - `shadowrocket/` — готовые `.conf` и итоговые `.list` для Shadowrocket
 - `streisand/` — экспортированные JSON-правила и профили для Streisand
+- `streisand/*.streisand-uri.txt` — готовые import-ready `streisand://...` ссылки
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
+- `scripts/export_streisand_uri.py` — экспорт Streisand-профилей в import-ready URI
 - `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
@@ -82,6 +84,12 @@ python3 scripts/check_regression_domains.py
 python3 scripts/export_streisand_rules.py --offline
 ```
 
+10. Проверить, что import-ready Streisand URI синхронизированы с профилями.
+
+```bash
+python3 scripts/export_streisand_uri.py --offline
+```
+
 То же самое короткими алиасами:
 
 ```bash
@@ -89,6 +97,7 @@ make offline
 make update
 make write
 make streisand
+make streisand-uri
 make smoke
 make regression
 ```
@@ -138,6 +147,7 @@ python3 scripts/update_routing_lists.py --offline --write
 python3 -m json.tool data/routing_settings.json >/dev/null
 python3 scripts/update_routing_lists.py --offline
 python3 scripts/export_streisand_rules.py --offline
+python3 scripts/export_streisand_uri.py --offline
 python3 scripts/check_regression_domains.py
 python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/smoke_check.py
@@ -214,6 +224,12 @@ make regression
 make streisand
 ```
 
+Запись только Streisand URI:
+
+```bash
+make streisand-uri
+```
+
 Просмотр diff с сетью:
 
 ```bash
@@ -260,6 +276,12 @@ python3 scripts/check_regression_domains.py
 
 ```bash
 python3 scripts/export_streisand_rules.py --offline
+```
+
+Проверка Streisand URI-синхронизации:
+
+```bash
+python3 scripts/export_streisand_uri.py --offline
 ```
 
 Просмотр diff с сетью:

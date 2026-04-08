@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import json
+import plistlib
 import re
 import subprocess
 import sys
+import base64
 from pathlib import Path
 
 
@@ -16,6 +18,7 @@ SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
 STREISAND_EXPORTER = ROOT / "scripts" / "export_streisand_rules.py"
+STREISAND_URI_EXPORTER = ROOT / "scripts" / "export_streisand_uri.py"
 REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
@@ -29,6 +32,10 @@ STREISAND_FILES = (
     STREISAND_DIR / "foreign-services.streisand.json",
     STREISAND_DIR / "routing-profile-split.json",
     STREISAND_DIR / "routing-profile-full.json",
+)
+STREISAND_URI_FILES = (
+    STREISAND_DIR / "routing-profile-split.streisand-uri.txt",
+    STREISAND_DIR / "routing-profile-full.streisand-uri.txt",
 )
 
 LIST_LINE_RE = re.compile(
@@ -158,6 +165,43 @@ def validate_streisand_file(path: Path) -> None:
         seen.add(value)
 
 
+def validate_streisand_uri_file(path: Path) -> None:
+    raw = path.read_text(encoding="utf-8").strip()
+    if not raw.startswith("streisand://"):
+        raise ValueError(f"{path}: missing streisand:// prefix")
+    wrapper_bytes = base64.b64decode(raw.removeprefix("streisand://"))
+    wrapper = wrapper_bytes.decode("utf-8")
+    if not wrapper.startswith("import/route://"):
+        raise ValueError(f"{path}: missing import/route:// wrapper")
+    plist_payload = plistlib.loads(base64.b64decode(wrapper.split("route://", 1)[1]))
+    if not isinstance(plist_payload, dict):
+        raise ValueError(f"{path}: decoded payload is not a plist dict")
+    if not str(plist_payload.get("name", "")).strip():
+        raise ValueError(f"{path}: decoded payload is missing name")
+    if not str(plist_payload.get("uuid", "")).strip():
+        raise ValueError(f"{path}: decoded payload is missing uuid")
+    if str(plist_payload.get("domainStrategy", "")) != "AsIs":
+        raise ValueError(f"{path}: unexpected domainStrategy")
+    if str(plist_payload.get("domainMatcher", "")) != "hybrid":
+        raise ValueError(f"{path}: unexpected domainMatcher")
+    rules = plist_payload.get("rules")
+    if not isinstance(rules, list) or not rules:
+        raise ValueError(f"{path}: decoded payload is missing rules")
+    for rule in rules:
+        if not isinstance(rule, dict):
+            raise ValueError(f"{path}: invalid plist rule entry: {rule!r}")
+        if str(rule.get("outboundTag", "")).strip() not in {"direct", "proxy", "block"}:
+            raise ValueError(f"{path}: invalid outboundTag in decoded rule")
+        domain = rule.get("domain")
+        ip = rule.get("ip")
+        if domain is not None and not isinstance(domain, list):
+            raise ValueError(f"{path}: decoded rule domain must be a list")
+        if ip is not None and not isinstance(ip, list):
+            raise ValueError(f"{path}: decoded rule ip must be a list")
+        if not domain and not ip and str(rule.get("port", "")).strip() != "0-65535":
+            raise ValueError(f"{path}: decoded final rule is missing 0-65535 port")
+
+
 def run_offline_updater() -> None:
     result = subprocess.run(
         [sys.executable, str(UPDATER), "--offline"],
@@ -198,6 +242,20 @@ def run_streisand_export_check() -> None:
         raise RuntimeError(f"streisand export is not stable:\n{result.stdout}")
 
 
+def run_streisand_uri_export_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(STREISAND_URI_EXPORTER), "--offline"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "streisand URI export failed")
+    if result.stdout.strip() != "No changes.":
+        raise RuntimeError(f"streisand URI export is not stable:\n{result.stdout}")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
@@ -205,8 +263,11 @@ def main() -> int:
         validate_list_file(path)
     run_offline_updater()
     run_streisand_export_check()
+    run_streisand_uri_export_check()
     for path in STREISAND_FILES:
         validate_streisand_file(path)
+    for path in STREISAND_URI_FILES:
+        validate_streisand_uri_file(path)
     run_regression_check()
     print("Smoke check passed.")
     return 0

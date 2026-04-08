@@ -22,3 +22,6 @@ jobs:
 
       - name: Export Streisand rules (offline)
         run: python3 scripts/export_streisand_rules.py --offline
+
+      - name: Export Streisand import URIs (offline)
+        run: python3 scripts/export_streisand_uri.py --offline
