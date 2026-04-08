@@ -20,6 +20,7 @@
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
 - `docs/streisand-profile-notes.md` — заметки по реальным `streisand://` профилям и что из них перенесено в проект
+- `docs/streisand-field-test-matrix.md` — фиксированная матрица полевых проверок для Streisand
 - `docs/hiddify-routing-spec.md` — ТЗ на thin export-layer для Hiddify
 - `docs/hiddify-profile-notes.md` — заметки по Hiddify-слою и его границам
 - `docs/happ-routing-spec.md` — ТЗ на thin export-layer для Happ
@@ -158,6 +159,10 @@ make regression
 - `streisand/routing-profile-split-qr.streisand-uri.txt`
 
 После этого всё равно обязательно проверить routing вручную в самом Streisand. До фикса known issue использовать Streisand в реальной работе только через full-profile.
+
+Для ручной проверки в живом клиенте использовать checklist из:
+
+- `docs/streisand-field-test-matrix.md`
 
 ## Как менять списки вручную
 

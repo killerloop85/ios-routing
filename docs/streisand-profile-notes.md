@@ -10,6 +10,7 @@
 - Поэтому любой профиль Streisand нужно подтверждать ручным тестом на реальном клиенте.
 - Тяжёлый `routing-profile-split.json` сохраняется как reference JSON, но больше не публикуется как import-ready URI: практический импортный контур сейчас ограничен `routing-profile-full.*` и `routing-profile-split-qr.*`.
 - Default CLI/export path теперь должен генерировать только `routing-profile-full.*`; split-артефакты собираются только по явному experimental opt-in.
+- Для повторяемых проверок использовать фиксированный чек-лист из `docs/streisand-field-test-matrix.md`.
 
 ## Что внутри этих ссылок
 
@@ -99,6 +100,12 @@
 - `routing-profile-full.json` и `routing-profile-full.streisand-uri.txt` — основной рекомендуемый путь для реального клиента Streisand.
 - `routing-profile-split-qr.json` и `routing-profile-split-qr.streisand-uri.txt` — диагностический split-вариант для ручного теста, но не рабочий production-профиль.
 - `routing-profile-split.json` — reference-only JSON для сопровождения policy и диффов, но не для обычного import-flow.
+
+## Как разбирать расхождения
+
+- `mapping_bug` — когда export-layer, вероятно, собрал профиль не в той семантике, что ожидает routing core.
+- `client_limitation` — когда профиль выглядит логично, но сам Streisand применяет правила по-другому.
+- `transport_issue` — когда профиль не импортируется, клиент падает или импорт не сохраняется корректно.
 
 ## Что пока сознательно не делаем
 

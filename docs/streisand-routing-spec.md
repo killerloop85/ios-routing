@@ -33,6 +33,15 @@
 - активный import-flow для реального клиента лучше ограничивать `routing-profile-full.*` и `routing-profile-split-qr.*`, пока не сняты вопросы по стабильности импорта и самого routing в Streisand.
 - default CLI/export path должен генерировать только stable full-profile; split-артефакты допускаются лишь по явному `--experimental-split`.
 
+## 2.1 Статусы артефактов
+
+- `ru-direct.streisand.json` — normalized bucket layer, not user-facing stability promise.
+- `ru-blocked-core.streisand.json` — normalized bucket layer, not user-facing stability promise.
+- `foreign-services.streisand.json` — normalized bucket layer, not user-facing stability promise.
+- `routing-profile-full.json` / `.streisand-uri.txt` — `stable`, `production`.
+- `routing-profile-split-qr.json` / `.streisand-uri.txt` — `experimental`, `diagnostic`.
+- `routing-profile-split.json` — `experimental`, `reference-only`.
+
 Streisand-формат фиксируем так:
 
 ```jsonc
@@ -64,6 +73,36 @@ Streisand-формат фиксируем так:
 - `action`: `"direct"` или `"proxy"`.
 - `bucket`: логический слой (`"ru-direct"`, `"ru-blocked-core"`, `"foreign-services"`).
 - Дополнительные поля (`note`, `source`) допускаются, но не обязательны.
+
+## 2.2 Формальный контракт правил
+
+На уровне bucket-файлов допускаются только:
+
+- `type: "domain_suffix"`
+- `action: "direct"` или `action: "proxy"`
+- `bucket` из множества `ru-direct`, `ru-blocked-core`, `foreign-services`
+
+На уровне profile `rules[].entries` допускаются:
+
+- `ipcidr:<cidr>`
+- `geoip:<code>`
+- `domain:<value>`
+- `geosite:<value>`
+- `source:<bucket>`
+- `final`
+
+На уровне экспортируемого `streisand://` / `bplist` route rule допускаются:
+
+- `domain`
+- `ip`
+- `outboundTag`
+- `port`
+
+Fallback-контракт:
+
+- `local/private` direct-правила должны идти раньше `final`
+- `final` всегда должен идти последним
+- для `final` в plist-слое используется пустой `domain`/`ip` и `port: "0-65535"`
 
 ## 3. Источники и связь с существующим слоем
 
@@ -269,6 +308,19 @@ Production contract:
 - `routing-profile-full.*` — stable / production.
 - `routing-profile-split-qr.*` — experimental / diagnostic.
 - `routing-profile-split.json` — experimental / reference-only.
+
+## 6. Полевые тесты
+
+Полевой контракт для Streisand задаётся отдельным документом:
+
+- `docs/streisand-field-test-matrix.md`
+
+Он фиксирует:
+
+- домены и IP для ручной проверки
+- ожидаемый outbound для `full` и `split`
+- формат заметки для расхождений
+- категории инцидентов: `mapping_bug`, `client_limitation`, `transport_issue`
 
 Принцип такой:
 

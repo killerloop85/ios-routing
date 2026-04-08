@@ -7,6 +7,7 @@
 - Validate Streisand routing behavior on real devices before treating it as production-ready; until then, use only full-profile in practice.
 - Validate Hiddify split/full profiles on real devices and document import caveats if any appear.
 - Define the exit criteria for Streisand experimental status: field-test matrix across profile type, client version, and a fixed direct/proxy domain set must pass without routing mismatches.
+- Keep `docs/streisand-field-test-matrix.md` current as the operational checklist for all future Streisand validation.
 
 ## Routing Extensions
 
@@ -26,6 +27,7 @@
 - Verify whether the mismatch comes from our export model: rule ordering, `domainMatcher`, `domainStrategy`, final fallback semantics, and `source:*` expansion vs compact `geosite/domain` rules.
 - Verify whether the mismatch comes from the Streisand client itself: import parser behavior, precedence between `domain`, `geoip`, and final rules, and version-specific routing differences.
 - Keep a small field-test matrix for Streisand split-routing: at minimum `ip.ru`, one bank/government domain, one Meta domain, YouTube, and OpenAI across multiple client versions.
+- For every new mismatch, classify it as `mapping_bug`, `client_limitation`, or `transport_issue` before changing exporter logic.
 
 ## Operational
 
