@@ -10,6 +10,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `shadowrocket/ru-blocked-core.list` - domains that should always go through VPN
 - `shadowrocket/ru-direct.list` - Russian domains that should stay direct
 - `shadowrocket/foreign-services.list` - foreign services that are more stable through VPN
+- `docs/routing-update-spec.md` - technical spec for automated list updates
 
 ## Usage
 
@@ -41,3 +42,4 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
 - `GEOIP,RU,DIRECT` keeps Russian IP traffic direct as a fallback.
+- Automated refresh logic for the three `.list` files is specified in `docs/routing-update-spec.md`.
