@@ -55,6 +55,13 @@ DOMAIN-SUFFIX,yota.ru
 DOMAIN-SUFFIX,domru.ru
 DOMAIN-SUFFIX,ertelecom.ru
 
+# Бизнес / CRM / Confael
+DOMAIN-SUFFIX,vpn.confael.ru
+DOMAIN-SUFFIX,confael.ru
+DOMAIN-SUFFIX,bitrix24.ru
+DOMAIN-SUFFIX,bitrix24.com
+DOMAIN-SUFFIX,bitrix.info
+
 # Общий fallback для .ru / .su
 DOMAIN-SUFFIX,ru
 DOMAIN-SUFFIX,su

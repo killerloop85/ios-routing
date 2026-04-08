@@ -57,6 +57,13 @@
       "yota.ru",
       "domru.ru",
       "ertelecom.ru"
+    ],
+    "Бизнес / CRM / Confael": [
+      "vpn.confael.ru",
+      "confael.ru",
+      "bitrix24.ru",
+      "bitrix24.com",
+      "bitrix.info"
     ]
   },
   "tail_comment": "Общий fallback для .ru / .su",
