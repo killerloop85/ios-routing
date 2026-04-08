@@ -8,6 +8,7 @@
 - JSON, URI и QR-артефакты проходят локальную валидацию и smoke-check, но это ещё не доказывает корректную работу маршрутизации внутри клиента Streisand.
 - Есть явное подозрение, что импорт и/или сам routing в Streisand может вести себя нестабильно.
 - Поэтому любой профиль Streisand нужно подтверждать ручным тестом на реальном клиенте.
+- Тяжёлый `routing-profile-split.json` сохраняется как reference JSON, но больше не публикуется как import-ready URI: практический импортный контур сейчас ограничен `routing-profile-full.*` и `routing-profile-split-qr.*`.
 
 ## Что внутри этих ссылок
 
@@ -92,9 +93,15 @@
 
 То есть это policy-compatible профиль по смыслу, но оптимизированный под размер transport-артефакта и стабильность клиента, а не под полное 1:1 раскрытие всех routing buckets.
 
+## Что сейчас считать безопасным набором
+
+- `routing-profile-full.json` и `routing-profile-full.streisand-uri.txt` — основной рекомендуемый путь для реального клиента Streisand.
+- `routing-profile-split-qr.json` и `routing-profile-split-qr.streisand-uri.txt` — компактный split-вариант для ручного теста, когда нужен именно split-routing.
+- `routing-profile-split.json` — reference-only JSON для сопровождения policy и диффов, но не для обычного import-flow.
+
 ## Что пока сознательно не делаем
 
-- не экспортируем `streisand://` import-URI как основной артефакт;
+- не экспортируем тяжёлый `routing-profile-split.json` как `streisand://` import-URI;
 - не делаем эти четыре пользовательских профиля source of truth;
 - не переносим в генератор случайные ручные домены или шумовые элементы из импортов;
 - не строим отдельный IP-heavy профиль под Google/Telegram, пока это не закреплено в общей политике репозитория.

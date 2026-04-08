@@ -18,7 +18,6 @@ ROOT = Path(__file__).resolve().parent.parent
 STREISAND_DIR = ROOT / "streisand"
 
 PROFILE_FILES = (
-    STREISAND_DIR / "routing-profile-split.json",
     STREISAND_DIR / "routing-profile-split-qr.json",
     STREISAND_DIR / "routing-profile-full.json",
 )

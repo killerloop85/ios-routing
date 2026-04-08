@@ -10,7 +10,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `shadowrocket/ru-direct.list` - Russian domains that should stay direct
 - `shadowrocket/foreign-services.list` - foreign services that are more stable through VPN
 - `streisand/*.json` - generated Streisand exports built from the same finalized routing lists
-- `streisand/*.streisand-uri.txt` - import-ready `streisand://...` links generated from the JSON profiles
+- `streisand/*.streisand-uri.txt` - safe import-ready `streisand://...` links generated from the supported Streisand profiles
 - `streisand/routing-profile-split-qr.*` - compact split-profile artifacts optimized for QR and fragile import flows
 - `hiddify/*.json` - generated Hiddify exports built from the same finalized routing lists
 - `happ/*.json` - generated Happ routing exports built from the same finalized routing lists
@@ -58,9 +58,9 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 ### Streisand
 
 1. Start with the full-tunnel profile first, not split.
-2. Import the generated Streisand JSON or the full-tunnel `streisand://` artifact.
+2. Import the generated full-tunnel `streisand://` artifact or the compact `routing-profile-split-qr` artifacts if you need split mode.
 3. Confirm that the client imports cleanly and actually routes traffic.
-4. Treat split-routing as experimental until the import and routing issues are fully verified.
+4. Treat `routing-profile-split.json` as reference-only JSON and split-routing in general as experimental until the import and routing issues are fully verified.
 
 ### Hiddify
 
@@ -81,6 +81,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
 - Streisand routing is currently experimental and must be tested manually before real use. There is an open suspicion that import and/or routing behavior may still be broken on the client side.
+- Only the Streisand `full` and compact `split-qr` import artifacts are kept in the active export path; the heavy split profile remains reference-only.
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.
@@ -95,8 +96,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Show available shortcuts: `make help`
 - Run repository smoke checks: `make smoke`
 - Run the fixed regression domain suite: `make regression`
-- Write Streisand JSON and URI exports: `make streisand`
-- Write only Streisand import URIs: `make streisand-uri`
+- Write Streisand JSON and safe URI exports: `make streisand`
+- Write only safe Streisand import URIs: `make streisand-uri`
 - Write compact Streisand split QR artifacts: `make streisand-qr`
 - Write Hiddify JSON exports: `make hiddify`
 - Check Hiddify export sync without writing: `make hiddify-check`

@@ -39,7 +39,6 @@ STREISAND_FILES = (
     STREISAND_DIR / "routing-profile-full.json",
 )
 STREISAND_URI_FILES = (
-    STREISAND_DIR / "routing-profile-split.streisand-uri.txt",
     STREISAND_DIR / "routing-profile-split-qr.streisand-uri.txt",
     STREISAND_DIR / "routing-profile-full.streisand-uri.txt",
 )

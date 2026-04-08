@@ -6,7 +6,7 @@
 
 - `shadowrocket/` — готовые `.conf` и итоговые `.list` для Shadowrocket
 - `streisand/` — экспортированные JSON-правила и профили для Streisand
-- `streisand/*.streisand-uri.txt` — готовые import-ready `streisand://...` ссылки
+- `streisand/*.streisand-uri.txt` — готовые import-ready `streisand://...` ссылки только для safe-профилей
 - `streisand/routing-profile-split-qr.*` — компактный split-профиль под QR и нестабильный импорт
 - `hiddify/` — экспортированные JSON-правила и профили для Hiddify
 - `happ/` — экспортированные routing-профили для Happ
@@ -34,6 +34,8 @@
 - Есть подозрение, что routing в самом клиенте Streisand может работать некорректно даже при валидных JSON/URI-артефактах.
 - Любой Streisand-профиль перед практическим использованием нужно проверять вручную на реальном клиенте.
 - До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
+- Тяжёлый `routing-profile-split.json` считать reference-only и не использовать как обычный import-flow.
+- Для практического импорта держать только `routing-profile-full.*` и `routing-profile-split-qr.*`.
 - Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
 - Happ-слой считать thin export-layer: он нужен как нормализованный routing JSON для Happ UI и не заменяет общий source of truth.
 - `happ/routing-profile-split.json` считать parity-safe профилем.
@@ -105,7 +107,7 @@ python3 scripts/check_regression_domains.py
 python3 scripts/export_streisand_rules.py --offline
 ```
 
-10. Проверить, что import-ready Streisand URI синхронизированы с профилями.
+10. Проверить, что safe Streisand URI синхронизированы с профилями.
 
 ```bash
 python3 scripts/export_streisand_uri.py --offline
@@ -140,7 +142,7 @@ make smoke
 make regression
 ```
 
-Если обычный split-URI слишком тяжёлый для QR или клиент нестабилен при импорте, использовать:
+Если нужен split-режим в Streisand, использовать только компактный safe-вариант:
 
 - `streisand/routing-profile-split-qr.json`
 - `streisand/routing-profile-split-qr.streisand-uri.txt`
