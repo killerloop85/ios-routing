@@ -19,6 +19,13 @@
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `Makefile` — короткие алиасы для повседневных команд
 
+## Важная пометка по Streisand
+
+- Streisand-слой пока считать experimental.
+- Есть подозрение, что routing в самом клиенте Streisand может работать некорректно даже при валидных JSON/URI-артефактах.
+- Любой Streisand-профиль перед практическим использованием нужно проверять вручную на реальном клиенте.
+- До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
+
 ## Базовый сценарий обновления списков
 
 1. Перейти в рабочую папку проекта.
@@ -108,6 +115,8 @@ make regression
 
 - `streisand/routing-profile-split-qr.json`
 - `streisand/routing-profile-split-qr.streisand-uri.txt`
+
+После этого всё равно обязательно проверить routing вручную в самом Streisand.
 
 ## Как менять списки вручную
 

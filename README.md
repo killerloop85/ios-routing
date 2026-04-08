@@ -42,6 +42,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
+- Streisand routing is currently experimental and must be tested manually before real use. There is an open suspicion that import and/or routing behavior may still be broken on the client side.
 - Personal configs with embedded credentials are intentionally not stored in the shared repository.
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
@@ -56,6 +57,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Write Streisand JSON and URI exports: `make streisand`
 - Write only Streisand import URIs: `make streisand-uri`
 - Write compact Streisand split QR artifacts: `make streisand-qr`
+- Treat Streisand exports as test artifacts until real client validation confirms that routing works as expected
 - Preview list regeneration without changing files: `make offline`
 - Fetch external sources and preview a diff: `make update`
 - Write updated lists to disk: `make write`
