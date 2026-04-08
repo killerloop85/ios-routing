@@ -274,7 +274,7 @@ def compact_domains(domains: Iterable[str], always_keep: Set[str] | None = None)
         if domain in always_keep:
             selected.append(domain)
             continue
-        if any(domain == keep or domain.endswith("." + keep) for keep in selected if keep not in always_keep):
+        if any(domain == keep or domain.endswith("." + keep) for keep in selected):
             continue
         selected.append(domain)
     return sorted(set(selected), key=lambda item: (item.count("."), item))

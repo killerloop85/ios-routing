@@ -56,10 +56,10 @@
     },
     {
       "name": "ooni-zapret-list",
-      "url": "https://raw.githubusercontent.com/1andrevich/ooni-zapret-list/master/resolvers-hosts.txt",
+      "url": "https://github.com/1andrevich/ooni-zapret-list/releases/latest/download/domains.lst",
       "bucket": "blocked",
       "priority": 85,
-      "notes": "Blocked-domain signal derived from OONI-driven measurements.",
+      "notes": "Blocked-domain signal derived from OONI-driven measurements, consumed from the release domains asset.",
       "exclude_domains": [],
       "optional": true
     },
