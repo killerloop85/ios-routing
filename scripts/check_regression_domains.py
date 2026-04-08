@@ -15,6 +15,7 @@ DATA_PATH = ROOT / "data" / "regression_domains.json"
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
 HIDDIFY_DIR = ROOT / "hiddify"
+HAPP_DIR = ROOT / "happ"
 
 DIRECT_PATH = SHADOWROCKET_DIR / "ru-direct.list"
 BLOCKED_PATH = SHADOWROCKET_DIR / "ru-blocked-core.list"
@@ -25,6 +26,7 @@ STREISAND_FOREIGN_PATH = STREISAND_DIR / "foreign-services.streisand.json"
 HIDDIFY_DIRECT_PATH = HIDDIFY_DIR / "ru-direct.hiddify.json"
 HIDDIFY_BLOCKED_PATH = HIDDIFY_DIR / "ru-blocked-core.hiddify.json"
 HIDDIFY_FOREIGN_PATH = HIDDIFY_DIR / "foreign-services.hiddify.json"
+HAPP_SPLIT_PATH = HAPP_DIR / "routing-profile-split.json"
 
 
 @dataclass(frozen=True)
@@ -125,6 +127,50 @@ def load_hiddify_suffixes(path: Path, expected_outbound: str, expected_bucket: s
     return suffixes
 
 
+@dataclass(frozen=True)
+class HappProfile:
+    global_proxy: bool
+    direct_domains: set[str]
+    blocked_domains: set[str]
+    foreign_domains: set[str]
+
+
+def load_happ_profile(path: Path) -> HappProfile:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    direct = payload.get("direct", {})
+    proxy = payload.get("proxy", {})
+    bucket_domains = payload.get("bucket_domains", {})
+    if not isinstance(direct, dict) or not isinstance(proxy, dict) or not isinstance(bucket_domains, dict):
+        raise ValueError(f"{path}: invalid Happ profile structure")
+    direct_domains = {str(value).strip().lower() for value in direct.get("domains", [])}
+    blocked_domains = {str(value).strip().lower() for value in bucket_domains.get("ru-blocked-core", [])}
+    foreign_domains = {str(value).strip().lower() for value in bucket_domains.get("foreign-services", [])}
+    return HappProfile(
+        global_proxy=bool(payload.get("globalProxy")),
+        direct_domains=direct_domains,
+        blocked_domains=blocked_domains,
+        foreign_domains=foreign_domains,
+    )
+
+
+def resolve_happ_domain(domain: str, profile: HappProfile) -> RoutingOutcome:
+    blocked_match = match_longest_suffix(domain, profile.blocked_domains)
+    if blocked_match:
+        return RoutingOutcome(bucket="PROXY", rule="ru-blocked-core", matched_suffix=blocked_match)
+
+    direct_match = match_longest_suffix(domain, profile.direct_domains)
+    if direct_match:
+        return RoutingOutcome(bucket="DIRECT", rule="ru-direct", matched_suffix=direct_match)
+
+    foreign_match = match_longest_suffix(domain, profile.foreign_domains)
+    if foreign_match:
+        return RoutingOutcome(bucket="PROXY", rule="foreign-services", matched_suffix=foreign_match)
+
+    if profile.global_proxy:
+        return RoutingOutcome(bucket="PROXY", rule="FINAL", matched_suffix=None)
+    return RoutingOutcome(bucket="DIRECT", rule="FINAL", matched_suffix=None)
+
+
 def main() -> int:
     payload = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     cases = payload.get("cases", [])
@@ -164,6 +210,7 @@ def main() -> int:
         expected_outbound="proxy",
         expected_bucket="foreign-services",
     )
+    happ_split = load_happ_profile(HAPP_SPLIT_PATH)
 
     failures: list[str] = []
     for item in cases:
@@ -187,6 +234,7 @@ def main() -> int:
             direct=hiddify_direct,
             foreign=hiddify_foreign,
         )
+        actual_happ = resolve_happ_domain(domain, happ_split)
         mismatches: list[str] = []
         if actual.bucket != expected_bucket:
             mismatches.append(f"bucket={actual.bucket} expected={expected_bucket}")
@@ -207,6 +255,13 @@ def main() -> int:
             mismatches.append(
                 "hiddify="
                 f"{actual_hiddify.rule}/{actual_hiddify.bucket}/{actual_hiddify.matched_suffix or '-'} "
+                "shadowrocket="
+                f"{actual.rule}/{actual.bucket}/{actual.matched_suffix or '-'}"
+            )
+        if actual_happ != actual:
+            mismatches.append(
+                "happ="
+                f"{actual_happ.rule}/{actual_happ.bucket}/{actual_happ.matched_suffix or '-'} "
                 "shadowrocket="
                 f"{actual.rule}/{actual.bucket}/{actual.matched_suffix or '-'}"
             )

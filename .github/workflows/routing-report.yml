@@ -24,6 +24,7 @@ jobs:
           python3 scripts/export_streisand_rules.py --report-json reports/streisand-export.json > reports/streisand-export.diff
           python3 scripts/export_streisand_uri.py --report-json reports/streisand-uri-export.json > reports/streisand-uri-export.diff
           python3 scripts/export_hiddify_rules.py --report-json reports/hiddify-export.json > reports/hiddify-export.diff
+          python3 scripts/export_happ_routing.py --report-json reports/happ-export.json > reports/happ-export.diff
 
       - name: Upload reports artifact
         uses: actions/upload-artifact@v4

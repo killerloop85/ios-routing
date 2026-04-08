@@ -1,0 +1,36 @@
+{
+  "name": "Full VPN",
+  "description": "All non-local traffic through proxy, keeping LAN and service traffic direct.",
+  "platform": "happ",
+  "globalProxy": true,
+  "routeOrder": "direct-block-proxy",
+  "direct": {
+    "domains": [
+      "localhost",
+      "local",
+      "captive.apple.com"
+    ],
+    "ip_cidrs": [
+      "127.0.0.0/8",
+      "10.0.0.0/8",
+      "172.16.0.0/12",
+      "192.168.0.0/16",
+      "100.64.0.0/10"
+    ]
+  },
+  "proxy": {
+    "domains": [],
+    "ip_cidrs": []
+  },
+  "block": {
+    "domains": [],
+    "ip_cidrs": []
+  },
+  "bucket_domains": {
+    "local": [
+      "localhost",
+      "local",
+      "captive.apple.com"
+    ]
+  }
+}

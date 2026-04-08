@@ -9,17 +9,21 @@
 - `streisand/*.streisand-uri.txt` — готовые import-ready `streisand://...` ссылки
 - `streisand/routing-profile-split-qr.*` — компактный split-профиль под QR и нестабильный импорт
 - `hiddify/` — экспортированные JSON-правила и профили для Hiddify
+- `happ/` — экспортированные routing-профили для Happ
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
 - `scripts/export_streisand_uri.py` — экспорт Streisand-профилей в import-ready URI
 - `scripts/export_hiddify_rules.py` — экспорт итоговых `.list` в Hiddify JSON
+- `scripts/export_happ_routing.py` — экспорт итоговых `.list` в Happ JSON
 - `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
 - `docs/streisand-profile-notes.md` — заметки по реальным `streisand://` профилям и что из них перенесено в проект
 - `docs/hiddify-routing-spec.md` — ТЗ на thin export-layer для Hiddify
 - `docs/hiddify-profile-notes.md` — заметки по Hiddify-слою и его границам
+- `docs/happ-routing-spec.md` — ТЗ на thin export-layer для Happ
+- `docs/happ-profile-notes.md` — заметки по Happ-слою и его ограничениями
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `docs/ROADMAP.md` — короткий backlog по полевым проверкам и следующим улучшениям
 - `Makefile` — короткие алиасы для повседневных команд
@@ -31,6 +35,7 @@
 - Любой Streisand-профиль перед практическим использованием нужно проверять вручную на реальном клиенте.
 - До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
 - Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
+- Happ-слой считать thin export-layer: он нужен как нормализованный routing JSON для Happ UI и не заменяет общий source of truth.
 
 ## Базовый сценарий обновления списков
 
@@ -110,6 +115,12 @@ python3 scripts/export_streisand_uri.py --offline
 python3 scripts/export_hiddify_rules.py --offline
 ```
 
+12. Проверить, что Happ-экспорт синхронизирован с текущими `.list`.
+
+```bash
+python3 scripts/export_happ_routing.py --offline
+```
+
 То же самое короткими алиасами:
 
 ```bash
@@ -121,6 +132,8 @@ make streisand-uri
 make streisand-qr
 make hiddify
 make hiddify-check
+make happ
+make happ-check
 make smoke
 make regression
 ```
@@ -179,6 +192,7 @@ python3 scripts/update_routing_lists.py --offline
 python3 scripts/export_streisand_rules.py --offline
 python3 scripts/export_streisand_uri.py --offline
 python3 scripts/export_hiddify_rules.py --offline
+python3 scripts/export_happ_routing.py --offline
 python3 scripts/check_regression_domains.py
 python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/smoke_check.py

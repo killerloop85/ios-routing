@@ -17,10 +17,12 @@ DATA_DIR = ROOT / "data"
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
 HIDDIFY_DIR = ROOT / "hiddify"
+HAPP_DIR = ROOT / "happ"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
 STREISAND_EXPORTER = ROOT / "scripts" / "export_streisand_rules.py"
 STREISAND_URI_EXPORTER = ROOT / "scripts" / "export_streisand_uri.py"
 HIDDIFY_EXPORTER = ROOT / "scripts" / "export_hiddify_rules.py"
+HAPP_EXPORTER = ROOT / "scripts" / "export_happ_routing.py"
 REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
@@ -47,6 +49,10 @@ HIDDIFY_FILES = (
     HIDDIFY_DIR / "foreign-services.hiddify.json",
     HIDDIFY_DIR / "routing-profile-split.json",
     HIDDIFY_DIR / "routing-profile-full.json",
+)
+HAPP_FILES = (
+    HAPP_DIR / "routing-profile-split.json",
+    HAPP_DIR / "routing-profile-full.json",
 )
 
 LIST_LINE_RE = re.compile(
@@ -311,6 +317,73 @@ def validate_hiddify_sync() -> None:
             raise ValueError(f"{path}: rules count {len(rules)} does not match source count {expected_count}")
 
 
+def validate_happ_file(path: Path) -> None:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path}: top-level object must be a JSON object")
+    if not isinstance(payload.get("name"), str) or not payload["name"].strip():
+        raise ValueError(f"{path}: missing or empty 'name'")
+    if not isinstance(payload.get("description"), str) or not payload["description"].strip():
+        raise ValueError(f"{path}: missing or empty 'description'")
+    if payload.get("platform") != "happ":
+        raise ValueError(f"{path}: unexpected platform: {payload.get('platform')!r}")
+    if not isinstance(payload.get("globalProxy"), bool):
+        raise ValueError(f"{path}: missing boolean globalProxy")
+    if not isinstance(payload.get("routeOrder"), str) or not payload["routeOrder"].strip():
+        raise ValueError(f"{path}: missing routeOrder")
+    for block_name in ("direct", "proxy", "block"):
+        block = payload.get(block_name)
+        if not isinstance(block, dict):
+            raise ValueError(f"{path}: missing {block_name} block")
+        domains = block.get("domains")
+        ip_cidrs = block.get("ip_cidrs")
+        if not isinstance(domains, list) or not all(isinstance(item, str) and item.strip() for item in domains):
+            raise ValueError(f"{path}: {block_name}.domains must be a list of non-empty strings")
+        if not isinstance(ip_cidrs, list) or not all(isinstance(item, str) and item.strip() for item in ip_cidrs):
+            raise ValueError(f"{path}: {block_name}.ip_cidrs must be a list of non-empty strings")
+    if path.name == "routing-profile-split.json":
+        direct_domains = set(payload["direct"]["domains"])
+        proxy_domains = set(payload["proxy"]["domains"])
+        for required in {"localhost", "local", "captive.apple.com"}:
+            if required not in direct_domains:
+                raise ValueError(f"{path}: missing local direct domain {required}")
+        if not payload["globalProxy"]:
+            raise ValueError(f"{path}: split profile must keep proxy-default fallback for parity with routing core")
+        if not proxy_domains:
+            raise ValueError(f"{path}: split profile has empty proxy.domains")
+    if path.name == "routing-profile-full.json":
+        if not payload["globalProxy"]:
+            raise ValueError(f"{path}: full profile must keep globalProxy=true")
+        if payload["proxy"]["domains"]:
+            raise ValueError(f"{path}: full profile should not need explicit proxy domains")
+
+
+def validate_happ_sync() -> None:
+    split_payload = json.loads((HAPP_DIR / "routing-profile-split.json").read_text(encoding="utf-8"))
+    direct_domains = {str(item).strip().lower() for item in split_payload["direct"]["domains"]}
+    proxy_domains = {str(item).strip().lower() for item in split_payload["proxy"]["domains"]}
+    source_direct = {
+        line.split(",", 1)[1].strip().lower()
+        for line in (SHADOWROCKET_DIR / "ru-direct.list").read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
+    source_proxy = {
+        line.split(",", 1)[1].strip().lower()
+        for source_path in (
+            SHADOWROCKET_DIR / "ru-blocked-core.list",
+            SHADOWROCKET_DIR / "foreign-services.list",
+        )
+        for line in source_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
+    if not source_direct.issubset(direct_domains):
+        missing = sorted(source_direct - direct_domains)[:10]
+        raise ValueError(f"happ/routing-profile-split.json: missing direct domains from source lists: {missing}")
+    if not source_proxy.issubset(proxy_domains):
+        missing = sorted(source_proxy - proxy_domains)[:10]
+        raise ValueError(f"happ/routing-profile-split.json: missing proxy domains from source lists: {missing}")
+
+
 def run_offline_updater() -> None:
     result = subprocess.run(
         [sys.executable, str(UPDATER), "--offline"],
@@ -379,6 +452,20 @@ def run_hiddify_export_check() -> None:
         raise RuntimeError(f"hiddify export is not stable:\n{result.stdout}")
 
 
+def run_happ_export_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(HAPP_EXPORTER), "--offline"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "happ export failed")
+    if result.stdout.strip() != "No changes.":
+        raise RuntimeError(f"happ export is not stable:\n{result.stdout}")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
@@ -388,6 +475,7 @@ def main() -> int:
     run_streisand_export_check()
     run_streisand_uri_export_check()
     run_hiddify_export_check()
+    run_happ_export_check()
     for path in STREISAND_FILES:
         validate_streisand_file(path)
     for path in STREISAND_URI_FILES:
@@ -395,6 +483,9 @@ def main() -> int:
     for path in HIDDIFY_FILES:
         validate_hiddify_file(path)
     validate_hiddify_sync()
+    for path in HAPP_FILES:
+        validate_happ_file(path)
+    validate_happ_sync()
     run_regression_check()
     print("Smoke check passed.")
     return 0
