@@ -5,6 +5,7 @@ These files are a thin export layer over the shared routing policy in this repos
 Available profiles:
 
 - `routing-profile-split.json`
+- `routing-profile-split-direct-default.json`
 - `routing-profile-full.json`
 
 How to use with Happ:
@@ -21,3 +22,5 @@ Notes:
 - The JSON files are not source of truth.
 - The source of truth remains the shared routing policy and generated Shadowrocket lists.
 - Split mode keeps a proxy-default fallback to stay aligned with the repository core routing semantics.
+- `routing-profile-split.json` is the parity-safe profile and matches the repository routing core most closely.
+- `routing-profile-split-direct-default.json` is the Happ-style variant with `globalProxy=false`, closer to manual `routing.happ.su` usage but intentionally not used as the parity backend.

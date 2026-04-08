@@ -113,6 +113,38 @@ def build_split_profile() -> dict[str, Any]:
     }
 
 
+def build_split_direct_default_profile() -> dict[str, Any]:
+    direct_domains = read_domain_suffix_list(DIRECT_PATH)
+    blocked_domains = read_domain_suffix_list(BLOCKED_PATH)
+    foreign_domains = read_domain_suffix_list(FOREIGN_PATH)
+
+    return {
+        "name": "RU Split Routing (Direct Default)",
+        "description": "Direct local and Russian traffic, proxy blocked core and foreign services, direct default fallback for Happ-style routing.",
+        "platform": "happ",
+        "globalProxy": False,
+        "routeOrder": "direct-block-proxy",
+        "direct": {
+            "domains": unique_preserve_order(LOCAL_DOMAINS + direct_domains),
+            "ip_cidrs": list(LOCAL_IP_CIDRS),
+        },
+        "proxy": {
+            "domains": unique_preserve_order(blocked_domains + foreign_domains),
+            "ip_cidrs": [],
+        },
+        "block": {
+            "domains": [],
+            "ip_cidrs": [],
+        },
+        "bucket_domains": {
+            "ru-direct": list(direct_domains),
+            "ru-blocked-core": list(blocked_domains),
+            "foreign-services": list(foreign_domains),
+            "local": list(LOCAL_DOMAINS),
+        },
+    }
+
+
 def build_full_profile() -> dict[str, Any]:
     return {
         "name": "Full VPN",
@@ -141,6 +173,7 @@ def build_full_profile() -> dict[str, Any]:
 def build_outputs() -> dict[Path, str]:
     outputs = {
         HAPP_DIR / "routing-profile-split.json": render_json(build_split_profile()),
+        HAPP_DIR / "routing-profile-split-direct-default.json": render_json(build_split_direct_default_profile()),
         HAPP_DIR / "routing-profile-full.json": render_json(build_full_profile()),
     }
     return outputs

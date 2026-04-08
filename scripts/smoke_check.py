@@ -52,6 +52,7 @@ HIDDIFY_FILES = (
 )
 HAPP_FILES = (
     HAPP_DIR / "routing-profile-split.json",
+    HAPP_DIR / "routing-profile-split-direct-default.json",
     HAPP_DIR / "routing-profile-full.json",
 )
 
@@ -351,6 +352,16 @@ def validate_happ_file(path: Path) -> None:
             raise ValueError(f"{path}: split profile must keep proxy-default fallback for parity with routing core")
         if not proxy_domains:
             raise ValueError(f"{path}: split profile has empty proxy.domains")
+    if path.name == "routing-profile-split-direct-default.json":
+        direct_domains = set(payload["direct"]["domains"])
+        proxy_domains = set(payload["proxy"]["domains"])
+        for required in {"localhost", "local", "captive.apple.com"}:
+            if required not in direct_domains:
+                raise ValueError(f"{path}: missing local direct domain {required}")
+        if payload["globalProxy"]:
+            raise ValueError(f"{path}: direct-default split profile must keep globalProxy=false")
+        if not proxy_domains:
+            raise ValueError(f"{path}: direct-default split profile has empty proxy.domains")
     if path.name == "routing-profile-full.json":
         if not payload["globalProxy"]:
             raise ValueError(f"{path}: full profile must keep globalProxy=true")

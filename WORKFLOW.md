@@ -36,6 +36,8 @@
 - До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
 - Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
 - Happ-слой считать thin export-layer: он нужен как нормализованный routing JSON для Happ UI и не заменяет общий source of truth.
+- `happ/routing-profile-split.json` считать parity-safe профилем.
+- `happ/routing-profile-split-direct-default.json` считать Happ-специфичным direct-default профилем.
 
 ## Базовый сценарий обновления списков
 

@@ -71,7 +71,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 
 ### Happ
 
-1. Open `happ/routing-profile-split.json` or `happ/routing-profile-full.json`.
+1. Open `happ/routing-profile-split.json`, `happ/routing-profile-split-direct-default.json`, or `happ/routing-profile-full.json`.
 2. Copy the exported `direct` and `proxy` sections into the corresponding Happ UI fields.
 3. Keep using the Happ profile only as a routing layer, not as a separate source of truth.
 4. Verify a few direct and proxy domains after applying the rules.
@@ -83,6 +83,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Streisand routing is currently experimental and must be tested manually before real use. There is an open suspicion that import and/or routing behavior may still be broken on the client side.
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
+- `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.
 - Personal configs with embedded credentials are intentionally not stored in the shared repository.
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
