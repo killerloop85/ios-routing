@@ -6,7 +6,7 @@ SMOKE := $(PYTHON) scripts/smoke_check.py
 REGRESSION := $(PYTHON) scripts/check_regression_domains.py
 REPORTS_DIR := reports
 
-.PHONY: help smoke regression streisand streisand-uri offline update write report-json report-md ci
+.PHONY: help smoke regression streisand streisand-uri streisand-qr offline update write report-json report-md ci
 
 help:
 	@printf "Available targets:\n"
@@ -14,6 +14,7 @@ help:
 	@printf "  make regression   Run the fixed regression domain suite\n"
 	@printf "  make streisand    Write Streisand JSON and URI exports to disk\n"
 	@printf "  make streisand-uri Write Streisand import URI exports to disk\n"
+	@printf "  make streisand-qr Write compact Streisand split QR artifacts to disk\n"
 	@printf "  make offline      Run offline updater preview\n"
 	@printf "  make update       Fetch sources and print diff preview\n"
 	@printf "  make write        Write regenerated lists to disk\n"
@@ -32,6 +33,10 @@ streisand:
 	$(STREISAND_URI) --write
 
 streisand-uri:
+	$(STREISAND_URI) --write
+
+streisand-qr:
+	$(STREISAND) --write
 	$(STREISAND_URI) --write
 
 offline:

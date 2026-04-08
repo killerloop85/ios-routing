@@ -11,6 +11,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `shadowrocket/foreign-services.list` - foreign services that are more stable through VPN
 - `streisand/*.json` - generated Streisand exports built from the same finalized routing lists
 - `streisand/*.streisand-uri.txt` - import-ready `streisand://...` links generated from the JSON profiles
+- `streisand/routing-profile-split-qr.*` - compact split-profile artifacts optimized for QR and fragile import flows
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
@@ -54,6 +55,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Run the fixed regression domain suite: `make regression`
 - Write Streisand JSON and URI exports: `make streisand`
 - Write only Streisand import URIs: `make streisand-uri`
+- Write compact Streisand split QR artifacts: `make streisand-qr`
 - Preview list regeneration without changing files: `make offline`
 - Fetch external sources and preview a diff: `make update`
 - Write updated lists to disk: `make write`

@@ -31,10 +31,12 @@ STREISAND_FILES = (
     STREISAND_DIR / "ru-blocked-core.streisand.json",
     STREISAND_DIR / "foreign-services.streisand.json",
     STREISAND_DIR / "routing-profile-split.json",
+    STREISAND_DIR / "routing-profile-split-qr.json",
     STREISAND_DIR / "routing-profile-full.json",
 )
 STREISAND_URI_FILES = (
     STREISAND_DIR / "routing-profile-split.streisand-uri.txt",
+    STREISAND_DIR / "routing-profile-split-qr.streisand-uri.txt",
     STREISAND_DIR / "routing-profile-full.streisand-uri.txt",
 )
 
@@ -200,6 +202,8 @@ def validate_streisand_uri_file(path: Path) -> None:
             raise ValueError(f"{path}: decoded rule ip must be a list")
         if not domain and not ip and str(rule.get("port", "")).strip() != "0-65535":
             raise ValueError(f"{path}: decoded final rule is missing 0-65535 port")
+    if path.name == "routing-profile-split-qr.streisand-uri.txt" and path.stat().st_size >= 2953:
+        raise ValueError(f"{path}: compact QR URI is too large for a practical single QR")
 
 
 def run_offline_updater() -> None:

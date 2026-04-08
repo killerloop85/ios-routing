@@ -7,6 +7,7 @@
 - `shadowrocket/` — готовые `.conf` и итоговые `.list` для Shadowrocket
 - `streisand/` — экспортированные JSON-правила и профили для Streisand
 - `streisand/*.streisand-uri.txt` — готовые import-ready `streisand://...` ссылки
+- `streisand/routing-profile-split-qr.*` — компактный split-профиль под QR и нестабильный импорт
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
@@ -98,9 +99,15 @@ make update
 make write
 make streisand
 make streisand-uri
+make streisand-qr
 make smoke
 make regression
 ```
+
+Если обычный split-URI слишком тяжёлый для QR или клиент нестабилен при импорте, использовать:
+
+- `streisand/routing-profile-split-qr.json`
+- `streisand/routing-profile-split-qr.streisand-uri.txt`
 
 ## Как менять списки вручную
 
