@@ -19,6 +19,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `docs/hiddify-routing-spec.md` - technical spec for exporting the same routing policy to Hiddify JSON
 - `docs/hiddify-profile-notes.md` - notes on Hiddify as a thin export layer and what semantics are carried over
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
+- `docs/ROADMAP.md` - short backlog for real-device validation and next routing improvements
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
 - `data/*.json` - manual core domains, overrides, headers, limits, and source definitions for the updater
 - `data/regression_domains.json` - fixed regression domain set for route expectation checks
@@ -40,6 +41,29 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 2. Import `shadowrocket/Vaso-All-VPN-v2.conf`.
 3. Make `Vaso-All-VPN-v2.conf` the active config.
 4. Leave your preferred imported server selected as the active proxy.
+
+## User Setup
+
+### Shadowrocket
+
+1. Import your own node from x-ui, URI, or QR.
+2. Import either `shadowrocket/Universal-Routing.conf` or `shadowrocket/Vaso-All-VPN-v2.conf`.
+3. Make the chosen config active.
+4. Test a few domains from the regression set before daily use.
+
+### Streisand
+
+1. Start with the full-tunnel profile first, not split.
+2. Import the generated Streisand JSON or the full-tunnel `streisand://` artifact.
+3. Confirm that the client imports cleanly and actually routes traffic.
+4. Treat split-routing as experimental until the import and routing issues are fully verified.
+
+### Hiddify
+
+1. Import `hiddify/routing-profile-split.json` or `hiddify/routing-profile-full.json` according to your use case.
+2. Keep using your own proxy/node configuration separately from the routing profile.
+3. Verify a few direct and proxy domains after import.
+4. If client-specific quirks appear, treat the JSON as the normalized reference and document the client behavior separately.
 
 ## Notes
 

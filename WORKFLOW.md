@@ -21,6 +21,7 @@
 - `docs/hiddify-routing-spec.md` — ТЗ на thin export-layer для Hiddify
 - `docs/hiddify-profile-notes.md` — заметки по Hiddify-слою и его границам
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
+- `docs/ROADMAP.md` — короткий backlog по полевым проверкам и следующим улучшениям
 - `Makefile` — короткие алиасы для повседневных команд
 
 ## Важная пометка по Streisand
