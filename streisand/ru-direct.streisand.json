@@ -1,0 +1,302 @@
+{
+  "name": "RU Direct",
+  "description": "Russian and socially significant domains that should stay DIRECT.",
+  "rules": [
+    {
+      "type": "domain_suffix",
+      "value": "gosuslugi.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nalog.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nalog.gov.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "mos.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "mosreg.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "government.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "kremlin.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "pfr.gov.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "sberbank.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "sber.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "vtb.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "alfabank.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tbank.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tinkoff.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "open.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "raiffeisen.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "gazprombank.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "psbank.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "mironline.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "sbp.nspk.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "yandex.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "yandex.net",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ya.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "yastatic.net",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "mail.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "vk.com",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ok.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ozon.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "wildberries.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "avito.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cian.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "2gis.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "pochta.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cdek.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "rzd.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "mts.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tele2.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "beeline.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "megafon.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "rostelecom.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "yota.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "domru.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ertelecom.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "confael.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "bitrix24.ru",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "bitrix24.com",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "bitrix.info",
+      "action": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ru",
+      "action": "direct",
+      "bucket": "ru-direct",
+      "note": "fallback .ru"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "su",
+      "action": "direct",
+      "bucket": "ru-direct",
+      "note": "fallback .su"
+    }
+  ]
+}

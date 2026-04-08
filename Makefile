@@ -1,15 +1,17 @@
 PYTHON ?= python3
 UPDATER := $(PYTHON) scripts/update_routing_lists.py
+STREISAND := $(PYTHON) scripts/export_streisand_rules.py
 SMOKE := $(PYTHON) scripts/smoke_check.py
 REGRESSION := $(PYTHON) scripts/check_regression_domains.py
 REPORTS_DIR := reports
 
-.PHONY: help smoke regression offline update write report-json report-md ci
+.PHONY: help smoke regression streisand offline update write report-json report-md ci
 
 help:
 	@printf "Available targets:\n"
 	@printf "  make smoke        Run repository smoke checks\n"
 	@printf "  make regression   Run the fixed regression domain suite\n"
+	@printf "  make streisand    Write Streisand JSON exports to disk\n"
 	@printf "  make offline      Run offline updater preview\n"
 	@printf "  make update       Fetch sources and print diff preview\n"
 	@printf "  make write        Write regenerated lists to disk\n"
@@ -22,6 +24,9 @@ smoke:
 
 regression:
 	$(REGRESSION)
+
+streisand:
+	$(STREISAND) --write
 
 offline:
 	$(UPDATER) --offline

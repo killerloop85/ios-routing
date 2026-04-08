@@ -13,13 +13,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
+STREISAND_DIR = ROOT / "streisand"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
+STREISAND_EXPORTER = ROOT / "scripts" / "export_streisand_rules.py"
 REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
     SHADOWROCKET_DIR / "ru-direct.list",
     SHADOWROCKET_DIR / "ru-blocked-core.list",
     SHADOWROCKET_DIR / "foreign-services.list",
+)
+STREISAND_FILES = (
+    STREISAND_DIR / "ru-direct.streisand.json",
+    STREISAND_DIR / "ru-blocked-core.streisand.json",
+    STREISAND_DIR / "foreign-services.streisand.json",
+    STREISAND_DIR / "routing-profile-split.json",
+    STREISAND_DIR / "routing-profile-full.json",
 )
 
 LIST_LINE_RE = re.compile(
@@ -77,6 +86,51 @@ def validate_list_file(path: Path) -> None:
         seen.add(domain)
 
 
+def validate_streisand_file(path: Path) -> None:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path}: top-level object must be a JSON object")
+    if not isinstance(payload.get("name"), str) or not payload["name"].strip():
+        raise ValueError(f"{path}: missing or empty 'name'")
+    if not isinstance(payload.get("description"), str) or not payload["description"].strip():
+        raise ValueError(f"{path}: missing or empty 'description'")
+
+    rules = payload.get("rules")
+    if rules is None:
+        priority = payload.get("priority")
+        sources = payload.get("sources")
+        final_action = payload.get("final_action")
+        if not isinstance(priority, list) or not priority:
+            raise ValueError(f"{path}: profile is missing non-empty 'priority'")
+        if not isinstance(sources, list):
+            raise ValueError(f"{path}: profile is missing 'sources' list")
+        if final_action != "proxy":
+            raise ValueError(f"{path}: profile has unexpected final_action: {final_action}")
+        return
+    if not isinstance(rules, list):
+        raise ValueError(f"{path}: 'rules' must be a list")
+
+    seen: set[str] = set()
+    for rule in rules:
+        if not isinstance(rule, dict):
+            raise ValueError(f"{path}: invalid rule entry: {rule!r}")
+        rule_type = str(rule.get("type", "")).strip()
+        value = str(rule.get("value", "")).strip().lower()
+        action = str(rule.get("action", "")).strip()
+        bucket = str(rule.get("bucket", "")).strip()
+        if rule_type != "domain_suffix":
+            raise ValueError(f"{path}: unsupported rule type: {rule_type}")
+        if action not in {"direct", "proxy"}:
+            raise ValueError(f"{path}: unsupported action: {action}")
+        if not bucket:
+            raise ValueError(f"{path}: missing bucket for {value or '<empty>'}")
+        if not value:
+            raise ValueError(f"{path}: empty value in rule")
+        if value in seen:
+            raise ValueError(f"{path}: duplicate rule value: {value}")
+        seen.add(value)
+
+
 def run_offline_updater() -> None:
     result = subprocess.run(
         [sys.executable, str(UPDATER), "--offline"],
@@ -103,12 +157,29 @@ def run_regression_check() -> None:
         raise RuntimeError(result.stderr or result.stdout or "regression check failed")
 
 
+def run_streisand_export_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(STREISAND_EXPORTER), "--offline"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "streisand export failed")
+    if result.stdout.strip() != "No changes.":
+        raise RuntimeError(f"streisand export is not stable:\n{result.stdout}")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
     for path in LIST_FILES:
         validate_list_file(path)
     run_offline_updater()
+    run_streisand_export_check()
+    for path in STREISAND_FILES:
+        validate_streisand_file(path)
     run_regression_check()
     print("Smoke check passed.")
     return 0

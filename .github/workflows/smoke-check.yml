@@ -19,3 +19,6 @@ jobs:
 
       - name: Run smoke check
         run: python3 scripts/smoke_check.py
+
+      - name: Export Streisand rules (offline)
+        run: python3 scripts/export_streisand_rules.py --offline

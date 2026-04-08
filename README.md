@@ -9,6 +9,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `shadowrocket/ru-blocked-core.list` - domains that should always go through VPN
 - `shadowrocket/ru-direct.list` - Russian domains that should stay direct
 - `shadowrocket/foreign-services.list` - foreign services that are more stable through VPN
+- `streisand/*.json` - generated Streisand exports built from the same finalized routing lists
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
@@ -49,6 +50,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Show available shortcuts: `make help`
 - Run repository smoke checks: `make smoke`
 - Run the fixed regression domain suite: `make regression`
+- Write Streisand JSON exports: `make streisand`
 - Preview list regeneration without changing files: `make offline`
 - Fetch external sources and preview a diff: `make update`
 - Write updated lists to disk: `make write`
@@ -56,6 +58,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Write a Markdown report to a file: `make report-md`
 - Run repository smoke checks: `python3 scripts/smoke_check.py`
 - Run the fixed regression domain suite: `python3 scripts/check_regression_domains.py`
+- Write Streisand JSON exports: `python3 scripts/export_streisand_rules.py --write`
+- Check Streisand export sync: `python3 scripts/export_streisand_rules.py --offline`
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`
 - Fetch external sources and preview a diff: `python3 scripts/update_routing_lists.py`
 - Write updated lists to disk: `python3 scripts/update_routing_lists.py --write`

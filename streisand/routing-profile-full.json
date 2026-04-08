@@ -1,0 +1,10 @@
+{
+  "name": "Full VPN",
+  "description": "All non-local traffic through proxy, keeping LAN direct.",
+  "priority": [
+    "local",
+    "final"
+  ],
+  "sources": [],
+  "final_action": "proxy"
+}

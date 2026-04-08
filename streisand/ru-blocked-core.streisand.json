@@ -1,0 +1,156 @@
+{
+  "name": "RU Blocked Core",
+  "description": "Compact core of domains that almost always require PROXY in Russia.",
+  "rules": [
+    {
+      "type": "domain_suffix",
+      "value": "instagram.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cdninstagram.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "threads.net",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "facebook.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "fbcdn.net",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "messenger.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "twitter.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "x.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "t.co",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "discord.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "discord.gg",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "discordapp.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "linkedin.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "licdn.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "youtube.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "youtu.be",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "googlevideo.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ytimg.com",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "meduza.io",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "svoboda.org",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "currenttime.tv",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "dozhd.ru",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tvrain.tv",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ooni.org",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "torproject.org",
+      "action": "proxy",
+      "bucket": "ru-blocked-core"
+    }
+  ]
+}

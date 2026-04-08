@@ -21,6 +21,7 @@ jobs:
         run: |
           mkdir -p reports
           python3 scripts/update_routing_lists.py --report-json reports/routing-update.json --report-md reports/routing-update.md > reports/routing-update.diff
+          python3 scripts/export_streisand_rules.py --report-json reports/streisand-export.json > reports/streisand-export.diff
 
       - name: Upload reports artifact
         uses: actions/upload-artifact@v4
