@@ -21,6 +21,7 @@
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
 - `docs/streisand-profile-notes.md` — заметки по реальным `streisand://` профилям и что из них перенесено в проект
 - `docs/streisand-field-test-matrix.md` — фиксированная матрица полевых проверок для Streisand
+- `docs/streisand-10min-checklist.md` — короткий human-friendly сценарий ручной проверки Streisand
 - `docs/hiddify-routing-spec.md` — ТЗ на thin export-layer для Hiddify
 - `docs/hiddify-profile-notes.md` — заметки по Hiddify-слою и его границам
 - `docs/happ-routing-spec.md` — ТЗ на thin export-layer для Happ
@@ -163,6 +164,7 @@ make regression
 Для ручной проверки в живом клиенте использовать checklist из:
 
 - `docs/streisand-field-test-matrix.md`
+- `docs/streisand-10min-checklist.md`
 
 ## Как менять списки вручную
 

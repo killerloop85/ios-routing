@@ -19,6 +19,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
 - `docs/streisand-field-test-matrix.md` - fixed field checklist for validating Streisand full vs split behavior on real clients
+- `docs/streisand-10min-checklist.md` - short human-friendly manual test flow for Streisand on a real device
 - `docs/hiddify-routing-spec.md` - technical spec for exporting the same routing policy to Hiddify JSON
 - `docs/hiddify-profile-notes.md` - notes on Hiddify as a thin export layer and what semantics are carried over
 - `docs/happ-routing-spec.md` - technical spec for exporting the same routing policy to Happ JSON
