@@ -58,9 +58,9 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 ### Streisand
 
 1. Start with the full-tunnel profile first, not split.
-2. Import the generated full-tunnel `streisand://` artifact or the compact `routing-profile-split-qr` artifacts if you need split mode.
+2. Import the generated full-tunnel `streisand://` artifact.
 3. Confirm that the client imports cleanly and actually routes traffic.
-4. Treat `routing-profile-split.json` as reference-only JSON and split-routing in general as experimental until the import and routing issues are fully verified.
+4. Treat `routing-profile-split.json` and `routing-profile-split-qr.*` as diagnostic artifacts only until the split-routing issue is fixed.
 
 ### Hiddify
 
@@ -80,8 +80,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
-- Streisand routing is currently experimental and must be tested manually before real use. There is an open suspicion that import and/or routing behavior may still be broken on the client side.
-- Only the Streisand `full` and compact `split-qr` import artifacts are kept in the active export path; the heavy split profile remains reference-only.
+- Streisand routing is currently experimental and must be tested manually before real use. Real-device testing already showed that `routing-profile-split-qr` can route `ip.ru` through NL instead of DIRECT, so split-routing is currently not trustworthy in Streisand.
+- Only the Streisand `full` import artifact should be treated as the practical path for now; both split variants remain diagnostic/reference artifacts.
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.

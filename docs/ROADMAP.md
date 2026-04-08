@@ -3,7 +3,8 @@
 ## Near-Term
 
 - Fix Streisand split-profile import instability and the suspected split URI crash path.
-- Validate Streisand routing behavior on real devices before treating it as production-ready.
+- Fix confirmed Streisand split-routing mismatch: `ip.ru` on `routing-profile-split-qr` resolves through NL instead of staying DIRECT/RU.
+- Validate Streisand routing behavior on real devices before treating it as production-ready; until then, use only full-profile in practice.
 - Validate Hiddify split/full profiles on real devices and document import caveats if any appear.
 
 ## Routing Extensions
@@ -17,6 +18,7 @@
 - Add newly discovered real-world edge cases to `data/regression_domains.json`.
 - Keep parity checks strict across Shadowrocket, Streisand, and Hiddify.
 - Add client-specific regression notes when a backend behaves differently from the normalized policy layer.
+- Record the Streisand `ip.ru -> NL on split-qr` case as a client-behavior exception until the export model or the client behavior is understood.
 
 ## Operational
 

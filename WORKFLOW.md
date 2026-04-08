@@ -31,11 +31,12 @@
 ## Важная пометка по Streisand
 
 - Streisand-слой пока считать experimental.
-- Есть подозрение, что routing в самом клиенте Streisand может работать некорректно даже при валидных JSON/URI-артефактах.
+- Есть подтверждённый кейс, что routing в самом клиенте Streisand может работать некорректно даже при валидных JSON/URI-артефактах: `ip.ru` на `routing-profile-split-qr` показывает NL вместо DIRECT/RU.
 - Любой Streisand-профиль перед практическим использованием нужно проверять вручную на реальном клиенте.
 - До отдельного подтверждения не считать Streisand-экспорт production-ready наравне с Shadowrocket.
 - Тяжёлый `routing-profile-split.json` считать reference-only и не использовать как обычный import-flow.
-- Для практического импорта держать только `routing-profile-full.*` и `routing-profile-split-qr.*`.
+- `routing-profile-split-qr.*` тоже считать только диагностическим артефактом, а не рабочим split-профилем.
+- Для практического импорта сейчас держать только `routing-profile-full.*`.
 - Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
 - Happ-слой считать thin export-layer: он нужен как нормализованный routing JSON для Happ UI и не заменяет общий source of truth.
 - `happ/routing-profile-split.json` считать parity-safe профилем.
@@ -142,12 +143,12 @@ make smoke
 make regression
 ```
 
-Если нужен split-режим в Streisand, использовать только компактный safe-вариант:
+Если нужен split-режим в Streisand, помнить, что компактный вариант сейчас годится только для диагностики, а не для production-использования:
 
 - `streisand/routing-profile-split-qr.json`
 - `streisand/routing-profile-split-qr.streisand-uri.txt`
 
-После этого всё равно обязательно проверить routing вручную в самом Streisand.
+После этого всё равно обязательно проверить routing вручную в самом Streisand. До фикса known issue использовать Streisand в реальной работе только через full-profile.
 
 ## Как менять списки вручную
 
