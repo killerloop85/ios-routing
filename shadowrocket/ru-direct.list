@@ -1,14 +1,25 @@
 # Russian and local services that should stay direct.
+# Optional broad direct fallback if you want every .ru/.su domain to bypass VPN:
+# DOMAIN-SUFFIX,ru
+# DOMAIN-SUFFIX,su
 DOMAIN-SUFFIX,gosuslugi.ru
 DOMAIN-SUFFIX,esia.gosuslugi.ru
+DOMAIN-SUFFIX,nalog.ru
 DOMAIN-SUFFIX,nalog.gov.ru
 DOMAIN-SUFFIX,mos.ru
+DOMAIN-SUFFIX,mironline.ru
+DOMAIN-SUFFIX,sbp.nspk.ru
 DOMAIN-SUFFIX,sberbank.ru
 DOMAIN-SUFFIX,sber.ru
 DOMAIN-SUFFIX,vtb.ru
 DOMAIN-SUFFIX,alfabank.ru
 DOMAIN-SUFFIX,tbank.ru
 DOMAIN-SUFFIX,tinkoff.ru
+DOMAIN-SUFFIX,mts.ru
+DOMAIN-SUFFIX,tele2.ru
+DOMAIN-SUFFIX,beeline.ru
+DOMAIN-SUFFIX,megafon.ru
+DOMAIN-SUFFIX,rostelecom.ru
 DOMAIN-SUFFIX,yandex.ru
 DOMAIN-SUFFIX,ya.ru
 DOMAIN-SUFFIX,mail.ru
