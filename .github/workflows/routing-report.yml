@@ -1,0 +1,29 @@
+name: Routing Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate reports
+        run: |
+          mkdir -p reports
+          python3 scripts/update_routing_lists.py --report-json reports/routing-update.json --report-md reports/routing-update.md > reports/routing-update.diff
+
+      - name: Upload reports artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: routing-update-report
+          path: reports/

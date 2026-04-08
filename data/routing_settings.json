@@ -48,7 +48,10 @@
       "bucket": "direct",
       "priority": 40,
       "notes": "Single community snapshot linked from net4people/bbs issue #516; useful but noisier than curated repo sources.",
-      "exclude_domains": [],
+      "exclude_domains": [
+        "yandex.com",
+        "yandex.com.tr"
+      ],
       "optional": true
     },
     {
@@ -84,7 +87,15 @@
       "bucket": "direct",
       "priority": 30,
       "notes": "Heuristic signal from VPN config docs; lower priority because parsing comes from free text.",
-      "exclude_domains": [],
+      "exclude_domains": [
+        "github.com",
+        "githubusercontent.com",
+        "raw.githubusercontent.com",
+        "docs.github.com",
+        "telegram.org",
+        "t.me",
+        "youtube.com"
+      ],
       "optional": true
     },
     {
@@ -93,7 +104,11 @@
       "bucket": "foreign",
       "priority": 30,
       "notes": "Heuristic foreign-service signal from free-form VPN config docs.",
-      "exclude_domains": [],
+      "exclude_domains": [
+        "raw.githubusercontent.com",
+        "docs.github.com",
+        "ntc.party"
+      ],
       "optional": true
     }
   ]

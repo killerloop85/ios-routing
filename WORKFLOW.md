@@ -57,6 +57,12 @@ python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/update_routing_lists.py --write
 ```
 
+7. Прогнать общий smoke-check репозитория.
+
+```bash
+python3 scripts/smoke_check.py
+```
+
 ## Как менять списки вручную
 
 ### Добавить или убрать ручные домены
@@ -102,6 +108,7 @@ python3 scripts/update_routing_lists.py --offline --write
 python3 -m json.tool data/routing_settings.json >/dev/null
 python3 scripts/update_routing_lists.py --offline
 python3 scripts/update_routing_lists.py --report-json -
+python3 scripts/smoke_check.py
 ```
 
 ## Как публиковать изменения
@@ -136,12 +143,25 @@ git push
 git push ssh://git@ssh.github.com:443/killerloop85/ios-routing.git HEAD:main
 ```
 
+## GitHub Actions
+
+В репозитории есть два workflow:
+
+- `.github/workflows/smoke-check.yml` — CI smoke-check на `push`, `pull_request`, `workflow_dispatch`
+- `.github/workflows/routing-report.yml` — weekly/manual запуск апдейтера с сохранением `json`, `md` и `diff` как artifact
+
 ## Быстрые команды
 
 Проверка генерации:
 
 ```bash
 python3 scripts/update_routing_lists.py --offline
+```
+
+Smoke-check:
+
+```bash
+python3 scripts/smoke_check.py
 ```
 
 Просмотр diff с сетью:
