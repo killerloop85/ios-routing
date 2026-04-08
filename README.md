@@ -11,6 +11,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `shadowrocket/ru-direct.list` - Russian domains that should stay direct
 - `shadowrocket/foreign-services.list` - foreign services that are more stable through VPN
 - `docs/routing-update-spec.md` - technical spec for automated list updates
+- `data/*.json` - manual core domains, overrides, headers, limits, and source definitions for the updater
 
 ## Usage
 
@@ -49,3 +50,5 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`
 - Fetch external sources and preview a diff: `python3 scripts/update_routing_lists.py`
 - Write updated lists to disk: `python3 scripts/update_routing_lists.py --write`
+- Edit `data/manual_*.json` to change the manual core domains and section order
+- Edit `data/routing_settings.json` to change overrides, limits, TLD policy, or source URLs

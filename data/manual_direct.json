@@ -1,0 +1,67 @@
+{
+  "header": [
+    "# Russian and local services that should stay DIRECT."
+  ],
+  "sections": {
+    "Госуслуги и госорганы": [
+      "gosuslugi.ru",
+      "esia.gosuslugi.ru",
+      "nalog.ru",
+      "nalog.gov.ru",
+      "mos.ru",
+      "mosreg.ru",
+      "government.ru",
+      "kremlin.ru",
+      "pfr.gov.ru"
+    ],
+    "Банки и платежи": [
+      "sberbank.ru",
+      "sber.ru",
+      "online.sberbank.ru",
+      "vtb.ru",
+      "alfabank.ru",
+      "tbank.ru",
+      "tinkoff.ru",
+      "open.ru",
+      "raiffeisen.ru",
+      "gazprombank.ru",
+      "psbank.ru",
+      "mironline.ru",
+      "sbp.nspk.ru"
+    ],
+    "Почта и соцсети Рунета": [
+      "yandex.ru",
+      "yandex.net",
+      "ya.ru",
+      "yastatic.net",
+      "mail.ru",
+      "vk.com",
+      "ok.ru"
+    ],
+    "Крупные сервисы и маркетплейсы": [
+      "ozon.ru",
+      "wildberries.ru",
+      "avito.ru",
+      "cian.ru",
+      "2gis.ru",
+      "pochta.ru",
+      "cdek.ru",
+      "rzd.ru"
+    ],
+    "Операторы связи и провайдеры": [
+      "mts.ru",
+      "tele2.ru",
+      "beeline.ru",
+      "megafon.ru",
+      "rostelecom.ru",
+      "yota.ru",
+      "domru.ru",
+      "ertelecom.ru"
+    ]
+  },
+  "tail_comment": "Общий fallback для .ru / .su",
+  "tail_domains": [
+    "ru",
+    "su"
+  ]
+}

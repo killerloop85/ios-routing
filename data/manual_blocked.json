@@ -1,0 +1,48 @@
+{
+  "header": [
+    "# Core services that are commonly blocked or heavily degraded in Russia.",
+    "# Весь этот трафик нужно строго гнать через VPN."
+  ],
+  "sections": {
+    "Meta / соцсети": [
+      "instagram.com",
+      "cdninstagram.com",
+      "threads.net",
+      "facebook.com",
+      "fbcdn.net",
+      "messenger.com"
+    ],
+    "Twitter / X": [
+      "twitter.com",
+      "x.com",
+      "t.co"
+    ],
+    "Discord": [
+      "discord.com",
+      "discord.gg",
+      "discordapp.com"
+    ],
+    "LinkedIn": [
+      "linkedin.com",
+      "licdn.com"
+    ],
+    "YouTube / Google-видео": [
+      "youtube.com",
+      "youtu.be",
+      "googlevideo.com",
+      "ytimg.com"
+    ],
+    "Независимые медиа / чувствительные ресурсы (ядро)": [
+      "meduza.io",
+      "svoboda.org",
+      "currenttime.tv",
+      "dozhd.ru",
+      "tvrain.tv"
+    ],
+    "OONI / цензурные исследования": [
+      "ooni.org",
+      "explorer.ooni.org",
+      "torproject.org"
+    ]
+  }
+}

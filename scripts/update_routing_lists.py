@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import json
 import re
 import sys
 import urllib.error
@@ -22,17 +23,11 @@ from typing import Dict, Iterable, List, Sequence, Set
 
 ROOT = Path(__file__).resolve().parent.parent
 SHADOWROCKET_DIR = ROOT / "shadowrocket"
+DATA_DIR = ROOT / "data"
 
 DIRECT_PATH = SHADOWROCKET_DIR / "ru-direct.list"
 BLOCKED_PATH = SHADOWROCKET_DIR / "ru-blocked-core.list"
 FOREIGN_PATH = SHADOWROCKET_DIR / "foreign-services.list"
-
-DIRECT_LIMIT = 500
-BLOCKED_LIMIT = 250
-FOREIGN_LIMIT = 250
-
-RU_TLDS = ("ru", "su", "rf", "moscow", "москва")
-DIRECT_ALWAYS_KEEP = {"ru", "su"}
 
 
 @dataclass(frozen=True)
@@ -54,223 +49,81 @@ class Candidate:
         return (1 if self.manual else 0, len(self.sources), self.domain)
 
 
-MANUAL_DIRECT: Dict[str, List[str]] = {
-    "Госуслуги и госорганы": [
-        "gosuslugi.ru",
-        "esia.gosuslugi.ru",
-        "nalog.ru",
-        "nalog.gov.ru",
-        "mos.ru",
-        "mosreg.ru",
-        "government.ru",
-        "kremlin.ru",
-        "pfr.gov.ru",
-    ],
-    "Банки и платежи": [
-        "sberbank.ru",
-        "sber.ru",
-        "online.sberbank.ru",
-        "vtb.ru",
-        "alfabank.ru",
-        "tbank.ru",
-        "tinkoff.ru",
-        "open.ru",
-        "raiffeisen.ru",
-        "gazprombank.ru",
-        "psbank.ru",
-        "mironline.ru",
-        "sbp.nspk.ru",
-    ],
-    "Почта и соцсети Рунета": [
-        "yandex.ru",
-        "yandex.net",
-        "ya.ru",
-        "yastatic.net",
-        "mail.ru",
-        "vk.com",
-        "ok.ru",
-    ],
-    "Крупные сервисы и маркетплейсы": [
-        "ozon.ru",
-        "wildberries.ru",
-        "avito.ru",
-        "cian.ru",
-        "2gis.ru",
-        "pochta.ru",
-        "cdek.ru",
-        "rzd.ru",
-    ],
-    "Операторы связи и провайдеры": [
-        "mts.ru",
-        "tele2.ru",
-        "beeline.ru",
-        "megafon.ru",
-        "rostelecom.ru",
-        "yota.ru",
-        "domru.ru",
-        "ertelecom.ru",
-    ],
-}
-
-MANUAL_BLOCKED: Dict[str, List[str]] = {
-    "Meta / соцсети": [
-        "instagram.com",
-        "cdninstagram.com",
-        "threads.net",
-        "facebook.com",
-        "fbcdn.net",
-        "messenger.com",
-    ],
-    "Twitter / X": [
-        "twitter.com",
-        "x.com",
-        "t.co",
-    ],
-    "Discord": [
-        "discord.com",
-        "discord.gg",
-        "discordapp.com",
-    ],
-    "LinkedIn": [
-        "linkedin.com",
-        "licdn.com",
-    ],
-    "YouTube / Google-видео": [
-        "youtube.com",
-        "youtu.be",
-        "googlevideo.com",
-        "ytimg.com",
-    ],
-    "Независимые медиа / чувствительные ресурсы (ядро)": [
-        "meduza.io",
-        "svoboda.org",
-        "currenttime.tv",
-        "dozhd.ru",
-        "tvrain.tv",
-    ],
-    "OONI / цензурные исследования": [
-        "ooni.org",
-        "explorer.ooni.org",
-        "torproject.org",
-    ],
-}
-
-MANUAL_FOREIGN: Dict[str, List[str]] = {
-    "Dev / AI / Tools": [
-        "openai.com",
-        "chatgpt.com",
-        "anthropic.com",
-        "claude.ai",
-        "perplexity.ai",
-        "deepl.com",
-    ],
-    "Prod / Collaboration": [
-        "notion.so",
-        "notion.site",
-        "figma.com",
-        "linear.app",
-        "slack.com",
-        "atlassian.com",
-        "trello.com",
-        "asana.com",
-        "zoom.us",
-    ],
-    "Dev / Cloud / CDN": [
-        "github.com",
-        "githubusercontent.com",
-        "githubassets.com",
-        "gitlab.com",
-        "bitbucket.org",
-        "docker.com",
-        "docker.io",
-        "hub.docker.com",
-        "cloudflare.com",
-        "workers.dev",
-        "vercel.com",
-        "netlify.app",
-        "herokuapp.com",
-    ],
-    "Google / YouTube": [
-        "google.com",
-        "googleapis.com",
-        "gstatic.com",
-        "youtube.com",
-        "ytimg.com",
-        "googlevideo.com",
-    ],
-    "Соцсети / медиа (но здесь — именно как зарубежные сервисы)": [
-        "reddit.com",
-        "redd.it",
-        "redditmedia.com",
-        "medium.com",
-        "substack.com",
-        "linkedin.com",
-    ],
-    "Почта / безопасность": [
-        "proton.me",
-        "protonmail.com",
-        "protonvpn.com",
-        "tutanota.com",
-    ],
-    "VPN / обход": [
-        "openvpn.net",
-        "wireguard.com",
-        "psiphon.ca",
-        "lantern.io",
-    ],
-    "Развлечения": [
-        "netflix.com",
-        "spotify.com",
-    ],
-}
-
-DIRECT_OVERRIDE: Set[str] = set()
-
-DIRECT_HEADER = ["# Russian and local services that should stay DIRECT."]
-BLOCKED_HEADER = [
-    "# Core services that are commonly blocked or heavily degraded in Russia.",
-    "# Весь этот трафик нужно строго гнать через VPN.",
-]
-FOREIGN_HEADER = [
-    "# Foreign services that are typically more reliable over VPN from Russia.",
-    "# Здесь — сервисы и компании, которые часто режут РФ или работают нестабильно без VPN.",
-]
-
-SOURCES: Sequence[Source] = (
-    Source(
-        "russia-mobile-internet-whitelist",
-        "https://github.com/hxehex/russia-mobile-internet-whitelist/raw/main/whitelist.txt",
-        "direct",
-    ),
-    Source(
-        "russia-mobile-internet-cidrwhitelist",
-        "https://github.com/hxehex/russia-mobile-internet-whitelist/raw/main/cidrwhitelist.txt",
-        "direct",
-    ),
-    Source(
-        "ooni-zapret-list",
-        "https://raw.githubusercontent.com/1andrevich/ooni-zapret-list/master/resolvers-hosts.txt",
-        "blocked",
-    ),
-    Source(
-        "re-filter-lists",
-        "https://raw.githubusercontent.com/1andrevich/Re-filter-lists/main/community.lst",
-        "blocked",
-    ),
-    Source(
-        "vpn-configs-for-russia-bypass",
-        "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/README.md",
-        "direct",
-    ),
-    Source(
-        "vpn-configs-for-russia",
-        "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/README.md",
-        "foreign",
-    ),
-)
-
-
 DOMAIN_RE = re.compile(r"\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-zа-я0-9-]{2,}\b", re.IGNORECASE)
+
+
+@dataclass(frozen=True)
+class ManualList:
+    header: List[str]
+    sections: Dict[str, List[str]]
+    tail_comment: str | None = None
+    tail_domains: List[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class RoutingConfig:
+    direct_limit: int
+    blocked_limit: int
+    foreign_limit: int
+    ru_tlds: tuple[str, ...]
+    direct_always_keep: Set[str]
+    direct_override: Set[str]
+    sources: Sequence[Source]
+
+
+def load_json(path: Path) -> object:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_manual_list(path: Path) -> ManualList:
+    raw = load_json(path)
+    assert isinstance(raw, dict)
+    header = [str(item) for item in raw.get("header", [])]
+    raw_sections = raw.get("sections", {})
+    if not isinstance(raw_sections, dict):
+        raise ValueError(f"Invalid sections in {path}")
+    sections = {
+        str(section): [str(domain) for domain in domains]
+        for section, domains in raw_sections.items()
+    }
+    tail_comment = raw.get("tail_comment")
+    tail_domains = [str(item) for item in raw.get("tail_domains", [])]
+    return ManualList(
+        header=header,
+        sections=sections,
+        tail_comment=str(tail_comment) if tail_comment is not None else None,
+        tail_domains=tail_domains,
+    )
+
+
+def load_routing_config(path: Path) -> RoutingConfig:
+    raw = load_json(path)
+    assert isinstance(raw, dict)
+    sources = tuple(
+        Source(
+            name=str(item["name"]),
+            url=str(item["url"]),
+            bucket=str(item["bucket"]),
+            kind=str(item.get("kind", "text")),
+            optional=bool(item.get("optional", True)),
+        )
+        for item in raw.get("sources", [])
+    )
+    return RoutingConfig(
+        direct_limit=int(raw["direct_limit"]),
+        blocked_limit=int(raw["blocked_limit"]),
+        foreign_limit=int(raw["foreign_limit"]),
+        ru_tlds=tuple(str(item) for item in raw["ru_tlds"]),
+        direct_always_keep={str(item) for item in raw.get("direct_always_keep", [])},
+        direct_override={str(item) for item in raw.get("direct_override", [])},
+        sources=sources,
+    )
+
+
+MANUAL_DIRECT = load_manual_list(DATA_DIR / "manual_direct.json")
+MANUAL_BLOCKED = load_manual_list(DATA_DIR / "manual_blocked.json")
+MANUAL_FOREIGN = load_manual_list(DATA_DIR / "manual_foreign.json")
+ROUTING_CONFIG = load_routing_config(DATA_DIR / "routing_settings.json")
 
 
 def parse_args() -> argparse.Namespace:
@@ -344,7 +197,7 @@ def flatten_sections(sections: Dict[str, List[str]]) -> Set[str]:
 def is_ru_domain(domain: str, manual_direct_domains: Set[str]) -> bool:
     if domain in manual_direct_domains:
         return True
-    return any(domain == tld or domain.endswith("." + tld) for tld in RU_TLDS)
+    return any(domain == tld or domain.endswith("." + tld) for tld in ROUTING_CONFIG.ru_tlds)
 
 
 def compact_domains(domains: Iterable[str], always_keep: Set[str] | None = None) -> List[str]:
@@ -421,10 +274,10 @@ def build_direct_list(
     direct_candidates: Dict[str, Candidate],
     blocked_domains: Set[str],
 ) -> str:
-    manual_core = flatten_sections(MANUAL_DIRECT)
+    manual_core = flatten_sections(MANUAL_DIRECT.sections)
     filtered: Dict[str, Candidate] = {}
     for domain, candidate in direct_candidates.items():
-        if domain in DIRECT_OVERRIDE:
+        if domain in ROUTING_CONFIG.direct_override:
             filtered[domain] = candidate
             continue
         if domain in blocked_domains:
@@ -433,21 +286,21 @@ def build_direct_list(
             continue
         filtered[domain] = candidate
 
-    always_keep = manual_core | DIRECT_ALWAYS_KEEP | DIRECT_OVERRIDE
-    selected = select_top(filtered, DIRECT_LIMIT, always_keep)
+    always_keep = manual_core | ROUTING_CONFIG.direct_always_keep | ROUTING_CONFIG.direct_override
+    selected = select_top(filtered, ROUTING_CONFIG.direct_limit, always_keep)
     extra = [domain for domain in selected if domain not in always_keep]
 
     return render_list(
-        header_lines=DIRECT_HEADER,
-        manual_sections={name: list(domains) for name, domains in MANUAL_DIRECT.items()},
+        header_lines=MANUAL_DIRECT.header,
+        manual_sections={name: list(domains) for name, domains in MANUAL_DIRECT.sections.items()},
         extra_sections={"Автодобавленные кандидаты": extra} if extra else None,
-        tail_comment="Общий fallback для .ru / .su",
-        tail_domains=["ru", "su"],
+        tail_comment=MANUAL_DIRECT.tail_comment,
+        tail_domains=MANUAL_DIRECT.tail_domains,
     )
 
 
 def build_blocked_list(blocked_candidates: Dict[str, Candidate], direct_override: Set[str]) -> str:
-    manual_core = flatten_sections(MANUAL_BLOCKED)
+    manual_core = flatten_sections(MANUAL_BLOCKED.sections)
     filtered: Dict[str, Candidate] = {}
     for domain, candidate in blocked_candidates.items():
         if domain in direct_override:
@@ -456,18 +309,18 @@ def build_blocked_list(blocked_candidates: Dict[str, Candidate], direct_override
             filtered[domain] = candidate
 
     always_keep = manual_core
-    selected = select_top(filtered, BLOCKED_LIMIT, always_keep)
+    selected = select_top(filtered, ROUTING_CONFIG.blocked_limit, always_keep)
     extra = [domain for domain in selected if domain not in always_keep]
 
     return render_list(
-        header_lines=BLOCKED_HEADER,
-        manual_sections={name: list(domains) for name, domains in MANUAL_BLOCKED.items()},
+        header_lines=MANUAL_BLOCKED.header,
+        manual_sections={name: list(domains) for name, domains in MANUAL_BLOCKED.sections.items()},
         extra_sections={"Автодобавленные кандидаты": extra} if extra else None,
     )
 
 
 def build_foreign_list(foreign_candidates: Dict[str, Candidate]) -> str:
-    manual_core = flatten_sections(MANUAL_FOREIGN)
+    manual_core = flatten_sections(MANUAL_FOREIGN.sections)
     filtered: Dict[str, Candidate] = {}
     for domain, candidate in foreign_candidates.items():
         if is_ru_domain(domain, set()):
@@ -475,12 +328,12 @@ def build_foreign_list(foreign_candidates: Dict[str, Candidate]) -> str:
         filtered[domain] = candidate
 
     always_keep = manual_core
-    selected = select_top(filtered, FOREIGN_LIMIT, always_keep)
+    selected = select_top(filtered, ROUTING_CONFIG.foreign_limit, always_keep)
     extra = [domain for domain in selected if domain not in always_keep]
 
     return render_list(
-        header_lines=FOREIGN_HEADER,
-        manual_sections={name: list(domains) for name, domains in MANUAL_FOREIGN.items()},
+        header_lines=MANUAL_FOREIGN.header,
+        manual_sections={name: list(domains) for name, domains in MANUAL_FOREIGN.sections.items()},
         extra_sections={"Автодобавленные кандидаты": extra} if extra else None,
     )
 
@@ -503,14 +356,14 @@ def gather_candidates(args: argparse.Namespace) -> tuple[Dict[str, Candidate], D
     foreign_candidates: Dict[str, Candidate] = {}
     warnings: List[str] = []
 
-    add_candidates(direct_candidates, flatten_sections(MANUAL_DIRECT), "manual-core", manual=True)
-    add_candidates(blocked_candidates, flatten_sections(MANUAL_BLOCKED), "manual-core", manual=True)
-    add_candidates(foreign_candidates, flatten_sections(MANUAL_FOREIGN), "manual-core", manual=True)
+    add_candidates(direct_candidates, flatten_sections(MANUAL_DIRECT.sections), "manual-core", manual=True)
+    add_candidates(blocked_candidates, flatten_sections(MANUAL_BLOCKED.sections), "manual-core", manual=True)
+    add_candidates(foreign_candidates, flatten_sections(MANUAL_FOREIGN.sections), "manual-core", manual=True)
 
     if args.offline:
         return direct_candidates, blocked_candidates, foreign_candidates, warnings
 
-    for source in SOURCES:
+    for source in ROUTING_CONFIG.sources:
         try:
             text = fetch_text(source, timeout=args.timeout)
         except (urllib.error.URLError, TimeoutError, ValueError) as exc:
@@ -540,9 +393,9 @@ def main() -> int:
     args = parse_args()
     direct_candidates, blocked_candidates, foreign_candidates, warnings = gather_candidates(args)
 
-    blocked_domains_for_direct = set(blocked_candidates) - DIRECT_OVERRIDE
+    blocked_domains_for_direct = set(blocked_candidates) - ROUTING_CONFIG.direct_override
     direct_text = build_direct_list(direct_candidates, blocked_domains_for_direct)
-    blocked_text = build_blocked_list(blocked_candidates, DIRECT_OVERRIDE)
+    blocked_text = build_blocked_list(blocked_candidates, ROUTING_CONFIG.direct_override)
     foreign_text = build_foreign_list(foreign_candidates)
 
     outputs = (

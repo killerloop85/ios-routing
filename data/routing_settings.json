@@ -1,0 +1,55 @@
+{
+  "direct_limit": 500,
+  "blocked_limit": 250,
+  "foreign_limit": 250,
+  "ru_tlds": [
+    "ru",
+    "su",
+    "rf",
+    "moscow",
+    "москва"
+  ],
+  "direct_always_keep": [
+    "ru",
+    "su"
+  ],
+  "direct_override": [],
+  "sources": [
+    {
+      "name": "russia-mobile-internet-whitelist",
+      "url": "https://github.com/hxehex/russia-mobile-internet-whitelist/raw/main/whitelist.txt",
+      "bucket": "direct",
+      "optional": true
+    },
+    {
+      "name": "russia-mobile-internet-cidrwhitelist",
+      "url": "https://github.com/hxehex/russia-mobile-internet-whitelist/raw/main/cidrwhitelist.txt",
+      "bucket": "direct",
+      "optional": true
+    },
+    {
+      "name": "ooni-zapret-list",
+      "url": "https://raw.githubusercontent.com/1andrevich/ooni-zapret-list/master/resolvers-hosts.txt",
+      "bucket": "blocked",
+      "optional": true
+    },
+    {
+      "name": "re-filter-lists",
+      "url": "https://raw.githubusercontent.com/1andrevich/Re-filter-lists/main/community.lst",
+      "bucket": "blocked",
+      "optional": true
+    },
+    {
+      "name": "vpn-configs-for-russia-bypass",
+      "url": "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/README.md",
+      "bucket": "direct",
+      "optional": true
+    },
+    {
+      "name": "vpn-configs-for-russia",
+      "url": "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/README.md",
+      "bucket": "foreign",
+      "optional": true
+    }
+  ]
+}

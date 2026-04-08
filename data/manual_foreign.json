@@ -1,0 +1,74 @@
+{
+  "header": [
+    "# Foreign services that are typically more reliable over VPN from Russia.",
+    "# Здесь — сервисы и компании, которые часто режут РФ или работают нестабильно без VPN."
+  ],
+  "sections": {
+    "Dev / AI / Tools": [
+      "openai.com",
+      "chatgpt.com",
+      "anthropic.com",
+      "claude.ai",
+      "perplexity.ai",
+      "deepl.com"
+    ],
+    "Prod / Collaboration": [
+      "notion.so",
+      "notion.site",
+      "figma.com",
+      "linear.app",
+      "slack.com",
+      "atlassian.com",
+      "trello.com",
+      "asana.com",
+      "zoom.us"
+    ],
+    "Dev / Cloud / CDN": [
+      "github.com",
+      "githubusercontent.com",
+      "githubassets.com",
+      "gitlab.com",
+      "bitbucket.org",
+      "docker.com",
+      "docker.io",
+      "hub.docker.com",
+      "cloudflare.com",
+      "workers.dev",
+      "vercel.com",
+      "netlify.app",
+      "herokuapp.com"
+    ],
+    "Google / YouTube": [
+      "google.com",
+      "googleapis.com",
+      "gstatic.com",
+      "youtube.com",
+      "ytimg.com",
+      "googlevideo.com"
+    ],
+    "Соцсети / медиа (но здесь — именно как зарубежные сервисы)": [
+      "reddit.com",
+      "redd.it",
+      "redditmedia.com",
+      "medium.com",
+      "substack.com",
+      "linkedin.com"
+    ],
+    "Почта / безопасность": [
+      "proton.me",
+      "protonmail.com",
+      "protonvpn.com",
+      "tutanota.com"
+    ],
+    "VPN / обход": [
+      "openvpn.net",
+      "wireguard.com",
+      "psiphon.ca",
+      "lantern.io"
+    ],
+    "Развлечения": [
+      "netflix.com",
+      "spotify.com"
+    ]
+  }
+}
