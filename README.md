@@ -11,6 +11,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `shadowrocket/ru-direct.list` - Russian domains that should stay direct
 - `shadowrocket/foreign-services.list` - foreign services that are more stable through VPN
 - `docs/routing-update-spec.md` - technical spec for automated list updates
+- `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
 - `data/*.json` - manual core domains, overrides, headers, limits, and source definitions for the updater
 
 ## Usage
