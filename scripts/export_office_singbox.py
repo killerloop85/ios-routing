@@ -122,16 +122,21 @@ def base_config() -> dict[str, Any]:
                 "type": "vless",
                 "tag": "vless-reality-primary",
                 "server": "REPLACE_VLESS_SERVER",
-                "server_port": 443,
+                "server_port": "REPLACE_VLESS_PORT",
                 "uuid": "REPLACE_VLESS_UUID",
-                "flow": "",
+                "flow": "REPLACE_VLESS_FLOW",
                 "tls": {
                     "enabled": True,
                     "server_name": "REPLACE_VLESS_SERVER_NAME",
+                    "utls": {
+                        "enabled": True,
+                        "fingerprint": "REPLACE_VLESS_FINGERPRINT",
+                    },
                     "reality": {
                         "enabled": True,
                         "public_key": "REPLACE_VLESS_PUBLIC_KEY",
                         "short_id": "REPLACE_VLESS_SHORT_ID",
+                        "spider_x": "REPLACE_VLESS_SPIDER_X",
                     },
                 },
             },

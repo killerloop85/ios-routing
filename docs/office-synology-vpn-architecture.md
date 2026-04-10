@@ -136,7 +136,8 @@ Suggested structure:
 
 ```text
 /volume1/docker/office-vpn/
-  compose/
+  docker-compose.yml
+  .env
   config/
   logs/
   data/
@@ -199,6 +200,18 @@ If needed later:
 - rollback should be possible in under 5 minutes by:
   - disabling the Container Manager stack, or
   - removing proxy settings / PAC / GPO from clients
+
+## Synology-specific note
+
+In the current office environment, the Docker socket on Synology is owned by group `synopkgs`.
+
+Practical implication:
+
+- file deployment to `/volume1/docker/office-vpn` can be done with the normal admin account;
+- but CLI lifecycle actions such as `docker run` or `docker compose up` may still require either:
+  - DSM Container Manager UI,
+  - a one-time privilege/group adjustment,
+  - or a root-capable shell.
 
 ## Exit Criteria for "Good enough"
 

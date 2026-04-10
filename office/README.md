@@ -37,14 +37,25 @@ They are exported from the finalized `shadowrocket/*.list` files, so office rout
 
 1. Copy this directory to Synology, for example:
    - `/volume1/docker/office-vpn`
+   - keep `docker-compose.synology.yml` there as `docker-compose.yml`
 2. Copy `env.example` to `.env` and fill real secrets locally on Synology.
 3. Run `python3 scripts/export_office_singbox.py --write`.
 4. Choose `sing-box/generated/config.split.generated.json` first.
 5. Copy it to the Synology-local `config/config.json`.
-6. Replace proxy auth and upstream placeholders locally on Synology.
+6. Replace proxy auth and upstream placeholders locally on Synology, including Reality fingerprint and spider path if they are present in the x-ui URI.
 7. Start the stack in Container Manager.
 8. Point 1-2 office pilot machines to the mixed proxy listener.
 9. Verify direct/proxy behavior before wider rollout.
+
+## Synology CLI note
+
+On this Synology, Docker listens on a socket owned by group `synopkgs`.
+
+That means a regular admin account can upload files into `/volume1/docker/office-vpn`, but CLI startup through `docker` may still require one of:
+
+- running the stack from DSM Container Manager UI;
+- a one-time group/privilege adjustment for the deployment user;
+- running the compose commands under a root-capable context.
 
 ## Do not commit
 

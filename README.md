@@ -154,6 +154,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Check Clash export sync: `python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default`
 - Write office Synology sing-box exports: `python3 scripts/export_office_singbox.py --write`
 - Check office Synology sing-box export sync: `python3 scripts/export_office_singbox.py --offline`
+- Render a Synology-local office config from a real VLESS URI: `python3 scripts/render_office_config_from_vless_uri.py --profile split --uri 'vless://...' --output /tmp/office-config.json`
 - Check Streisand import URI sync: `python3 scripts/export_streisand_uri.py --offline`
 - Check Streisand export sync: `python3 scripts/export_streisand_rules.py --offline`
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`

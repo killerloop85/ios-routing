@@ -244,6 +244,7 @@ python3 scripts/export_hiddify_rules.py --offline
 python3 scripts/export_happ_routing.py --offline
 python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default
 python3 scripts/export_office_singbox.py --offline
+python3 scripts/render_office_config_from_vless_uri.py --profile split --uri 'vless://...' --output /tmp/office-config.json
 python3 scripts/check_regression_domains.py
 python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/smoke_check.py
