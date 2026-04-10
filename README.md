@@ -64,6 +64,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 2. Import either `shadowrocket/Universal-Routing.conf` or `shadowrocket/Vaso-All-VPN-v2.conf`.
 3. Make the chosen config active.
 4. Test a few domains from the regression set before daily use.
+5. Keep Tailscale and tailnet access direct: `100.64.0.0/10` and `*.ts.net` must not go through the proxy.
 
 ### Streisand
 
@@ -108,6 +109,7 @@ If all employees need Telegram and WhatsApp desktop, prefer the Hiddify path for
 ## Notes
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
+- Shadowrocket must keep Tailscale addresses direct. If `https://100.x.y.z:5001/` or other tailnet endpoints fail while Tailscale is connected, the usual cause is proxying `100.64.0.0/10` instead of bypassing it.
 - `Vaso-All-VPN-v2.conf` is the simpler option when you want all non-local traffic to go through VPN.
 - Streisand routing is currently experimental and must be tested manually before real use. One earlier real-device run showed `ip.ru -> NL` on `routing-profile-split-qr`, but newer tests on April 9, 2026 showed `split-qr` and `full` working, so the current status is inconsistent rather than conclusively broken.
 - Only the Streisand `full` import artifact should be treated as the practical path for now; both split variants remain diagnostic/reference artifacts.

@@ -56,6 +56,7 @@
 - Офисный Synology-слой считать deployment-target поверх того же routing core, а не отдельным policy-источником.
 - Для Synology office gateway использовать именно generated `office/sing-box/generated/*.json`, а не поддерживать маршрутизацию отдельными ручными списками.
 - Для сотрудников с Telegram/WhatsApp desktop считать Hiddify основным пользовательским сценарием, а PAC на Synology — fallback-режимом для браузеров и быстрым rollback.
+- Для Shadowrocket всегда держать Tailscale в `DIRECT`: `100.64.0.0/10` и `*.ts.net` не должны уходить в proxy, иначе доступ к DSM и tailnet-сервисам ломается даже при рабочем Tailscale.
 - `happ/routing-profile-split.json` считать parity-safe профилем.
 - `happ/routing-profile-split-direct-default.json` считать Happ-специфичным direct-default профилем.
 - `clash/routing-profile-full.yaml` считать stable Clash-профилем.
