@@ -39,3 +39,21 @@ DOMAIN-SUFFIX,tvrain.tv
 # OONI / цензурные исследования
 DOMAIN-SUFFIX,ooni.org
 DOMAIN-SUFFIX,torproject.org
+
+# Высокая уверенность / автоподтвержденные
+DOMAIN-SUFFIX,adguard.com
+DOMAIN-SUFFIX,bitcoin.org
+DOMAIN-SUFFIX,e621.net
+DOMAIN-SUFFIX,flibusta.is
+DOMAIN-SUFFIX,libgen.rs
+DOMAIN-SUFFIX,localbitcoins.com
+DOMAIN-SUFFIX,nordvpn.com
+DOMAIN-SUFFIX,ntc.party
+DOMAIN-SUFFIX,pixiv.net
+DOMAIN-SUFFIX,pornolab.net
+DOMAIN-SUFFIX,republic.ru
+DOMAIN-SUFFIX,semnasem.org
+DOMAIN-SUFFIX,soundcloud.com
+DOMAIN-SUFFIX,xhamster.com
+DOMAIN-SUFFIX,lib.rus.ec
+DOMAIN-SUFFIX,seedoff.zannn.top

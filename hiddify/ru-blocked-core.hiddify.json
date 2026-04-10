@@ -152,6 +152,102 @@
       "value": "torproject.org",
       "outbound": "proxy",
       "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "adguard.com",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "bitcoin.org",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "e621.net",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "flibusta.is",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "libgen.rs",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "localbitcoins.com",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nordvpn.com",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ntc.party",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "pixiv.net",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "pornolab.net",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "republic.ru",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "semnasem.org",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "soundcloud.com",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "xhamster.com",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "lib.rus.ec",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "seedoff.zannn.top",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
     }
   ]
 }

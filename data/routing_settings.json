@@ -88,12 +88,21 @@
       "priority": 30,
       "notes": "Heuristic signal from VPN config docs; lower priority because parsing comes from free text.",
       "exclude_domains": [
+        "badges.frapsoft.com",
+        "custom-icon-badges.demolab.com",
+        "giphy.com",
         "github.com",
         "githubusercontent.com",
+        "habr.com",
+        "img.shields.io",
+        "komarev.com",
+        "media.giphy.com",
         "raw.githubusercontent.com",
         "docs.github.com",
+        "support.google.com",
         "telegram.org",
         "t.me",
+        "web.archive.org",
         "youtube.com"
       ],
       "optional": true
@@ -105,8 +114,15 @@
       "priority": 30,
       "notes": "Heuristic foreign-service signal from free-form VPN config docs.",
       "exclude_domains": [
+        "badges.frapsoft.com",
+        "custom-icon-badges.demolab.com",
         "raw.githubusercontent.com",
         "docs.github.com",
+        "giphy.com",
+        "habr.com",
+        "img.shields.io",
+        "komarev.com",
+        "media.giphy.com",
         "ntc.party"
       ],
       "optional": true

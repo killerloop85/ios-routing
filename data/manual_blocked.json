@@ -42,6 +42,24 @@
     "OONI / цензурные исследования": [
       "ooni.org",
       "torproject.org"
+    ],
+    "Высокая уверенность / автоподтвержденные": [
+      "adguard.com",
+      "bitcoin.org",
+      "e621.net",
+      "flibusta.is",
+      "libgen.rs",
+      "localbitcoins.com",
+      "nordvpn.com",
+      "ntc.party",
+      "pixiv.net",
+      "pornolab.net",
+      "republic.ru",
+      "semnasem.org",
+      "soundcloud.com",
+      "xhamster.com",
+      "lib.rus.ec",
+      "seedoff.zannn.top"
     ]
   }
 }

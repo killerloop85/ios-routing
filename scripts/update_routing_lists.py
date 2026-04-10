@@ -56,6 +56,46 @@ class Candidate:
 
 
 DOMAIN_RE = re.compile(r"\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-zа-я0-9-]{2,}\b", re.IGNORECASE)
+LETTER_RE = re.compile(r"[a-zа-я]", re.IGNORECASE)
+FILELIKE_TLDS = {
+    "7z",
+    "apk",
+    "avif",
+    "bin",
+    "csv",
+    "deb",
+    "dmg",
+    "doc",
+    "docx",
+    "exe",
+    "gif",
+    "gz",
+    "ico",
+    "jpeg",
+    "jpg",
+    "json",
+    "md",
+    "pdf",
+    "pkg",
+    "png",
+    "rar",
+    "rpm",
+    "svg",
+    "tar",
+    "tgz",
+    "toml",
+    "txt",
+    "webp",
+    "xls",
+    "xlsx",
+    "xml",
+    "yaml",
+    "yml",
+    "zip",
+}
+BLOCKED_AUTO_MIN_PRIORITY = 275
+BLOCKED_AUTO_MIN_SOURCES = 3
+FOREIGN_AUTO_MIN_SOURCES = 2
 
 
 @dataclass(frozen=True)
@@ -199,6 +239,13 @@ def normalize_domain(value: str) -> str | None:
     if "/" in value or ":" in value or "*" in value or " " in value:
         return None
     if not DOMAIN_RE.fullmatch(value):
+        return None
+    tld = value.rsplit(".", 1)[-1]
+    if tld in FILELIKE_TLDS:
+        return None
+    if "-" in tld and not tld.startswith("xn--"):
+        return None
+    if not (tld.startswith("xn--") or LETTER_RE.search(tld)):
         return None
     return value
 
@@ -370,11 +417,17 @@ def build_direct_list(
 
 def build_blocked_list(blocked_candidates: Dict[str, Candidate], direct_override: Set[str]) -> str:
     manual_core = flatten_sections(MANUAL_BLOCKED.sections)
+    foreign_core = flatten_sections(MANUAL_FOREIGN.sections)
     filtered: Dict[str, Candidate] = {}
     for domain, candidate in blocked_candidates.items():
         if domain in direct_override:
             continue
-        if candidate.manual or len(candidate.sources) >= 2:
+        if domain in foreign_core:
+            continue
+        if candidate.manual:
+            filtered[domain] = candidate
+            continue
+        if len(candidate.sources) >= BLOCKED_AUTO_MIN_SOURCES and candidate.total_priority() >= BLOCKED_AUTO_MIN_PRIORITY:
             filtered[domain] = candidate
 
     always_keep = manual_core
@@ -393,6 +446,8 @@ def build_foreign_list(foreign_candidates: Dict[str, Candidate]) -> str:
     filtered: Dict[str, Candidate] = {}
     for domain, candidate in foreign_candidates.items():
         if is_ru_domain(domain, set()):
+            continue
+        if not candidate.manual and len(candidate.sources) < FOREIGN_AUTO_MIN_SOURCES:
             continue
         filtered[domain] = candidate
 
