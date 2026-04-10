@@ -20,3 +20,14 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  office-pac:
+    image: nginx:alpine
+    container_name: office-pac
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - "${OFFICE_LAN_BIND_IP:-10.77.221.15}:${PAC_PORT:-8088}:80/tcp"
+    volumes:
+      - ./proxy.pac:/usr/share/nginx/html/proxy.pac:ro
+      - ./pac.nginx.conf:/etc/nginx/conf.d/default.conf:ro

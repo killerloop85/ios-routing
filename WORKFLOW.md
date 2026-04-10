@@ -13,6 +13,7 @@
 - `clash/` — экспортированные YAML-правила и профили для Clash for Windows / mihomo
 - `office/` — шаблоны офисного Synology gateway-стека, PAC-файл и `sing-box` templates
 - `office/sing-box/generated/` — сгенерированные sing-box конфиги для Synology из текущего routing core
+- `office/windows-pilot-setup.md` — короткая инструкция для первой Windows-машины в офисе
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON

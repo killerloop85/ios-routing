@@ -24,11 +24,14 @@ This pin is intentional for Synology compatibility with the current office confi
 
 - `docker-compose.synology.yml` - Synology Container Manager compose skeleton
 - `env.example` - example environment variables for local-only secrets
+- `proxy.pac` - ready PAC file for Windows/macOS auto proxy config
 - `proxy.pac.example.js` - browser/system PAC example for office rollout
+- `pac.nginx.conf` - tiny nginx config for serving `proxy.pac` over HTTP inside the office LAN
 - `sing-box/config.split.template.jsonc` - split-routing template
 - `sing-box/config.full.template.jsonc` - full-tunnel template
 - `sing-box/generated/config.split.generated.json` - generated split config built from the current routing core
 - `sing-box/generated/config.full.generated.json` - generated full config built from the current routing core
+- `windows-pilot-setup.md` - short setup checklist for the first Windows office machine
 
 ## Generated baseline
 
@@ -51,8 +54,15 @@ They are exported from the finalized `shadowrocket/*.list` files, so office rout
 5. Copy it to the Synology-local `config/config.json`.
 6. Replace proxy auth and upstream placeholders locally on Synology, including Reality fingerprint and spider path if they are present in the x-ui URI.
 7. Start the stack in Container Manager.
-8. Point 1-2 office pilot machines to the mixed proxy listener.
-9. Verify direct/proxy behavior before wider rollout.
+8. Start both `office-vpn` and `office-pac`.
+9. Point 1-2 office pilot machines to the PAC URL or the mixed proxy listener.
+10. Verify direct/proxy behavior before wider rollout.
+
+## Pilot URL
+
+Preferred Windows auto-config URL:
+
+- `http://10.77.221.15:8088/proxy.pac`
 
 ## Synology CLI note
 
