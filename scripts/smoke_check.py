@@ -19,12 +19,15 @@ STREISAND_DIR = ROOT / "streisand"
 HIDDIFY_DIR = ROOT / "hiddify"
 HAPP_DIR = ROOT / "happ"
 CLASH_DIR = ROOT / "clash"
+OFFICE_DIR = ROOT / "office"
+OFFICE_SINGBOX_DIR = OFFICE_DIR / "sing-box" / "generated"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
 STREISAND_EXPORTER = ROOT / "scripts" / "export_streisand_rules.py"
 STREISAND_URI_EXPORTER = ROOT / "scripts" / "export_streisand_uri.py"
 HIDDIFY_EXPORTER = ROOT / "scripts" / "export_hiddify_rules.py"
 HAPP_EXPORTER = ROOT / "scripts" / "export_happ_routing.py"
 CLASH_EXPORTER = ROOT / "scripts" / "export_clash_rules.py"
+OFFICE_EXPORTER = ROOT / "scripts" / "export_office_singbox.py"
 REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
@@ -63,6 +66,10 @@ CLASH_FILES = (
     CLASH_DIR / "routing-profile-full.yaml",
     CLASH_DIR / "routing-profile-split.yaml",
     CLASH_DIR / "routing-profile-split-direct-default.yaml",
+)
+OFFICE_FILES = (
+    OFFICE_SINGBOX_DIR / "config.split.generated.json",
+    OFFICE_SINGBOX_DIR / "config.full.generated.json",
 )
 
 LIST_LINE_RE = re.compile(
@@ -521,6 +528,96 @@ def validate_clash_sync() -> None:
             raise ValueError(f"{path}: rules count {len(rules)} does not match source count {expected_count}")
 
 
+def validate_office_file(path: Path) -> None:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path}: top-level object must be a JSON object")
+    for key in ("dns", "inbounds", "outbounds", "route"):
+        if key not in payload:
+            raise ValueError(f"{path}: missing {key}")
+    route = payload.get("route")
+    if not isinstance(route, dict):
+        raise ValueError(f"{path}: route must be an object")
+    if route.get("final") != "proxy":
+        raise ValueError(f"{path}: route.final must be proxy")
+    rules = route.get("rules")
+    if not isinstance(rules, list) or not rules:
+        raise ValueError(f"{path}: missing non-empty route.rules")
+    saw_local_ip_rule = False
+    saw_local_domain_rule = False
+    saw_direct_suffixes = False
+    saw_proxy_suffixes = False
+    for rule in rules:
+        if not isinstance(rule, dict):
+            raise ValueError(f"{path}: invalid route rule: {rule!r}")
+        ip_cidr = rule.get("ip_cidr")
+        domain = rule.get("domain")
+        domain_suffix = rule.get("domain_suffix")
+        outbound = str(rule.get("outbound", "")).strip()
+        if outbound not in {"direct", "proxy", "block"}:
+            raise ValueError(f"{path}: unsupported outbound in route rule: {outbound}")
+        if ip_cidr is not None:
+            if not isinstance(ip_cidr, list) or not all(isinstance(item, str) and item.strip() for item in ip_cidr):
+                raise ValueError(f"{path}: ip_cidr rule must be a list of non-empty strings")
+            if "10.77.221.0/24" in ip_cidr and outbound == "direct":
+                saw_local_ip_rule = True
+        if domain is not None:
+            if not isinstance(domain, list) or not all(isinstance(item, str) and item.strip() for item in domain):
+                raise ValueError(f"{path}: domain rule must be a list of non-empty strings")
+            if "localhost" in domain and outbound == "direct":
+                saw_local_domain_rule = True
+        if domain_suffix is not None:
+            if not isinstance(domain_suffix, list) or not all(isinstance(item, str) and item.strip() for item in domain_suffix):
+                raise ValueError(f"{path}: domain_suffix rule must be a list of non-empty strings")
+            if outbound == "direct":
+                saw_direct_suffixes = True
+            if outbound == "proxy":
+                saw_proxy_suffixes = True
+    if not saw_local_ip_rule:
+        raise ValueError(f"{path}: missing office LAN direct IP rule")
+    if not saw_local_domain_rule:
+        raise ValueError(f"{path}: missing localhost direct rule")
+    if not saw_direct_suffixes:
+        raise ValueError(f"{path}: missing direct domain_suffix rule")
+    if path.name == "config.split.generated.json" and not saw_proxy_suffixes:
+        raise ValueError(f"{path}: split config must include proxy domain_suffix rules")
+
+
+def validate_office_sync() -> None:
+    split_payload = json.loads((OFFICE_SINGBOX_DIR / "config.split.generated.json").read_text(encoding="utf-8"))
+    rules = split_payload["route"]["rules"]
+    direct_suffixes: set[str] = set()
+    proxy_suffixes: set[str] = set()
+    for rule in rules:
+        suffixes = rule.get("domain_suffix")
+        if not isinstance(suffixes, list):
+            continue
+        if rule.get("outbound") == "direct":
+            direct_suffixes.update(str(item).strip().lower() for item in suffixes)
+        if rule.get("outbound") == "proxy":
+            proxy_suffixes.update(str(item).strip().lower() for item in suffixes)
+    source_direct = {
+        line.split(",", 1)[1].strip().lower()
+        for line in (SHADOWROCKET_DIR / "ru-direct.list").read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
+    source_proxy = {
+        line.split(",", 1)[1].strip().lower()
+        for source_path in (
+            SHADOWROCKET_DIR / "ru-blocked-core.list",
+            SHADOWROCKET_DIR / "foreign-services.list",
+        )
+        for line in source_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
+    if not source_direct.issubset(direct_suffixes):
+        missing = sorted(source_direct - direct_suffixes)[:10]
+        raise ValueError(f"office/sing-box/generated/config.split.generated.json: missing direct suffixes: {missing}")
+    if not source_proxy.issubset(proxy_suffixes):
+        missing = sorted(source_proxy - proxy_suffixes)[:10]
+        raise ValueError(f"office/sing-box/generated/config.split.generated.json: missing proxy suffixes: {missing}")
+
+
 def run_offline_updater() -> None:
     result = subprocess.run(
         [sys.executable, str(UPDATER), "--offline"],
@@ -629,6 +726,20 @@ def run_clash_export_check() -> None:
             raise RuntimeError(f"clash export is not stable:\n{result.stdout}")
 
 
+def run_office_export_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(OFFICE_EXPORTER), "--offline"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "office export failed")
+    if result.stdout.strip() != "No changes.":
+        raise RuntimeError(f"office export is not stable:\n{result.stdout}")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
@@ -640,6 +751,7 @@ def main() -> int:
     run_hiddify_export_check()
     run_happ_export_check()
     run_clash_export_check()
+    run_office_export_check()
     for path in STREISAND_FILES:
         validate_streisand_file(path)
     for path in STREISAND_URI_FILES:
@@ -653,6 +765,9 @@ def main() -> int:
     for path in CLASH_FILES:
         validate_clash_file(path)
     validate_clash_sync()
+    for path in OFFICE_FILES:
+        validate_office_file(path)
+    validate_office_sync()
     run_regression_check()
     print("Smoke check passed.")
     print("Note: Streisand split artifacts are validated only as experimental local exports; real client behavior is not guaranteed.")

@@ -1,0 +1,19 @@
+services:
+  office-vpn:
+    image: ghcr.io/sagernet/sing-box:latest
+    container_name: office-vpn
+    restart: unless-stopped
+    network_mode: bridge
+    env_file:
+      - .env
+    ports:
+      - "${OFFICE_LAN_BIND_IP:-10.77.221.15}:${MIXED_PORT:-1080}:${MIXED_PORT:-1080}/tcp"
+      - "${OFFICE_LAN_BIND_IP:-10.77.221.15}:${MIXED_PORT:-1080}:${MIXED_PORT:-1080}/udp"
+    volumes:
+      - ./config/config.json:/etc/sing-box/config.json:ro
+      - ./logs:/var/log/sing-box
+    healthcheck:
+      test: ["CMD", "sing-box", "check", "-c", "/etc/sing-box/config.json"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

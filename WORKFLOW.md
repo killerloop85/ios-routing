@@ -11,6 +11,8 @@
 - `hiddify/` — экспортированные JSON-правила и профили для Hiddify
 - `happ/` — экспортированные routing-профили для Happ
 - `clash/` — экспортированные YAML-правила и профили для Clash for Windows / mihomo
+- `office/` — шаблоны офисного Synology gateway-стека, PAC-файл и `sing-box` templates
+- `office/sing-box/generated/` — сгенерированные sing-box конфиги для Synology из текущего routing core
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
@@ -18,6 +20,7 @@
 - `scripts/export_hiddify_rules.py` — экспорт итоговых `.list` в Hiddify JSON
 - `scripts/export_happ_routing.py` — экспорт итоговых `.list` в Happ JSON
 - `scripts/export_clash_rules.py` — экспорт итоговых `.list` в Clash YAML
+- `scripts/export_office_singbox.py` — экспорт итоговых `.list` в sing-box конфиги для Synology office gateway
 - `scripts/check_regression_domains.py` — фиксированный regression-check по доменам
 - `docs/routing-update-spec.md` — техническая спецификация логики обновления
 - `docs/streisand-routing-spec.md` — ТЗ на второй consumer того же routing-слоя для Streisand
@@ -29,6 +32,7 @@
 - `docs/happ-routing-spec.md` — ТЗ на thin export-layer для Happ
 - `docs/happ-profile-notes.md` — заметки по Happ-слою и его ограничениями
 - `docs/clash-routing-spec.md` — ТЗ на thin export-layer для Clash
+- `docs/office-synology-vpn-architecture.md` — рекомендуемая продовая архитектура офиса через Synology
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `docs/ROADMAP.md` — короткий backlog по полевым проверкам и следующим улучшениям
 - `Makefile` — короткие алиасы для повседневных команд
@@ -46,6 +50,8 @@
 - Hiddify-слой считать thin export-layer: он должен быть семантически синхронизирован с Shadowrocket и не заменяет основной source of truth в `data/`.
 - Happ-слой считать thin export-layer: он нужен как нормализованный routing JSON для Happ UI и не заменяет общий source of truth.
 - Clash-слой считать thin export-layer: он нужен как rule/profile YAML для mihomo и не заменяет общий source of truth.
+- Офисный Synology-слой считать deployment-target поверх того же routing core, а не отдельным policy-источником.
+- Для Synology office gateway использовать именно generated `office/sing-box/generated/*.json`, а не поддерживать маршрутизацию отдельными ручными списками.
 - `happ/routing-profile-split.json` считать parity-safe профилем.
 - `happ/routing-profile-split-direct-default.json` считать Happ-специфичным direct-default профилем.
 - `clash/routing-profile-full.yaml` считать stable Clash-профилем.
@@ -148,6 +154,12 @@ python3 scripts/export_happ_routing.py --offline
 python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default
 ```
 
+15. Проверить, что office Synology sing-box экспорт синхронизирован с текущими `.list`.
+
+```bash
+python3 scripts/export_office_singbox.py --offline
+```
+
 То же самое короткими алиасами:
 
 ```bash
@@ -164,6 +176,8 @@ make happ
 make happ-check
 make clash
 make clash-check
+make office
+make office-check
 make smoke
 make regression
 ```
@@ -229,6 +243,7 @@ python3 scripts/export_streisand_uri.py --offline
 python3 scripts/export_hiddify_rules.py --offline
 python3 scripts/export_happ_routing.py --offline
 python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default
+python3 scripts/export_office_singbox.py --offline
 python3 scripts/check_regression_domains.py
 python3 scripts/update_routing_lists.py --report-json -
 python3 scripts/smoke_check.py

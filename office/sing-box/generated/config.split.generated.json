@@ -1,0 +1,273 @@
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "local-dns",
+        "address": "local",
+        "detour": "direct"
+      },
+      {
+        "tag": "remote-dns",
+        "address": "https://1.1.1.1/dns-query",
+        "detour": "proxy"
+      }
+    ],
+    "rules": [
+      {
+        "domain": [
+          "localhost",
+          "captive.apple.com"
+        ],
+        "server": "local-dns"
+      },
+      {
+        "domain_suffix": [
+          "local",
+          "lan"
+        ],
+        "server": "local-dns"
+      }
+    ],
+    "final": "remote-dns"
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "office-mixed",
+      "listen": "0.0.0.0",
+      "listen_port": 1080,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "users": [
+        {
+          "username": "REPLACE_PROXY_USERNAME",
+          "password": "REPLACE_PROXY_PASSWORD"
+        }
+      ]
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "vless-reality-primary"
+      ],
+      "default": "vless-reality-primary"
+    },
+    {
+      "type": "vless",
+      "tag": "vless-reality-primary",
+      "server": "REPLACE_VLESS_SERVER",
+      "server_port": 443,
+      "uuid": "REPLACE_VLESS_UUID",
+      "flow": "",
+      "tls": {
+        "enabled": true,
+        "server_name": "REPLACE_VLESS_SERVER_NAME",
+        "reality": {
+          "enabled": true,
+          "public_key": "REPLACE_VLESS_PUBLIC_KEY",
+          "short_id": "REPLACE_VLESS_SHORT_ID"
+        }
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "final": "proxy",
+    "rules": [
+      {
+        "ip_cidr": [
+          "127.0.0.0/8",
+          "10.0.0.0/8",
+          "172.16.0.0/12",
+          "192.168.0.0/16",
+          "100.64.0.0/10",
+          "17.0.0.0/8",
+          "10.77.221.0/24"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "domain": [
+          "localhost",
+          "captive.apple.com"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "domain_suffix": [
+          "local",
+          "lan",
+          "gosuslugi.ru",
+          "nalog.ru",
+          "nalog.gov.ru",
+          "mos.ru",
+          "mosreg.ru",
+          "government.ru",
+          "kremlin.ru",
+          "pfr.gov.ru",
+          "sberbank.ru",
+          "sber.ru",
+          "vtb.ru",
+          "alfabank.ru",
+          "tbank.ru",
+          "tinkoff.ru",
+          "open.ru",
+          "raiffeisen.ru",
+          "gazprombank.ru",
+          "psbank.ru",
+          "mironline.ru",
+          "sbp.nspk.ru",
+          "yandex.ru",
+          "yandex.net",
+          "ya.ru",
+          "yastatic.net",
+          "mail.ru",
+          "vk.com",
+          "ok.ru",
+          "ozon.ru",
+          "wildberries.ru",
+          "avito.ru",
+          "cian.ru",
+          "2gis.ru",
+          "pochta.ru",
+          "cdek.ru",
+          "rzd.ru",
+          "mts.ru",
+          "tele2.ru",
+          "beeline.ru",
+          "megafon.ru",
+          "rostelecom.ru",
+          "yota.ru",
+          "domru.ru",
+          "ertelecom.ru",
+          "confael.ru",
+          "bitrix24.ru",
+          "bitrix24.com",
+          "bitrix.info",
+          "ru",
+          "su"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "domain_suffix": [
+          "instagram.com",
+          "cdninstagram.com",
+          "threads.net",
+          "facebook.com",
+          "fbcdn.net",
+          "messenger.com",
+          "twitter.com",
+          "x.com",
+          "t.co",
+          "discord.com",
+          "discord.gg",
+          "discordapp.com",
+          "linkedin.com",
+          "licdn.com",
+          "youtube.com",
+          "youtu.be",
+          "googlevideo.com",
+          "ytimg.com",
+          "meduza.io",
+          "svoboda.org",
+          "currenttime.tv",
+          "dozhd.ru",
+          "tvrain.tv",
+          "ooni.org",
+          "torproject.org",
+          "adguard.com",
+          "bitcoin.org",
+          "e621.net",
+          "flibusta.is",
+          "libgen.rs",
+          "localbitcoins.com",
+          "nordvpn.com",
+          "ntc.party",
+          "pixiv.net",
+          "pornolab.net",
+          "republic.ru",
+          "semnasem.org",
+          "soundcloud.com",
+          "xhamster.com",
+          "lib.rus.ec",
+          "seedoff.zannn.top"
+        ],
+        "outbound": "proxy"
+      },
+      {
+        "domain_suffix": [
+          "openai.com",
+          "chatgpt.com",
+          "anthropic.com",
+          "claude.ai",
+          "perplexity.ai",
+          "deepl.com",
+          "notion.so",
+          "notion.site",
+          "figma.com",
+          "linear.app",
+          "slack.com",
+          "atlassian.com",
+          "trello.com",
+          "asana.com",
+          "zoom.us",
+          "github.com",
+          "githubusercontent.com",
+          "githubassets.com",
+          "gitlab.com",
+          "bitbucket.org",
+          "docker.com",
+          "docker.io",
+          "cloudflare.com",
+          "workers.dev",
+          "vercel.com",
+          "netlify.app",
+          "herokuapp.com",
+          "google.com",
+          "googleapis.com",
+          "gstatic.com",
+          "youtube.com",
+          "ytimg.com",
+          "googlevideo.com",
+          "reddit.com",
+          "redd.it",
+          "redditmedia.com",
+          "medium.com",
+          "substack.com",
+          "linkedin.com",
+          "proton.me",
+          "protonmail.com",
+          "protonvpn.com",
+          "tutanota.com",
+          "openvpn.net",
+          "wireguard.com",
+          "psiphon.ca",
+          "lantern.io",
+          "netflix.com",
+          "spotify.com"
+        ],
+        "outbound": "proxy"
+      }
+    ]
+  }
+}

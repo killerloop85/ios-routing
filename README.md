@@ -16,6 +16,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `happ/*.json` - generated Happ routing exports built from the same finalized routing lists
 - `happ/README.md` - short guide for mapping the exported Happ JSON into the client UI
 - `clash/*.yaml` - generated Clash for Windows / mihomo routing exports built from the same finalized routing lists
+- `office/` - Synology office gateway templates, PAC example, and sing-box deployment skeleton
+- `office/sing-box/generated/*.json` - generated Synology sing-box configs built from the same finalized routing lists
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
@@ -26,6 +28,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `docs/happ-routing-spec.md` - technical spec for exporting the same routing policy to Happ JSON
 - `docs/happ-profile-notes.md` - notes on Happ as a thin export layer and how to map it into the client UI
 - `docs/clash-routing-spec.md` - technical spec for exporting the same routing policy to Clash YAML
+- `docs/office-synology-vpn-architecture.md` - recommended office architecture for running Synology as a split-routing VPN gateway
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
 - `docs/ROADMAP.md` - short backlog for real-device validation and next routing improvements
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
@@ -87,6 +90,13 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 3. Start with `routing-profile-full.yaml` if you want the least surprising behavior.
 4. Verify a few direct and proxy domains after import.
 
+### Office Synology Gateway
+
+1. Generate the office sing-box configs with `python3 scripts/export_office_singbox.py --write`.
+2. Copy `office/` to Synology, for example under `/volume1/docker/office-vpn`.
+3. Use `office/sing-box/generated/config.split.generated.json` as the preferred baseline, then replace placeholders locally.
+4. Start with 1-2 pilot machines through explicit proxy or PAC before wider office rollout.
+
 ## Notes
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
@@ -97,8 +107,10 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - Clash artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
+- The office Synology stack should be treated as another deployment target that consumes the same routing policy, not as a separate routing policy source.
 - `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.
 - `clash/routing-profile-full.yaml` is the stable Clash profile; both split Clash profiles should be treated as experimental until real Windows client checks confirm parity.
+- The office Synology layer should consume generated sing-box configs from this repo, not its own hand-maintained routing policy.
 - Personal configs with embedded credentials are intentionally not stored in the shared repository.
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
@@ -120,6 +132,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Check Happ export sync without writing: `make happ-check`
 - Write Clash YAML exports: `make clash`
 - Check Clash export sync without writing: `make clash-check`
+- Write office Synology sing-box exports: `make office`
+- Check office Synology sing-box export sync without writing: `make office-check`
 - Treat Streisand exports as test artifacts until real client validation confirms that routing works as expected
 - Preview list regeneration without changing files: `make offline`
 - Fetch external sources and preview a diff: `make update`
@@ -138,6 +152,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Check Happ export sync: `python3 scripts/export_happ_routing.py --offline`
 - Write Clash YAML exports: `python3 scripts/export_clash_rules.py --write --profile full --profile split --profile split-direct-default`
 - Check Clash export sync: `python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default`
+- Write office Synology sing-box exports: `python3 scripts/export_office_singbox.py --write`
+- Check office Synology sing-box export sync: `python3 scripts/export_office_singbox.py --offline`
 - Check Streisand import URI sync: `python3 scripts/export_streisand_uri.py --offline`
 - Check Streisand export sync: `python3 scripts/export_streisand_rules.py --offline`
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`

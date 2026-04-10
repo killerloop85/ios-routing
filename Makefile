@@ -5,11 +5,12 @@ STREISAND_URI := $(PYTHON) scripts/export_streisand_uri.py
 HIDDIFY := $(PYTHON) scripts/export_hiddify_rules.py
 HAPP := $(PYTHON) scripts/export_happ_routing.py
 CLASH := $(PYTHON) scripts/export_clash_rules.py
+OFFICE := $(PYTHON) scripts/export_office_singbox.py
 SMOKE := $(PYTHON) scripts/smoke_check.py
 REGRESSION := $(PYTHON) scripts/check_regression_domains.py
 REPORTS_DIR := reports
 
-.PHONY: help smoke regression streisand streisand-uri streisand-experimental streisand-qr hiddify hiddify-check happ happ-check clash clash-check offline update write report-json report-md ci
+.PHONY: help smoke regression streisand streisand-uri streisand-experimental streisand-qr hiddify hiddify-check happ happ-check clash clash-check office office-check offline update write report-json report-md ci
 
 help:
 	@printf "Available targets:\n"
@@ -25,6 +26,8 @@ help:
 	@printf "  make happ-check   Check Happ export sync without writing\n"
 	@printf "  make clash        Write Clash YAML exports to disk\n"
 	@printf "  make clash-check  Check Clash export sync without writing\n"
+	@printf "  make office       Write office Synology sing-box exports to disk\n"
+	@printf "  make office-check Check office Synology sing-box export sync without writing\n"
 	@printf "  make offline      Run offline updater preview\n"
 	@printf "  make update       Fetch sources and print diff preview\n"
 	@printf "  make write        Write regenerated lists to disk\n"
@@ -70,6 +73,12 @@ clash:
 
 clash-check:
 	$(CLASH) --offline --profile full --profile split --profile split-direct-default
+
+office:
+	$(OFFICE) --write
+
+office-check:
+	$(OFFICE) --offline
 
 offline:
 	$(UPDATER) --offline
