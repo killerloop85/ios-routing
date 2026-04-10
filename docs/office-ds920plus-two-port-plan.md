@@ -44,7 +44,7 @@ Use `LAN2` as the new office VPN segment:
   - dedicated VPN segment subnet: `10.77.230.0/24`
   - Synology `LAN2` IP: `10.77.230.1`
   - suggested DHCP range: `10.77.230.50-10.77.230.199`
-  - DNS for clients: `10.77.230.1`
+  - DNS for clients: `10.77.222.1` at the first stage
 
 ## Why this is the best immediate office option
 
@@ -77,7 +77,8 @@ On the DS920+ we need:
 2. DHCP server enabled for `10.77.230.0/24`
 3. IP forwarding between `LAN2` and the office/VPN egress path
 4. NAT / masquerade for the VPN segment where needed
-5. Office routing policy from this repository:
+5. A dedicated network-gateway layer on top of the current office `sing-box` baseline, because the current office stack is still explicit-proxy-first.
+6. Office routing policy from this repository:
    - `local/private` -> `DIRECT`
    - office LAN `10.77.221.0/24` -> `DIRECT`
    - `ru-direct` -> `DIRECT`
@@ -105,7 +106,7 @@ Start small:
 3. Confirm they receive:
    - IP from `10.77.230.0/24`
    - gateway `10.77.230.1`
-   - DNS `10.77.230.1`
+   - DNS `10.77.222.1`
 4. Verify:
    - `ifconfig.me/ip`
    - `yandex.ru`

@@ -28,10 +28,11 @@ Use this when the office is ready to use the second Ethernet port of the Synolog
 4. Gateway for clients:
    - `10.77.230.1`
 5. DNS for clients:
-   - `10.77.230.1`
+   - `10.77.222.1`
 6. Keep the office `sing-box` stack as the routing baseline.
 7. Enable forwarding/NAT for the new segment.
-8. Keep office LAN destinations direct.
+8. Add the dedicated network-gateway layer for the office segment on top of the current office stack.
+9. Keep office LAN destinations direct.
 
 ## Pilot validation
 
@@ -39,7 +40,7 @@ For the first 1-2 machines connected to `LAN2`:
 
 - confirm they get `10.77.230.x`
 - confirm gateway is `10.77.230.1`
-- confirm DNS is `10.77.230.1`
+- confirm DNS is `10.77.222.1`
 - check:
   - `https://ifconfig.me/ip`
   - `https://yandex.ru`

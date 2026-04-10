@@ -17,8 +17,9 @@ Current office recommendation:
 
 ## Design Summary
 
-- Synology acts as a LAN-only split-routing gateway.
-- Office clients use the Synology node as an explicit proxy first.
+- Synology acts as the office routing node.
+- Today the deployed office stack is explicit-proxy-first.
+- The DS920+ two-port office segment adds a dedicated network-gateway layer on top of that baseline.
 - Upstream tunnel is `VLESS/Reality` today.
 - `Hysteria2` can be added later without redesigning the office side.
 - The routing policy follows the shared repository core:
