@@ -16,6 +16,7 @@
 - `office/windows-pilot-setup.md` — короткая инструкция для первой Windows-машины в офисе
 - `office/windows-hiddify-setup.md` — основная инструкция для Windows-машины, если сотруднику нужен Telegram/WhatsApp desktop
 - `office/hiddify-office-rollout.md` — короткий план офиса для перехода на Hiddify-first rollout
+- `office/ds920plus-two-port-rollout.md` — конкретный rollout для DS920+ с отдельным офисным VPN-сегментом на втором LAN-порту
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
@@ -36,6 +37,7 @@
 - `docs/happ-profile-notes.md` — заметки по Happ-слою и его ограничениями
 - `docs/clash-routing-spec.md` — ТЗ на thin export-layer для Clash
 - `docs/office-synology-vpn-architecture.md` — рекомендуемая продовая архитектура офиса через Synology
+- `docs/office-ds920plus-two-port-plan.md` — конкретный план для DS920+ с `LAN1` в текущей сети и `LAN2` как отдельным офисным VPN-сегментом
 - `docs/routing-dev-heuristics.md` — короткая памятка по эвристикам и правилам сопровождения
 - `docs/ROADMAP.md` — короткий backlog по полевым проверкам и следующим улучшениям
 - `Makefile` — короткие алиасы для повседневных команд

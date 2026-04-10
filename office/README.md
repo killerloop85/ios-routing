@@ -41,6 +41,7 @@ Current office recommendation:
 - `windows-hiddify-setup.md` - primary Windows setup when employees need Telegram and WhatsApp desktop
 - `hiddify-office-rollout.md` - short rollout plan for switching the office from PAC-first to Hiddify-first
 - `segment-gateway-rollout.md` - rollout plan for a dedicated office segment through Synology gateway
+- `ds920plus-two-port-rollout.md` - concrete rollout for using DS920+ `LAN2` as the dedicated office VPN segment
 
 ## Generated baseline
 
@@ -90,6 +91,12 @@ When the office is ready to touch network topology:
 2. route only that segment through Synology;
 3. validate Telegram, WhatsApp, browser traffic, and office-internal resources;
 4. expand only after the pilot segment proves stable.
+
+If the Synology has a free second Ethernet port, prefer the simpler physical variant:
+
+1. keep `LAN1` on the current office LAN;
+2. use `LAN2` as a dedicated office VPN segment;
+3. let Synology serve DHCP and gateway for that segment directly.
 
 ## Synology CLI note
 

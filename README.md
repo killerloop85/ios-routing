@@ -21,6 +21,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `office/windows-pilot-setup.md` - short first-machine checklist for testing the Synology office gateway on Windows
 - `office/windows-hiddify-setup.md` - primary Windows setup when employees need Telegram and WhatsApp desktop
 - `office/hiddify-office-rollout.md` - short office rollout plan for Hiddify-first deployment
+- `office/ds920plus-two-port-rollout.md` - concrete rollout for using a free second Synology NIC as the office VPN segment
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
@@ -32,6 +33,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `docs/happ-profile-notes.md` - notes on Happ as a thin export layer and how to map it into the client UI
 - `docs/clash-routing-spec.md` - technical spec for exporting the same routing policy to Clash YAML
 - `docs/office-synology-vpn-architecture.md` - recommended office architecture for running Synology as a split-routing VPN gateway
+- `docs/office-ds920plus-two-port-plan.md` - concrete DS920+ two-port office segment plan with Synology as DHCP and gateway on `LAN2`
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
 - `docs/ROADMAP.md` - short backlog for real-device validation and next routing improvements
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
