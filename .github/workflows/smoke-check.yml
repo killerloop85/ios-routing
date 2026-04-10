@@ -37,3 +37,6 @@ jobs:
 
       - name: Export Happ routing (offline)
         run: python3 scripts/export_happ_routing.py --offline
+
+      - name: Export Clash routing (offline)
+        run: python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default

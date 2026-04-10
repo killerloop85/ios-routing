@@ -1,0 +1,30 @@
+# Full VPN
+# All non-local traffic through proxy, keeping LAN and service traffic direct.
+# status: stable
+# intended-use: production
+port: 7890
+socks-port: 7891
+mode: Rule
+allow-lan: true
+log-level: info
+proxies: []
+proxy-groups:
+  - name: "PROXY"
+    type: select
+    include-all: true
+    proxies:
+      - "DIRECT"
+  - name: "DIRECT"
+    type: select
+    proxies:
+      - "DIRECT"
+rules:
+  - "DOMAIN,localhost,DIRECT"
+  - "DOMAIN-SUFFIX,local,DIRECT"
+  - "DOMAIN,captive.apple.com,DIRECT"
+  - "IP-CIDR,127.0.0.0/8,DIRECT,no-resolve"
+  - "IP-CIDR,10.0.0.0/8,DIRECT,no-resolve"
+  - "IP-CIDR,172.16.0.0/12,DIRECT,no-resolve"
+  - "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve"
+  - "IP-CIDR,100.64.0.0/10,DIRECT,no-resolve"
+  - "MATCH,PROXY"

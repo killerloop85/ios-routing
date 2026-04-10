@@ -15,6 +15,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `hiddify/*.json` - generated Hiddify exports built from the same finalized routing lists
 - `happ/*.json` - generated Happ routing exports built from the same finalized routing lists
 - `happ/README.md` - short guide for mapping the exported Happ JSON into the client UI
+- `clash/*.yaml` - generated Clash for Windows / mihomo routing exports built from the same finalized routing lists
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
@@ -24,6 +25,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `docs/hiddify-profile-notes.md` - notes on Hiddify as a thin export layer and what semantics are carried over
 - `docs/happ-routing-spec.md` - technical spec for exporting the same routing policy to Happ JSON
 - `docs/happ-profile-notes.md` - notes on Happ as a thin export layer and how to map it into the client UI
+- `docs/clash-routing-spec.md` - technical spec for exporting the same routing policy to Clash YAML
 - `docs/routing-dev-heuristics.md` - short maintainer notes for manual core, source tuning, and regression checks
 - `docs/ROADMAP.md` - short backlog for real-device validation and next routing improvements
 - `WORKFLOW.md` - practical day-to-day workflow for updating lists and publishing changes
@@ -78,6 +80,13 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 3. Keep using the Happ profile only as a routing layer, not as a separate source of truth.
 4. Verify a few direct and proxy domains after applying the rules.
 
+### Clash for Windows
+
+1. Import or merge `clash/routing-profile-full.yaml`, `clash/routing-profile-split.yaml`, or `clash/routing-profile-split-direct-default.yaml` into your Clash for Windows / mihomo setup.
+2. Keep using your own nodes or subscription separately; the Clash YAML here is only the routing layer.
+3. Start with `routing-profile-full.yaml` if you want the least surprising behavior.
+4. Verify a few direct and proxy domains after import.
+
 ## Notes
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
@@ -87,7 +96,9 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - The default Streisand export commands generate only the stable full-profile path. Split artifacts require an explicit experimental opt-in.
 - Hiddify artifacts are generated from the finalized Shadowrocket lists and are not a separate source of truth.
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
+- Clash artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.
+- `clash/routing-profile-full.yaml` is the stable Clash profile; both split Clash profiles should be treated as experimental until real Windows client checks confirm parity.
 - Personal configs with embedded credentials are intentionally not stored in the shared repository.
 - The rule lists are shared between both configs and can be extended over time.
 - `FINAL,PROXY` is enabled, so all non-local traffic that does not match the direct rules will go through VPN.
@@ -107,6 +118,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Check Hiddify export sync without writing: `make hiddify-check`
 - Write Happ routing exports: `make happ`
 - Check Happ export sync without writing: `make happ-check`
+- Write Clash YAML exports: `make clash`
+- Check Clash export sync without writing: `make clash-check`
 - Treat Streisand exports as test artifacts until real client validation confirms that routing works as expected
 - Preview list regeneration without changing files: `make offline`
 - Fetch external sources and preview a diff: `make update`
@@ -123,6 +136,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Check Hiddify export sync: `python3 scripts/export_hiddify_rules.py --offline`
 - Write Happ routing exports: `python3 scripts/export_happ_routing.py --write`
 - Check Happ export sync: `python3 scripts/export_happ_routing.py --offline`
+- Write Clash YAML exports: `python3 scripts/export_clash_rules.py --write --profile full --profile split --profile split-direct-default`
+- Check Clash export sync: `python3 scripts/export_clash_rules.py --offline --profile full --profile split --profile split-direct-default`
 - Check Streisand import URI sync: `python3 scripts/export_streisand_uri.py --offline`
 - Check Streisand export sync: `python3 scripts/export_streisand_rules.py --offline`
 - Preview list regeneration without changing files: `python3 scripts/update_routing_lists.py --offline`

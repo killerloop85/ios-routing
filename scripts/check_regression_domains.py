@@ -16,6 +16,7 @@ SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
 HIDDIFY_DIR = ROOT / "hiddify"
 HAPP_DIR = ROOT / "happ"
+CLASH_DIR = ROOT / "clash"
 
 DIRECT_PATH = SHADOWROCKET_DIR / "ru-direct.list"
 BLOCKED_PATH = SHADOWROCKET_DIR / "ru-blocked-core.list"
@@ -27,6 +28,7 @@ HIDDIFY_DIRECT_PATH = HIDDIFY_DIR / "ru-direct.hiddify.json"
 HIDDIFY_BLOCKED_PATH = HIDDIFY_DIR / "ru-blocked-core.hiddify.json"
 HIDDIFY_FOREIGN_PATH = HIDDIFY_DIR / "foreign-services.hiddify.json"
 HAPP_SPLIT_PATH = HAPP_DIR / "routing-profile-split.json"
+CLASH_SPLIT_PATH = CLASH_DIR / "routing-profile-split.yaml"
 
 
 @dataclass(frozen=True)
@@ -34,6 +36,13 @@ class RoutingOutcome:
     bucket: str
     rule: str
     matched_suffix: str | None
+
+
+@dataclass(frozen=True)
+class ClashRule:
+    kind: str
+    value: str
+    action: str
 
 
 def load_suffixes(path: Path) -> set[str]:
@@ -171,6 +180,77 @@ def resolve_happ_domain(domain: str, profile: HappProfile) -> RoutingOutcome:
     return RoutingOutcome(bucket="DIRECT", rule="FINAL", matched_suffix=None)
 
 
+def unquote_yaml_scalar(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        if value[0] == '"':
+            return str(json.loads(value))
+        return value[1:-1]
+    return value
+
+
+def load_clash_rules(path: Path) -> list[ClashRule]:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    rules: list[ClashRule] = []
+    in_rules = False
+    for raw_line in lines:
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if not in_rules:
+            if stripped == "rules:":
+                in_rules = True
+            continue
+        if not line.startswith("  - "):
+            continue
+        raw_rule = unquote_yaml_scalar(line.split("- ", 1)[1])
+        parts = [part.strip() for part in raw_rule.split(",")]
+        if not parts:
+            continue
+        kind = parts[0].upper()
+        if kind == "MATCH":
+            if len(parts) < 2:
+                raise ValueError(f"{path}: invalid MATCH rule: {raw_rule}")
+            rules.append(ClashRule(kind=kind, value="", action=parts[1].upper()))
+            continue
+        if len(parts) < 3:
+            raise ValueError(f"{path}: invalid Clash rule: {raw_rule}")
+        rules.append(ClashRule(kind=kind, value=parts[1].lower(), action=parts[2].upper()))
+    if not rules:
+        raise ValueError(f"{path}: no rules found")
+    return rules
+
+
+def resolve_clash_domain(
+    domain: str,
+    rules: list[ClashRule],
+    *,
+    direct_suffixes: set[str],
+    blocked_suffixes: set[str],
+    foreign_suffixes: set[str],
+) -> RoutingOutcome:
+    for rule in rules:
+        if rule.kind == "DOMAIN-SUFFIX":
+            if domain == rule.value or domain.endswith("." + rule.value):
+                target = "DIRECT" if rule.action == "DIRECT" else "PROXY"
+                if rule.value in direct_suffixes:
+                    rule_name = "ru-direct"
+                elif rule.value in blocked_suffixes:
+                    rule_name = "ru-blocked-core"
+                elif rule.value in foreign_suffixes:
+                    rule_name = "foreign-services"
+                else:
+                    rule_name = "ru-direct" if target == "DIRECT" else "FINAL"
+                return RoutingOutcome(bucket=target, rule=rule_name, matched_suffix=rule.value)
+        elif rule.kind == "DOMAIN":
+            if domain == rule.value:
+                return RoutingOutcome(bucket="DIRECT" if rule.action == "DIRECT" else "PROXY", rule="ru-direct", matched_suffix=rule.value)
+        elif rule.kind == "MATCH":
+            return RoutingOutcome(bucket="DIRECT" if rule.action == "DIRECT" else "PROXY", rule="FINAL", matched_suffix=None)
+    raise ValueError(f"Clash profile did not yield a MATCH fallback for {domain}")
+
+
 def main() -> int:
     payload = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     cases = payload.get("cases", [])
@@ -211,6 +291,7 @@ def main() -> int:
         expected_bucket="foreign-services",
     )
     happ_split = load_happ_profile(HAPP_SPLIT_PATH)
+    clash_split_rules = load_clash_rules(CLASH_SPLIT_PATH)
 
     failures: list[str] = []
     for item in cases:
@@ -235,6 +316,13 @@ def main() -> int:
             foreign=hiddify_foreign,
         )
         actual_happ = resolve_happ_domain(domain, happ_split)
+        actual_clash = resolve_clash_domain(
+            domain,
+            clash_split_rules,
+            direct_suffixes=direct,
+            blocked_suffixes=blocked,
+            foreign_suffixes=foreign,
+        )
         mismatches: list[str] = []
         if actual.bucket != expected_bucket:
             mismatches.append(f"bucket={actual.bucket} expected={expected_bucket}")
@@ -262,6 +350,13 @@ def main() -> int:
             mismatches.append(
                 "happ="
                 f"{actual_happ.rule}/{actual_happ.bucket}/{actual_happ.matched_suffix or '-'} "
+                "shadowrocket="
+                f"{actual.rule}/{actual.bucket}/{actual.matched_suffix or '-'}"
+            )
+        if actual_clash != actual:
+            mismatches.append(
+                "clash="
+                f"{actual_clash.rule}/{actual_clash.bucket}/{actual_clash.matched_suffix or '-'} "
                 "shadowrocket="
                 f"{actual.rule}/{actual.bucket}/{actual.matched_suffix or '-'}"
             )

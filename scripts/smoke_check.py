@@ -18,11 +18,13 @@ SHADOWROCKET_DIR = ROOT / "shadowrocket"
 STREISAND_DIR = ROOT / "streisand"
 HIDDIFY_DIR = ROOT / "hiddify"
 HAPP_DIR = ROOT / "happ"
+CLASH_DIR = ROOT / "clash"
 UPDATER = ROOT / "scripts" / "update_routing_lists.py"
 STREISAND_EXPORTER = ROOT / "scripts" / "export_streisand_rules.py"
 STREISAND_URI_EXPORTER = ROOT / "scripts" / "export_streisand_uri.py"
 HIDDIFY_EXPORTER = ROOT / "scripts" / "export_hiddify_rules.py"
 HAPP_EXPORTER = ROOT / "scripts" / "export_happ_routing.py"
+CLASH_EXPORTER = ROOT / "scripts" / "export_clash_rules.py"
 REGRESSION_CHECK = ROOT / "scripts" / "check_regression_domains.py"
 
 LIST_FILES = (
@@ -53,6 +55,14 @@ HAPP_FILES = (
     HAPP_DIR / "routing-profile-split.json",
     HAPP_DIR / "routing-profile-split-direct-default.json",
     HAPP_DIR / "routing-profile-full.json",
+)
+CLASH_FILES = (
+    CLASH_DIR / "ru-direct.rules.yaml",
+    CLASH_DIR / "ru-blocked-core.rules.yaml",
+    CLASH_DIR / "foreign-services.rules.yaml",
+    CLASH_DIR / "routing-profile-full.yaml",
+    CLASH_DIR / "routing-profile-split.yaml",
+    CLASH_DIR / "routing-profile-split-direct-default.yaml",
 )
 
 LIST_LINE_RE = re.compile(
@@ -406,6 +416,111 @@ def validate_happ_sync() -> None:
         raise ValueError(f"happ/routing-profile-split.json: missing proxy domains from source lists: {missing}")
 
 
+def unquote_yaml_scalar(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        if value[0] == '"':
+            return str(json.loads(value))
+        return value[1:-1]
+    return value
+
+
+def parse_clash_yaml(path: Path) -> tuple[dict[str, str], list[str]]:
+    scalars: dict[str, str] = {}
+    rules: list[str] = []
+    in_rules = False
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if not in_rules:
+            if stripped == "rules:":
+                in_rules = True
+                continue
+            if ":" in stripped and not line.startswith("  - ") and not line.startswith("    "):
+                key, value = stripped.split(":", 1)
+                scalars[key.strip()] = unquote_yaml_scalar(value)
+            continue
+        if line.startswith("  - "):
+            rules.append(unquote_yaml_scalar(line.split("- ", 1)[1]))
+    if not rules:
+        raise ValueError(f"{path}: missing rules list")
+    return scalars, rules
+
+
+def validate_clash_file(path: Path) -> None:
+    scalars, rules = parse_clash_yaml(path)
+    if path.name.endswith(".rules.yaml"):
+        if "rules" in scalars:
+            raise ValueError(f"{path}: unexpected scalar 'rules'")
+        for rule in rules:
+            if not rule.startswith("DOMAIN-SUFFIX,"):
+                raise ValueError(f"{path}: unsupported bucket rule: {rule}")
+            parts = [part.strip() for part in rule.split(",")]
+            if len(parts) != 3:
+                raise ValueError(f"{path}: malformed bucket rule: {rule}")
+            if parts[2] not in {"DIRECT", "PROXY"}:
+                raise ValueError(f"{path}: unsupported action in bucket rule: {rule}")
+        return
+
+    required_scalars = {
+        "port",
+        "socks-port",
+        "mode",
+        "allow-lan",
+        "log-level",
+        "proxies",
+        "proxy-groups",
+    }
+    missing = sorted(key for key in required_scalars if key not in scalars)
+    if missing:
+        raise ValueError(f"{path}: missing profile keys: {missing}")
+    if scalars["mode"] != "Rule":
+        raise ValueError(f"{path}: unexpected mode {scalars['mode']}")
+    if scalars["allow-lan"] != "true":
+        raise ValueError(f"{path}: allow-lan must be true")
+    if not any(rule == "MATCH,PROXY" or rule == "MATCH,DIRECT" for rule in rules):
+        raise ValueError(f"{path}: missing MATCH fallback")
+    if not any(rule.startswith("DOMAIN,localhost,DIRECT") for rule in rules):
+        raise ValueError(f"{path}: missing localhost direct rule")
+    if not any(rule.startswith("IP-CIDR,10.0.0.0/8,DIRECT") for rule in rules):
+        raise ValueError(f"{path}: missing local/private IP rule")
+    if path.name == "routing-profile-full.yaml" and rules[-1] != "MATCH,PROXY":
+        raise ValueError(f"{path}: full profile must end with MATCH,PROXY")
+    if path.name == "routing-profile-split.yaml":
+        if rules[-1] != "MATCH,PROXY":
+            raise ValueError(f"{path}: parity split profile must end with MATCH,PROXY")
+        if not any(rule == "GEOIP,RU,DIRECT,no-resolve" for rule in rules):
+            raise ValueError(f"{path}: split profile is missing GEOIP,RU,DIRECT,no-resolve")
+    if path.name == "routing-profile-split-direct-default.yaml":
+        if rules[-1] != "MATCH,DIRECT":
+            raise ValueError(f"{path}: direct-default split profile must end with MATCH,DIRECT")
+        if not any(rule == "GEOIP,RU,DIRECT,no-resolve" for rule in rules):
+            raise ValueError(f"{path}: direct-default split profile is missing GEOIP,RU,DIRECT,no-resolve")
+
+
+def validate_clash_sync() -> None:
+    expected_counts = {
+        CLASH_DIR / "ru-direct.rules.yaml": sum(
+            1 for line in (SHADOWROCKET_DIR / "ru-direct.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ),
+        CLASH_DIR / "ru-blocked-core.rules.yaml": sum(
+            1 for line in (SHADOWROCKET_DIR / "ru-blocked-core.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ),
+        CLASH_DIR / "foreign-services.rules.yaml": sum(
+            1 for line in (SHADOWROCKET_DIR / "foreign-services.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        ),
+    }
+    for path, expected_count in expected_counts.items():
+        _, rules = parse_clash_yaml(path)
+        if len(rules) != expected_count:
+            raise ValueError(f"{path}: rules count {len(rules)} does not match source count {expected_count}")
+
+
 def run_offline_updater() -> None:
     result = subprocess.run(
         [sys.executable, str(UPDATER), "--offline"],
@@ -496,6 +611,24 @@ def run_happ_export_check() -> None:
         raise RuntimeError(f"happ export is not stable:\n{result.stdout}")
 
 
+def run_clash_export_check() -> None:
+    for command in (
+        [sys.executable, str(CLASH_EXPORTER), "--offline"],
+        [sys.executable, str(CLASH_EXPORTER), "--offline", "--profile", "split", "--profile", "split-direct-default"],
+    ):
+        result = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr or result.stdout or "clash export failed")
+        if result.stdout.strip() != "No changes.":
+            raise RuntimeError(f"clash export is not stable:\n{result.stdout}")
+
+
 def main() -> int:
     validate_json_files()
     validate_manual_core_conflicts()
@@ -506,6 +639,7 @@ def main() -> int:
     run_streisand_uri_export_check()
     run_hiddify_export_check()
     run_happ_export_check()
+    run_clash_export_check()
     for path in STREISAND_FILES:
         validate_streisand_file(path)
     for path in STREISAND_URI_FILES:
@@ -516,6 +650,9 @@ def main() -> int:
     for path in HAPP_FILES:
         validate_happ_file(path)
     validate_happ_sync()
+    for path in CLASH_FILES:
+        validate_clash_file(path)
+    validate_clash_sync()
     run_regression_check()
     print("Smoke check passed.")
     print("Note: Streisand split artifacts are validated only as experimental local exports; real client behavior is not guaranteed.")
