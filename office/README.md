@@ -9,6 +9,11 @@ Current runtime baseline:
 
 This pin is intentional for Synology compatibility with the current office config shape. Do not switch back to `latest` without retesting the config against current sing-box migrations.
 
+Current office recommendation:
+
+- for employees who need Telegram and WhatsApp desktop, use per-machine Hiddify as the primary path;
+- keep the Synology PAC/proxy stack as a browser fallback, rollback path, and diagnostic tool.
+
 ## Design Summary
 
 - Synology acts as a LAN-only split-routing gateway.
@@ -32,6 +37,8 @@ This pin is intentional for Synology compatibility with the current office confi
 - `sing-box/generated/config.split.generated.json` - generated split config built from the current routing core
 - `sing-box/generated/config.full.generated.json` - generated full config built from the current routing core
 - `windows-pilot-setup.md` - short setup checklist for the first Windows office machine
+- `windows-hiddify-setup.md` - primary Windows setup when employees need Telegram and WhatsApp desktop
+- `hiddify-office-rollout.md` - short rollout plan for switching the office from PAC-first to Hiddify-first
 
 ## Generated baseline
 
@@ -63,6 +70,15 @@ They are exported from the finalized `shadowrocket/*.list` files, so office rout
 Preferred Windows auto-config URL:
 
 - `http://10.77.221.15:8088/proxy.pac`
+
+## Preferred employee path
+
+For employees who need native desktop apps:
+
+1. install Hiddify on the Windows machine;
+2. import the employee's own node or subscription;
+3. import `hiddify/routing-profile-split.json`;
+4. keep PAC as a browser-only fallback, not the main employee path.
 
 ## Synology CLI note
 

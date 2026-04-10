@@ -19,6 +19,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - `office/` - Synology office gateway templates, PAC example, and sing-box deployment skeleton
 - `office/sing-box/generated/*.json` - generated Synology sing-box configs built from the same finalized routing lists
 - `office/windows-pilot-setup.md` - short first-machine checklist for testing the Synology office gateway on Windows
+- `office/windows-hiddify-setup.md` - primary Windows setup when employees need Telegram and WhatsApp desktop
+- `office/hiddify-office-rollout.md` - short office rollout plan for Hiddify-first deployment
 - `docs/routing-update-spec.md` - technical spec for automated list updates
 - `docs/streisand-routing-spec.md` - technical spec for exporting the same routing policy to Streisand JSON
 - `docs/streisand-profile-notes.md` - decoded notes about real-world Streisand import profiles and what we adopted
@@ -77,6 +79,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 3. Verify a few direct and proxy domains after import.
 4. If client-specific quirks appear, treat the JSON as the normalized reference and document the client behavior separately.
 
+For office machines that need Telegram and WhatsApp desktop, prefer Hiddify over PAC as the main per-machine setup.
+
 ### Happ
 
 1. Open `happ/routing-profile-split.json`, `happ/routing-profile-split-direct-default.json`, or `happ/routing-profile-full.json`.
@@ -99,6 +103,8 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 4. Serve `office/proxy.pac` from Synology and use `http://10.77.221.15:8088/proxy.pac` for the first Windows pilot machine.
 5. Start with 1-2 pilot machines through explicit proxy or PAC before wider office rollout.
 
+If all employees need Telegram and WhatsApp desktop, prefer the Hiddify path for each machine and keep the Synology PAC/proxy stack as a browser fallback and rollback tool.
+
 ## Notes
 
 - `Universal-Routing.conf` is the recommended file for family, clients, and anyone who uses their own nodes.
@@ -110,6 +116,7 @@ Ready-to-use Shadowrocket routing presets and rule lists for split tunneling on 
 - Happ artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - Clash artifacts are generated from the finalized Shadowrocket lists and are also not a separate source of truth.
 - The office Synology stack should be treated as another deployment target that consumes the same routing policy, not as a separate routing policy source.
+- For office employees with native desktop messengers, Hiddify is now the preferred rollout path; Synology PAC remains useful as browser fallback and rollback.
 - `happ/routing-profile-split.json` is the parity-safe variant; `happ/routing-profile-split-direct-default.json` is the Happ-style direct-default variant.
 - `clash/routing-profile-full.yaml` is the stable Clash profile; both split Clash profiles should be treated as experimental until real Windows client checks confirm parity.
 - The office Synology layer should consume generated sing-box configs from this repo, not its own hand-maintained routing policy.

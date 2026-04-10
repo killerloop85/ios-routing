@@ -14,6 +14,8 @@
 - `office/` — шаблоны офисного Synology gateway-стека, PAC-файл и `sing-box` templates
 - `office/sing-box/generated/` — сгенерированные sing-box конфиги для Synology из текущего routing core
 - `office/windows-pilot-setup.md` — короткая инструкция для первой Windows-машины в офисе
+- `office/windows-hiddify-setup.md` — основная инструкция для Windows-машины, если сотруднику нужен Telegram/WhatsApp desktop
+- `office/hiddify-office-rollout.md` — короткий план офиса для перехода на Hiddify-first rollout
 - `data/` — source of truth для ручного ядра, source pool, приоритетов и override-правил
 - `scripts/update_routing_lists.py` — генератор и апдейтер списков
 - `scripts/export_streisand_rules.py` — экспорт итоговых `.list` в Streisand JSON
@@ -53,6 +55,7 @@
 - Clash-слой считать thin export-layer: он нужен как rule/profile YAML для mihomo и не заменяет общий source of truth.
 - Офисный Synology-слой считать deployment-target поверх того же routing core, а не отдельным policy-источником.
 - Для Synology office gateway использовать именно generated `office/sing-box/generated/*.json`, а не поддерживать маршрутизацию отдельными ручными списками.
+- Для сотрудников с Telegram/WhatsApp desktop считать Hiddify основным пользовательским сценарием, а PAC на Synology — fallback-режимом для браузеров и быстрым rollback.
 - `happ/routing-profile-split.json` считать parity-safe профилем.
 - `happ/routing-profile-split-direct-default.json` считать Happ-специфичным direct-default профилем.
 - `clash/routing-profile-full.yaml` считать stable Clash-профилем.
