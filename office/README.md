@@ -13,6 +13,7 @@ Current office recommendation:
 
 - for employees who need Telegram and WhatsApp desktop, use per-machine Hiddify as the primary path;
 - keep the Synology PAC/proxy stack as a browser fallback, rollback path, and diagnostic tool.
+- long-term office target: a separate office VLAN / SSID routed through Synology gateway.
 
 ## Design Summary
 
@@ -39,6 +40,7 @@ Current office recommendation:
 - `windows-pilot-setup.md` - short setup checklist for the first Windows office machine
 - `windows-hiddify-setup.md` - primary Windows setup when employees need Telegram and WhatsApp desktop
 - `hiddify-office-rollout.md` - short rollout plan for switching the office from PAC-first to Hiddify-first
+- `segment-gateway-rollout.md` - rollout plan for a dedicated office segment through Synology gateway
 
 ## Generated baseline
 
@@ -79,6 +81,15 @@ For employees who need native desktop apps:
 2. import the employee's own node or subscription;
 3. import `hiddify/routing-profile-split.json`;
 4. keep PAC as a browser-only fallback, not the main employee path.
+
+## Long-term office path
+
+When the office is ready to touch network topology:
+
+1. create a separate office VLAN or SSID;
+2. route only that segment through Synology;
+3. validate Telegram, WhatsApp, browser traffic, and office-internal resources;
+4. expand only after the pilot segment proves stable.
 
 ## Synology CLI note
 
