@@ -2,6 +2,13 @@
 
 This directory contains the practical deployment skeleton for running an office VPN gateway on Synology Container Manager.
 
+Current runtime baseline:
+
+- `ghcr.io/sagernet/sing-box:v1.12.0`
+- `ENABLE_DEPRECATED_SPECIAL_OUTBOUNDS=true`
+
+This pin is intentional for Synology compatibility with the current office config shape. Do not switch back to `latest` without retesting the config against current sing-box migrations.
+
 ## Design Summary
 
 - Synology acts as a LAN-only split-routing gateway.

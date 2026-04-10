@@ -52,7 +52,6 @@ def parse_vless_uri(uri: str) -> dict[str, str]:
         "fingerprint": one("fp", "chrome"),
         "public_key": one("pbk"),
         "short_id": one("sid"),
-        "spider_x": unquote(one("spx", "/")),
     }
 
 
@@ -82,7 +81,6 @@ def main() -> int:
         "REPLACE_VLESS_FINGERPRINT": uri_values["fingerprint"],
         "REPLACE_VLESS_PUBLIC_KEY": uri_values["public_key"],
         "REPLACE_VLESS_SHORT_ID": uri_values["short_id"],
-        "REPLACE_VLESS_SPIDER_X": uri_values["spider_x"],
     }
     rendered = replace_placeholders(config, replacements)
 

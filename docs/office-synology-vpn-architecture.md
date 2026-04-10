@@ -154,6 +154,8 @@ Recommended service account:
 ### Current state
 
 - primary upstream: `VLESS/Reality`
+- current validated Synology runtime pin: `ghcr.io/sagernet/sing-box:v1.12.0`
+- current compatibility flag: `ENABLE_DEPRECATED_SPECIAL_OUTBOUNDS=true`
 
 ### Future state
 

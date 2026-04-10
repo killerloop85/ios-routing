@@ -72,12 +72,14 @@ def base_config() -> dict[str, Any]:
             "servers": [
                 {
                     "tag": "local-dns",
-                    "address": "local",
-                    "detour": "direct",
+                    "type": "local",
                 },
                 {
                     "tag": "remote-dns",
-                    "address": "https://1.1.1.1/dns-query",
+                    "type": "https",
+                    "server": "1.1.1.1",
+                    "server_port": 443,
+                    "path": "/dns-query",
                     "detour": "proxy",
                 },
             ],
@@ -136,7 +138,6 @@ def base_config() -> dict[str, Any]:
                         "enabled": True,
                         "public_key": "REPLACE_VLESS_PUBLIC_KEY",
                         "short_id": "REPLACE_VLESS_SHORT_ID",
-                        "spider_x": "REPLACE_VLESS_SPIDER_X",
                     },
                 },
             },
@@ -164,6 +165,7 @@ def build_split_config() -> dict[str, Any]:
     payload = base_config()
     payload["route"] = {
         "auto_detect_interface": True,
+        "default_domain_resolver": "local-dns",
         "final": "proxy",
         "rules": [
             {
@@ -195,6 +197,7 @@ def build_full_config() -> dict[str, Any]:
     payload = base_config()
     payload["route"] = {
         "auto_detect_interface": True,
+        "default_domain_resolver": "local-dns",
         "final": "proxy",
         "rules": [
             {

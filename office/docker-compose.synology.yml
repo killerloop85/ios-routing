@@ -1,11 +1,14 @@
 services:
   office-vpn:
-    image: ghcr.io/sagernet/sing-box:latest
+    image: ghcr.io/sagernet/sing-box:v1.12.0
     container_name: office-vpn
     restart: unless-stopped
     network_mode: bridge
+    command: ["run", "-c", "/etc/sing-box/config.json"]
     env_file:
       - .env
+    environment:
+      ENABLE_DEPRECATED_SPECIAL_OUTBOUNDS: "true"
     ports:
       - "${OFFICE_LAN_BIND_IP:-10.77.221.15}:${MIXED_PORT:-1080}:${MIXED_PORT:-1080}/tcp"
       - "${OFFICE_LAN_BIND_IP:-10.77.221.15}:${MIXED_PORT:-1080}:${MIXED_PORT:-1080}/udp"
