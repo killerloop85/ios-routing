@@ -8,6 +8,9 @@ DOMAIN-SUFFIX,threads.net
 DOMAIN-SUFFIX,facebook.com
 DOMAIN-SUFFIX,fbcdn.net
 DOMAIN-SUFFIX,messenger.com
+DOMAIN-SUFFIX,whatsapp.com
+DOMAIN-SUFFIX,whatsapp.net
+DOMAIN-SUFFIX,wa.me
 
 # Twitter / X
 DOMAIN-SUFFIX,twitter.com

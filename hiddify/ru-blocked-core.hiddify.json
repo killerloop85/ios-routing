@@ -41,6 +41,24 @@
     },
     {
       "type": "domain_suffix",
+      "value": "whatsapp.com",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "whatsapp.net",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "wa.me",
+      "outbound": "proxy",
+      "bucket": "ru-blocked-core"
+    },
+    {
+      "type": "domain_suffix",
       "value": "twitter.com",
       "outbound": "proxy",
       "bucket": "ru-blocked-core"

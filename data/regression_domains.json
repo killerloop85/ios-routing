@@ -182,6 +182,18 @@
       "expected_suffix": "threads.net"
     },
     {
+      "domain": "whatsapp.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "whatsapp.com"
+    },
+    {
+      "domain": "web.whatsapp.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "ru-blocked-core",
+      "expected_suffix": "whatsapp.com"
+    },
+    {
       "domain": "fbcdn.net",
       "expected_bucket": "PROXY",
       "expected_rule": "ru-blocked-core",
