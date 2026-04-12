@@ -238,6 +238,12 @@
     },
     {
       "type": "domain_suffix",
+      "value": "snapchat.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
       "value": "proton.me",
       "action": "proxy",
       "bucket": "foreign-services"
@@ -293,6 +299,174 @@
     {
       "type": "domain_suffix",
       "value": "spotify.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "akamai.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "americanexpress.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "aws.amazon.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "battlenet.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "braintreepayments.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "byteoversea.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cloudfront.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "dell.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "digitalocean.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hetzner.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "linode.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nflxext.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nflximg.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nflxso.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nflxvideo.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nintendo.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "origin.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ovh.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "payoneer.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "paypal.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "peacocktv.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "render.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "sonyentertainmentnetwork.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "steamstatic.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "support.lenovo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tools.cisco.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ttvnw.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "youtube-nocookie.com",
       "action": "proxy",
       "bucket": "foreign-services"
     }

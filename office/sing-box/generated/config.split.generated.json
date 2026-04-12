@@ -50,6 +50,15 @@
           "password": "REPLACE_PROXY_PASSWORD"
         }
       ]
+    },
+    {
+      "type": "tproxy",
+      "tag": "office-tproxy",
+      "listen": "0.0.0.0",
+      "listen_port": 12346,
+      "network": "tcp,udp",
+      "sniff": true,
+      "sniff_override_destination": true
     }
   ],
   "outbounds": [
@@ -57,9 +66,22 @@
       "type": "selector",
       "tag": "proxy",
       "outbounds": [
-        "vless-reality-primary"
+        "proxy-auto",
+        "vless-reality-primary",
+        "hysteria2-fallback"
       ],
-      "default": "vless-reality-primary"
+      "default": "proxy-auto"
+    },
+    {
+      "type": "urltest",
+      "tag": "proxy-auto",
+      "outbounds": [
+        "vless-reality-primary",
+        "hysteria2-fallback"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m",
+      "tolerance": 50
     },
     {
       "type": "vless",
@@ -80,6 +102,20 @@
           "public_key": "REPLACE_VLESS_PUBLIC_KEY",
           "short_id": "REPLACE_VLESS_SHORT_ID"
         }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "hysteria2-fallback",
+      "server": "REPLACE_HY2_SERVER",
+      "server_port": "REPLACE_HY2_PORT",
+      "password": "REPLACE_HY2_PASSWORD",
+      "tls": {
+        "enabled": true,
+        "server_name": "REPLACE_HY2_SNI",
+        "alpn": [
+          "h3"
+        ]
       }
     },
     {
@@ -108,7 +144,9 @@
           "192.168.0.0/16",
           "100.64.0.0/10",
           "17.0.0.0/8",
-          "10.77.221.0/24"
+          "10.77.216.0/21",
+          "10.77.221.0/24",
+          "10.77.230.0/24"
         ],
         "outbound": "direct"
       },
@@ -116,6 +154,12 @@
         "domain": [
           "localhost",
           "captive.apple.com"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "protocol": [
+          "bittorrent"
         ],
         "outbound": "direct"
       },
@@ -148,6 +192,7 @@
           "ya.ru",
           "yastatic.net",
           "mail.ru",
+          "max.ru",
           "vk.com",
           "ok.ru",
           "ozon.ru",
@@ -183,6 +228,9 @@
           "facebook.com",
           "fbcdn.net",
           "messenger.com",
+          "whatsapp.com",
+          "whatsapp.net",
+          "wa.me",
           "twitter.com",
           "x.com",
           "t.co",
@@ -262,6 +310,7 @@
           "medium.com",
           "substack.com",
           "linkedin.com",
+          "snapchat.com",
           "proton.me",
           "protonmail.com",
           "protonvpn.com",
@@ -271,7 +320,35 @@
           "psiphon.ca",
           "lantern.io",
           "netflix.com",
-          "spotify.com"
+          "spotify.com",
+          "akamai.com",
+          "americanexpress.com",
+          "aws.amazon.com",
+          "battlenet.com",
+          "braintreepayments.com",
+          "byteoversea.com",
+          "cloudfront.net",
+          "dell.com",
+          "digitalocean.com",
+          "hetzner.com",
+          "linode.com",
+          "nflxext.com",
+          "nflximg.net",
+          "nflxso.net",
+          "nflxvideo.net",
+          "nintendo.net",
+          "origin.com",
+          "ovh.com",
+          "payoneer.com",
+          "paypal.com",
+          "peacocktv.com",
+          "render.com",
+          "sonyentertainmentnetwork.com",
+          "steamstatic.com",
+          "support.lenovo.com",
+          "tools.cisco.com",
+          "ttvnw.net",
+          "youtube-nocookie.com"
         ],
         "outbound": "proxy"
       }

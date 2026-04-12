@@ -49,6 +49,7 @@ DOMAIN-SUFFIX,redditmedia.com
 DOMAIN-SUFFIX,medium.com
 DOMAIN-SUFFIX,substack.com
 DOMAIN-SUFFIX,linkedin.com
+DOMAIN-SUFFIX,snapchat.com
 
 # Почта / безопасность
 DOMAIN-SUFFIX,proton.me
@@ -65,3 +66,33 @@ DOMAIN-SUFFIX,lantern.io
 # Развлечения
 DOMAIN-SUFFIX,netflix.com
 DOMAIN-SUFFIX,spotify.com
+
+# Pinned by RU direct probe (2026-04-12)
+DOMAIN-SUFFIX,akamai.com
+DOMAIN-SUFFIX,americanexpress.com
+DOMAIN-SUFFIX,aws.amazon.com
+DOMAIN-SUFFIX,battlenet.com
+DOMAIN-SUFFIX,braintreepayments.com
+DOMAIN-SUFFIX,byteoversea.com
+DOMAIN-SUFFIX,cloudfront.net
+DOMAIN-SUFFIX,dell.com
+DOMAIN-SUFFIX,digitalocean.com
+DOMAIN-SUFFIX,hetzner.com
+DOMAIN-SUFFIX,linode.com
+DOMAIN-SUFFIX,nflxext.com
+DOMAIN-SUFFIX,nflximg.net
+DOMAIN-SUFFIX,nflxso.net
+DOMAIN-SUFFIX,nflxvideo.net
+DOMAIN-SUFFIX,nintendo.net
+DOMAIN-SUFFIX,origin.com
+DOMAIN-SUFFIX,ovh.com
+DOMAIN-SUFFIX,payoneer.com
+DOMAIN-SUFFIX,paypal.com
+DOMAIN-SUFFIX,peacocktv.com
+DOMAIN-SUFFIX,render.com
+DOMAIN-SUFFIX,sonyentertainmentnetwork.com
+DOMAIN-SUFFIX,steamstatic.com
+DOMAIN-SUFFIX,support.lenovo.com
+DOMAIN-SUFFIX,tools.cisco.com
+DOMAIN-SUFFIX,ttvnw.net
+DOMAIN-SUFFIX,youtube-nocookie.com

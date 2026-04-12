@@ -51,7 +51,8 @@
       "redditmedia.com",
       "medium.com",
       "substack.com",
-      "linkedin.com"
+      "linkedin.com",
+      "snapchat.com"
     ],
     "Почта / безопасность": [
       "proton.me",
@@ -68,6 +69,36 @@
     "Развлечения": [
       "netflix.com",
       "spotify.com"
+    ],
+    "Pinned by RU direct probe (2026-04-12)": [
+      "akamai.com",
+      "americanexpress.com",
+      "aws.amazon.com",
+      "battlenet.com",
+      "braintreepayments.com",
+      "byteoversea.com",
+      "cloudfront.net",
+      "dell.com",
+      "digitalocean.com",
+      "hetzner.com",
+      "linode.com",
+      "nflxext.com",
+      "nflximg.net",
+      "nflxso.net",
+      "nflxvideo.net",
+      "nintendo.net",
+      "origin.com",
+      "ovh.com",
+      "payoneer.com",
+      "paypal.com",
+      "peacocktv.com",
+      "render.com",
+      "sonyentertainmentnetwork.com",
+      "steamstatic.com",
+      "support.lenovo.com",
+      "tools.cisco.com",
+      "ttvnw.net",
+      "youtube-nocookie.com"
     ]
   }
 }

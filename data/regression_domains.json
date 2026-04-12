@@ -368,6 +368,12 @@
       "expected_suffix": "slack.com"
     },
     {
+      "domain": "snapchat.com",
+      "expected_bucket": "PROXY",
+      "expected_rule": "foreign-services",
+      "expected_suffix": "snapchat.com"
+    },
+    {
       "domain": "github.com",
       "expected_bucket": "PROXY",
       "expected_rule": "foreign-services",
