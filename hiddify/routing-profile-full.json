@@ -1,9 +1,10 @@
 {
   "name": "Full VPN",
-  "description": "All non-local traffic through proxy, keeping LAN and service traffic direct.",
+  "description": "All non-local traffic through proxy, keeping LAN, service, and torrent-port traffic direct.",
   "platform": "hiddify",
   "priority": [
     "local",
+    "torrent-bypass",
     "final"
   ],
   "rules": [
@@ -59,6 +60,25 @@
         {
           "type": "geosite",
           "value": "icloud"
+        }
+      ]
+    },
+    {
+      "name": "Torrent bypass ports",
+      "bucket": "torrent-bypass",
+      "outbound": "direct",
+      "entries": [
+        {
+          "type": "port",
+          "value": "6881-6999"
+        },
+        {
+          "type": "port",
+          "value": "51413"
+        },
+        {
+          "type": "port",
+          "value": "16881"
         }
       ]
     },

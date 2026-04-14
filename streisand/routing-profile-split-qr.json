@@ -1,10 +1,11 @@
 {
   "name": "RU Split QR",
-  "description": "Compact split profile optimized for Streisand QR import.",
+  "description": "Compact split profile optimized for Streisand QR import with torrent bypass ports.",
   "stability": "experimental",
   "intended_use": "diagnostic",
   "priority": [
     "local",
+    "torrent-bypass",
     "ru-direct",
     "proxy-core",
     "final"
@@ -30,6 +31,16 @@
       ],
       "action": "direct",
       "bucket": "local"
+    },
+    {
+      "name": "Torrent bypass ports",
+      "entries": [
+        "port:6881-6999",
+        "port:51413",
+        "port:16881"
+      ],
+      "action": "direct",
+      "bucket": "torrent-bypass"
     },
     {
       "name": "RU direct compact",

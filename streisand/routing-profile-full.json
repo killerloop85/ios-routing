@@ -1,10 +1,11 @@
 {
   "name": "Full VPN",
-  "description": "All non-local traffic through proxy, keeping LAN direct.",
+  "description": "All non-local traffic through proxy, keeping LAN and torrent ports direct.",
   "stability": "stable",
   "intended_use": "production",
   "priority": [
     "local",
+    "torrent-bypass",
     "final"
   ],
   "sources": [],
@@ -28,6 +29,16 @@
       ],
       "action": "direct",
       "bucket": "local"
+    },
+    {
+      "name": "Torrent bypass ports",
+      "entries": [
+        "port:6881-6999",
+        "port:51413",
+        "port:16881"
+      ],
+      "action": "direct",
+      "bucket": "torrent-bypass"
     },
     {
       "name": "Final fallback",

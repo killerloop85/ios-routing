@@ -1,10 +1,11 @@
 {
   "name": "RU Split Routing",
-  "description": "Direct RU and core domestic traffic, proxy blocked core and foreign services.",
+  "description": "Direct RU, local, and torrent ports; proxy blocked core and foreign services.",
   "stability": "experimental",
   "intended_use": "reference-only",
   "priority": [
     "local",
+    "torrent-bypass",
     "ru-blocked-core",
     "ru-direct",
     "foreign-services",
@@ -35,6 +36,16 @@
       ],
       "action": "direct",
       "bucket": "local"
+    },
+    {
+      "name": "Torrent bypass ports",
+      "entries": [
+        "port:6881-6999",
+        "port:51413",
+        "port:16881"
+      ],
+      "action": "direct",
+      "bucket": "torrent-bypass"
     },
     {
       "name": "RU direct domains and GeoIP",

@@ -28,6 +28,12 @@
     },
     {
       "type": "domain_suffix",
+      "value": "claude.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
       "value": "perplexity.ai",
       "action": "proxy",
       "bucket": "foreign-services"
@@ -179,6 +185,30 @@
     {
       "type": "domain_suffix",
       "value": "gstatic.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "googleusercontent.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ggpht.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "gvt1.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "gvt2.com",
       "action": "proxy",
       "bucket": "foreign-services"
     },
@@ -448,18 +478,6 @@
     },
     {
       "type": "domain_suffix",
-      "value": "support.lenovo.com",
-      "action": "proxy",
-      "bucket": "foreign-services"
-    },
-    {
-      "type": "domain_suffix",
-      "value": "tools.cisco.com",
-      "action": "proxy",
-      "bucket": "foreign-services"
-    },
-    {
-      "type": "domain_suffix",
       "value": "ttvnw.net",
       "action": "proxy",
       "bucket": "foreign-services"
@@ -467,6 +485,522 @@
     {
       "type": "domain_suffix",
       "value": "youtube-nocookie.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ea.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "fly.io",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hp.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "wb.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "bolt.eu",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "box.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "gog.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hpe.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ibm.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "max.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cash.app",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "espn.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hulu.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "jira.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "live.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "lyft.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "sony.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "uber.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "visa.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "wise.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "xbox.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "agoda.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "apple.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "azure.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "cisco.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "kayak.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "twitch.tv",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "uplay.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "venmo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "airbnb.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "deezer.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "disney.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "fastly.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hbomax.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "heroku.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hotels.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "lenovo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nbcuni.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "office.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "stripe.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tiktok.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "booking.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "dropbox.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "expedia.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "hotstar.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "netlify.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "revolut.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "ubisoft.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "blizzard.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "fortnite.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nintendo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "showtime.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "squareup.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "disneynow.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "epicgames.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "microsoft.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "paramount.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "pinterest.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "pokemongo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "riotgames.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "supercell.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "wargaming.net",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "workplace.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "brawlstars.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "confluence.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "disneyplus.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "mastercard.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "primevideo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "warnerbros.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "amazonvideo.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nianticlabs.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "playstation.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "tripadvisor.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "clashofclans.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "playvalorant.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "steampowered.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "worldoftanks.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "discoveryplus.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "paramountplus.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "rockstargames.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "steamcommunity.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "leagueoflegends.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "nintendo-europe.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "universalpictures.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "store.ubi.com",
+      "action": "proxy",
+      "bucket": "foreign-services"
+    },
+    {
+      "type": "domain_suffix",
+      "value": "s3.amazonaws.com",
       "action": "proxy",
       "bucket": "foreign-services"
     }

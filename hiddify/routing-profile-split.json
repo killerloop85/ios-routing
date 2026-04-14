@@ -1,9 +1,10 @@
 {
   "name": "RU Split Routing",
-  "description": "Direct local and Russian traffic, proxy blocked core and foreign services.",
+  "description": "Direct local, Russian, and torrent-port traffic; proxy blocked core and foreign services.",
   "platform": "hiddify",
   "priority": [
     "local",
+    "torrent-bypass",
     "ru-blocked-core",
     "ru-direct",
     "foreign-services",
@@ -62,6 +63,25 @@
         {
           "type": "geosite",
           "value": "icloud"
+        }
+      ]
+    },
+    {
+      "name": "Torrent bypass ports",
+      "bucket": "torrent-bypass",
+      "outbound": "direct",
+      "entries": [
+        {
+          "type": "port",
+          "value": "6881-6999"
+        },
+        {
+          "type": "port",
+          "value": "51413"
+        },
+        {
+          "type": "port",
+          "value": "16881"
         }
       ]
     },

@@ -155,6 +155,12 @@
     },
     {
       "type": "domain_suffix",
+      "value": "max.ru",
+      "outbound": "direct",
+      "bucket": "ru-direct"
+    },
+    {
+      "type": "domain_suffix",
       "value": "vk.com",
       "outbound": "direct",
       "bucket": "ru-direct"

@@ -26,6 +26,7 @@ rules:
   - "DOMAIN-SUFFIX,ya.ru,DIRECT"
   - "DOMAIN-SUFFIX,yastatic.net,DIRECT"
   - "DOMAIN-SUFFIX,mail.ru,DIRECT"
+  - "DOMAIN-SUFFIX,max.ru,DIRECT"
   - "DOMAIN-SUFFIX,vk.com,DIRECT"
   - "DOMAIN-SUFFIX,ok.ru,DIRECT"
   - "DOMAIN-SUFFIX,ozon.ru,DIRECT"

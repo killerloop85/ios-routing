@@ -23,10 +23,13 @@ LOCAL_IP_CIDRS = [
     "192.168.0.0/16",
     "100.64.0.0/10",
     "17.0.0.0/8",
+    "10.77.216.0/21",
     "10.77.221.0/24",
+    "10.77.230.0/24",
 ]
 LOCAL_DOMAINS = ["localhost", "captive.apple.com"]
 LOCAL_SUFFIXES = ["local", "lan"]
+TPROXY_INBOUND_PORT = 12346
 
 
 def parse_args() -> argparse.Namespace:
@@ -69,6 +72,7 @@ def base_config() -> dict[str, Any]:
             "timestamp": True,
         },
         "dns": {
+            "strategy": "ipv4_only",
             "servers": [
                 {
                     "tag": "local-dns",
@@ -109,16 +113,38 @@ def base_config() -> dict[str, Any]:
                         "password": "REPLACE_PROXY_PASSWORD",
                     }
                 ],
-            }
+            },
+            {
+                "type": "tproxy",
+                "tag": "office-tproxy",
+                "listen": "0.0.0.0",
+                "listen_port": TPROXY_INBOUND_PORT,
+                "network": "tcp,udp",
+                "sniff": True,
+                "sniff_override_destination": True,
+            },
         ],
         "outbounds": [
             {
                 "type": "selector",
                 "tag": "proxy",
                 "outbounds": [
+                    "proxy-auto",
                     "vless-reality-primary",
+                    "hysteria2-fallback",
                 ],
-                "default": "vless-reality-primary",
+                "default": "proxy-auto",
+            },
+            {
+                "type": "urltest",
+                "tag": "proxy-auto",
+                "outbounds": [
+                    "vless-reality-primary",
+                    "hysteria2-fallback",
+                ],
+                "url": "https://www.gstatic.com/generate_204",
+                "interval": "3m",
+                "tolerance": 50,
             },
             {
                 "type": "vless",
@@ -139,6 +165,20 @@ def base_config() -> dict[str, Any]:
                         "public_key": "REPLACE_VLESS_PUBLIC_KEY",
                         "short_id": "REPLACE_VLESS_SHORT_ID",
                     },
+                },
+            },
+            {
+                "type": "hysteria2",
+                "tag": "hysteria2-fallback",
+                "server": "REPLACE_HY2_SERVER",
+                "server_port": "REPLACE_HY2_PORT",
+                "password": "REPLACE_HY2_PASSWORD",
+                "tls": {
+                    "enabled": True,
+                    "server_name": "REPLACE_HY2_SNI",
+                    "alpn": [
+                        "h3",
+                    ],
                 },
             },
             {
@@ -177,6 +217,12 @@ def build_split_config() -> dict[str, Any]:
                 "outbound": "direct",
             },
             {
+                "protocol": [
+                    "bittorrent",
+                ],
+                "outbound": "direct",
+            },
+            {
                 "domain_suffix": LOCAL_SUFFIXES + direct_domains,
                 "outbound": "direct",
             },
@@ -206,6 +252,12 @@ def build_full_config() -> dict[str, Any]:
             },
             {
                 "domain": LOCAL_DOMAINS,
+                "outbound": "direct",
+            },
+            {
+                "protocol": [
+                    "bittorrent",
+                ],
                 "outbound": "direct",
             },
             {
