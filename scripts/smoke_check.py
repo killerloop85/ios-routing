@@ -240,12 +240,24 @@ def validate_streisand_uri_file(path: Path) -> None:
             raise ValueError(f"{path}: invalid outboundTag in decoded rule")
         domain = rule.get("domain")
         ip = rule.get("ip")
+        port = str(rule.get("port", "")).strip()
         if domain is not None and not isinstance(domain, list):
             raise ValueError(f"{path}: decoded rule domain must be a list")
         if ip is not None and not isinstance(ip, list):
             raise ValueError(f"{path}: decoded rule ip must be a list")
-        if not domain and not ip and str(rule.get("port", "")).strip() != "0-65535":
-            raise ValueError(f"{path}: decoded final rule is missing 0-65535 port")
+        if not domain and not ip and not port:
+            raise ValueError(f"{path}: decoded rule with empty domain/ip must define port")
+        if port and port != "0-65535":
+            for part in port.split(","):
+                piece = part.strip()
+                if not piece:
+                    raise ValueError(f"{path}: decoded rule has malformed port list")
+                if "-" in piece:
+                    lo, hi = piece.split("-", 1)
+                    if not lo.isdigit() or not hi.isdigit():
+                        raise ValueError(f"{path}: decoded rule has malformed port range: {piece}")
+                elif not piece.isdigit():
+                    raise ValueError(f"{path}: decoded rule has malformed port value: {piece}")
     if path.name == "routing-profile-split-qr.streisand-uri.txt" and path.stat().st_size >= 2953:
         raise ValueError(f"{path}: compact QR URI is too large for a practical single QR")
 
@@ -312,7 +324,7 @@ def validate_hiddify_file(path: Path) -> None:
                 raise ValueError(f"{path}: profile rule '{name}' has invalid entry: {entry!r}")
             entry_type = str(entry.get("type", "")).strip()
             value = str(entry.get("value", "")).strip()
-            if entry_type not in {"domain_suffix", "domain", "ip_cidr", "geoip", "geosite", "final", "source"}:
+            if entry_type not in {"domain_suffix", "domain", "ip_cidr", "geoip", "geosite", "final", "source", "port"}:
                 raise ValueError(f"{path}: profile rule '{name}' has unsupported entry type: {entry_type}")
             if not value:
                 raise ValueError(f"{path}: profile rule '{name}' has empty entry value")
@@ -538,8 +550,8 @@ def validate_office_file(path: Path) -> None:
     route = payload.get("route")
     if not isinstance(route, dict):
         raise ValueError(f"{path}: route must be an object")
-    if route.get("final") != "proxy":
-        raise ValueError(f"{path}: route.final must be proxy")
+    if route.get("final") != "direct":
+        raise ValueError(f"{path}: route.final must be direct")
     rules = route.get("rules")
     if not isinstance(rules, list) or not rules:
         raise ValueError(f"{path}: missing non-empty route.rules")
@@ -554,7 +566,7 @@ def validate_office_file(path: Path) -> None:
         domain = rule.get("domain")
         domain_suffix = rule.get("domain_suffix")
         outbound = str(rule.get("outbound", "")).strip()
-        if outbound not in {"direct", "proxy", "block"}:
+        if outbound not in {"direct", "proxy", "block", "vless-reality-primary"}:
             raise ValueError(f"{path}: unsupported outbound in route rule: {outbound}")
         if ip_cidr is not None:
             if not isinstance(ip_cidr, list) or not all(isinstance(item, str) and item.strip() for item in ip_cidr):
@@ -580,42 +592,51 @@ def validate_office_file(path: Path) -> None:
     if not saw_direct_suffixes:
         raise ValueError(f"{path}: missing direct domain_suffix rule")
     if path.name == "config.split.generated.json" and not saw_proxy_suffixes:
-        raise ValueError(f"{path}: split config must include proxy domain_suffix rules")
+        saw_vless_suffixes = any(
+            isinstance(rule, dict)
+            and rule.get("outbound") == "vless-reality-primary"
+            and isinstance(rule.get("domain_suffix"), list)
+            for rule in rules
+        )
+        if not saw_vless_suffixes:
+            raise ValueError(f"{path}: split config must include selective VPN domain_suffix rules")
 
 
 def validate_office_sync() -> None:
     split_payload = json.loads((OFFICE_SINGBOX_DIR / "config.split.generated.json").read_text(encoding="utf-8"))
     rules = split_payload["route"]["rules"]
     direct_suffixes: set[str] = set()
-    proxy_suffixes: set[str] = set()
+    vpn_suffixes: set[str] = set()
     for rule in rules:
         suffixes = rule.get("domain_suffix")
         if not isinstance(suffixes, list):
             continue
         if rule.get("outbound") == "direct":
             direct_suffixes.update(str(item).strip().lower() for item in suffixes)
-        if rule.get("outbound") == "proxy":
-            proxy_suffixes.update(str(item).strip().lower() for item in suffixes)
+        if rule.get("outbound") in {"proxy", "vless-reality-primary"}:
+            vpn_suffixes.update(str(item).strip().lower() for item in suffixes)
     source_direct = {
         line.split(",", 1)[1].strip().lower()
         for line in (SHADOWROCKET_DIR / "ru-direct.list").read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.strip().startswith("#")
     }
-    source_proxy = {
-        line.split(",", 1)[1].strip().lower()
-        for source_path in (
-            SHADOWROCKET_DIR / "ru-blocked-core.list",
-            SHADOWROCKET_DIR / "foreign-services.list",
-        )
-        for line in source_path.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.strip().startswith("#")
-    }
     if not source_direct.issubset(direct_suffixes):
         missing = sorted(source_direct - direct_suffixes)[:10]
         raise ValueError(f"office/sing-box/generated/config.split.generated.json: missing direct suffixes: {missing}")
-    if not source_proxy.issubset(proxy_suffixes):
-        missing = sorted(source_proxy - proxy_suffixes)[:10]
-        raise ValueError(f"office/sing-box/generated/config.split.generated.json: missing proxy suffixes: {missing}")
+    required_vpn = {
+        "api.telegram.org",
+        "telegram.org",
+        "t.me",
+        "web.whatsapp.com",
+        "whatsapp.com",
+        "instagram.com",
+        "facebook.com",
+        "openai.com",
+        "chatgpt.com",
+    }
+    if not required_vpn.issubset(vpn_suffixes):
+        missing = sorted(required_vpn - vpn_suffixes)
+        raise ValueError(f"office/sing-box/generated/config.split.generated.json: missing selective VPN suffixes: {missing}")
 
 
 def run_offline_updater() -> None:

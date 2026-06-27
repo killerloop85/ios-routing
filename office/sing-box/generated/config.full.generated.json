@@ -67,18 +67,17 @@
       "type": "selector",
       "tag": "proxy",
       "outbounds": [
+        "direct",
         "proxy-auto",
-        "vless-reality-primary",
-        "hysteria2-fallback"
+        "vless-reality-primary"
       ],
-      "default": "proxy-auto"
+      "default": "direct"
     },
     {
       "type": "urltest",
       "tag": "proxy-auto",
       "outbounds": [
-        "vless-reality-primary",
-        "hysteria2-fallback"
+        "vless-reality-primary"
       ],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
@@ -135,7 +134,7 @@
   "route": {
     "auto_detect_interface": true,
     "default_domain_resolver": "local-dns",
-    "final": "proxy",
+    "final": "direct",
     "rules": [
       {
         "ip_cidr": [
@@ -170,6 +169,97 @@
           "lan"
         ],
         "outbound": "direct"
+      },
+      {
+        "domain_suffix": [
+          "api.telegram.org",
+          "telegram.org",
+          "t.me",
+          "telegram.me",
+          "telegra.ph",
+          "telesco.pe"
+        ],
+        "outbound": "vless-reality-primary"
+      },
+      {
+        "ip_cidr": [
+          "91.108.4.0/22",
+          "91.108.56.0/22",
+          "149.154.160.0/20"
+        ],
+        "outbound": "vless-reality-primary"
+      },
+      {
+        "domain_suffix": [
+          "api.whatsapp.com",
+          "web.whatsapp.com",
+          "whatsapp.com",
+          "whatsapp.net",
+          "wa.me",
+          "instagram.com",
+          "cdninstagram.com",
+          "facebook.com",
+          "fbcdn.net",
+          "messenger.com",
+          "threads.net",
+          "twitter.com",
+          "x.com",
+          "t.co",
+          "discord.com",
+          "discord.gg",
+          "discordapp.com",
+          "linkedin.com",
+          "licdn.com",
+          "meduza.io",
+          "svoboda.org",
+          "currenttime.tv",
+          "dozhd.ru",
+          "tvrain.tv"
+        ],
+        "outbound": "vless-reality-primary"
+      },
+      {
+        "domain_suffix": [
+          "openai.com",
+          "chatgpt.com",
+          "api.openai.com",
+          "anthropic.com",
+          "claude.ai",
+          "claude.com",
+          "perplexity.ai",
+          "deepl.com",
+          "huggingface.co",
+          "hf.co",
+          "replicate.com",
+          "cursor.com",
+          "cursor.sh"
+        ],
+        "outbound": "vless-reality-primary"
+      },
+      {
+        "domain_suffix": [
+          "canva.com",
+          "figma.com",
+          "github.com",
+          "githubusercontent.com",
+          "githubassets.com",
+          "gitlab.com",
+          "docker.com",
+          "docker.io",
+          "registry-1.docker.io",
+          "auth.docker.io",
+          "npmjs.com",
+          "npmjs.org",
+          "registry.npmjs.org",
+          "pypi.org",
+          "pythonhosted.org",
+          "supabase.com",
+          "vercel.com",
+          "netlify.app",
+          "render.com",
+          "fly.io"
+        ],
+        "outbound": "vless-reality-primary"
       }
     ]
   }

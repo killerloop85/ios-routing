@@ -15,6 +15,14 @@
       "whatsapp.net",
       "wa.me"
     ],
+    "Telegram / мессенджеры": [
+      "telegram.org",
+      "t.me",
+      "telegram.me",
+      "telegra.ph",
+      "telesco.pe",
+      "signal.org"
+    ],
     "Twitter / X": [
       "twitter.com",
       "x.com",
@@ -32,8 +40,10 @@
     "YouTube / Google-видео": [
       "youtube.com",
       "youtu.be",
+      "youtube-nocookie.com",
       "googlevideo.com",
-      "ytimg.com"
+      "ytimg.com",
+      "ggpht.com"
     ],
     "Независимые медиа / чувствительные ресурсы (ядро)": [
       "meduza.io",

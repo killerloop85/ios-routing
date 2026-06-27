@@ -12,6 +12,14 @@ DOMAIN-SUFFIX,whatsapp.com
 DOMAIN-SUFFIX,whatsapp.net
 DOMAIN-SUFFIX,wa.me
 
+# Telegram / мессенджеры
+DOMAIN-SUFFIX,telegram.org
+DOMAIN-SUFFIX,t.me
+DOMAIN-SUFFIX,telegram.me
+DOMAIN-SUFFIX,telegra.ph
+DOMAIN-SUFFIX,telesco.pe
+DOMAIN-SUFFIX,signal.org
+
 # Twitter / X
 DOMAIN-SUFFIX,twitter.com
 DOMAIN-SUFFIX,x.com
@@ -29,8 +37,10 @@ DOMAIN-SUFFIX,licdn.com
 # YouTube / Google-видео
 DOMAIN-SUFFIX,youtube.com
 DOMAIN-SUFFIX,youtu.be
+DOMAIN-SUFFIX,youtube-nocookie.com
 DOMAIN-SUFFIX,googlevideo.com
 DOMAIN-SUFFIX,ytimg.com
+DOMAIN-SUFFIX,ggpht.com
 
 # Независимые медиа / чувствительные ресурсы (ядро)
 DOMAIN-SUFFIX,meduza.io

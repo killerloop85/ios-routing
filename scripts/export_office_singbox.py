@@ -31,6 +31,88 @@ LOCAL_DOMAINS = ["localhost", "captive.apple.com"]
 LOCAL_SUFFIXES = ["local", "lan"]
 TPROXY_INBOUND_PORT = 12346
 
+# Keep the office VPN route intentionally narrow.  The broad finalized
+# blocked/foreign lists are useful for per-device clients, but on the NAS they
+# can fan out into hundreds of background office connections and overload a
+# single Reality upstream.  The office gateway should default to direct and
+# only send explicitly blocked/user-facing families through VLESS.
+TELEGRAM_SUFFIXES = [
+    "api.telegram.org",
+    "telegram.org",
+    "t.me",
+    "telegram.me",
+    "telegra.ph",
+    "telesco.pe",
+]
+TELEGRAM_IP_CIDRS = [
+    "91.108.4.0/22",
+    "91.108.56.0/22",
+    "149.154.160.0/20",
+]
+SOCIAL_VPN_SUFFIXES = [
+    "api.whatsapp.com",
+    "web.whatsapp.com",
+    "whatsapp.com",
+    "whatsapp.net",
+    "wa.me",
+    "instagram.com",
+    "cdninstagram.com",
+    "facebook.com",
+    "fbcdn.net",
+    "messenger.com",
+    "threads.net",
+    "twitter.com",
+    "x.com",
+    "t.co",
+    "discord.com",
+    "discord.gg",
+    "discordapp.com",
+    "linkedin.com",
+    "licdn.com",
+    "meduza.io",
+    "svoboda.org",
+    "currenttime.tv",
+    "dozhd.ru",
+    "tvrain.tv",
+]
+AI_VPN_SUFFIXES = [
+    "openai.com",
+    "chatgpt.com",
+    "api.openai.com",
+    "anthropic.com",
+    "claude.ai",
+    "claude.com",
+    "perplexity.ai",
+    "deepl.com",
+    "huggingface.co",
+    "hf.co",
+    "replicate.com",
+    "cursor.com",
+    "cursor.sh",
+]
+FOREIGN_IP_BLOCKING_SUFFIXES = [
+    "canva.com",
+    "figma.com",
+    "github.com",
+    "githubusercontent.com",
+    "githubassets.com",
+    "gitlab.com",
+    "docker.com",
+    "docker.io",
+    "registry-1.docker.io",
+    "auth.docker.io",
+    "npmjs.com",
+    "npmjs.org",
+    "registry.npmjs.org",
+    "pypi.org",
+    "pythonhosted.org",
+    "supabase.com",
+    "vercel.com",
+    "netlify.app",
+    "render.com",
+    "fly.io",
+]
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -129,18 +211,17 @@ def base_config() -> dict[str, Any]:
                 "type": "selector",
                 "tag": "proxy",
                 "outbounds": [
+                    "direct",
                     "proxy-auto",
                     "vless-reality-primary",
-                    "hysteria2-fallback",
                 ],
-                "default": "proxy-auto",
+                "default": "direct",
             },
             {
                 "type": "urltest",
                 "tag": "proxy-auto",
                 "outbounds": [
                     "vless-reality-primary",
-                    "hysteria2-fallback",
                 ],
                 "url": "https://www.gstatic.com/generate_204",
                 "interval": "3m",
@@ -199,14 +280,12 @@ def base_config() -> dict[str, Any]:
 
 def build_split_config() -> dict[str, Any]:
     direct_domains = read_domain_suffix_list(SHADOWROCKET_DIR / "ru-direct.list")
-    blocked_domains = read_domain_suffix_list(SHADOWROCKET_DIR / "ru-blocked-core.list")
-    foreign_domains = read_domain_suffix_list(SHADOWROCKET_DIR / "foreign-services.list")
 
     payload = base_config()
     payload["route"] = {
         "auto_detect_interface": True,
         "default_domain_resolver": "local-dns",
-        "final": "proxy",
+        "final": "direct",
         "rules": [
             {
                 "ip_cidr": LOCAL_IP_CIDRS,
@@ -227,12 +306,24 @@ def build_split_config() -> dict[str, Any]:
                 "outbound": "direct",
             },
             {
-                "domain_suffix": blocked_domains,
-                "outbound": "proxy",
+                "domain_suffix": TELEGRAM_SUFFIXES,
+                "outbound": "vless-reality-primary",
             },
             {
-                "domain_suffix": foreign_domains,
-                "outbound": "proxy",
+                "ip_cidr": TELEGRAM_IP_CIDRS,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "domain_suffix": SOCIAL_VPN_SUFFIXES,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "domain_suffix": AI_VPN_SUFFIXES,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "domain_suffix": FOREIGN_IP_BLOCKING_SUFFIXES,
+                "outbound": "vless-reality-primary",
             },
         ],
     }
@@ -244,7 +335,7 @@ def build_full_config() -> dict[str, Any]:
     payload["route"] = {
         "auto_detect_interface": True,
         "default_domain_resolver": "local-dns",
-        "final": "proxy",
+        "final": "direct",
         "rules": [
             {
                 "ip_cidr": LOCAL_IP_CIDRS,
@@ -263,6 +354,26 @@ def build_full_config() -> dict[str, Any]:
             {
                 "domain_suffix": LOCAL_SUFFIXES,
                 "outbound": "direct",
+            },
+            {
+                "domain_suffix": TELEGRAM_SUFFIXES,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "ip_cidr": TELEGRAM_IP_CIDRS,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "domain_suffix": SOCIAL_VPN_SUFFIXES,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "domain_suffix": AI_VPN_SUFFIXES,
+                "outbound": "vless-reality-primary",
+            },
+            {
+                "domain_suffix": FOREIGN_IP_BLOCKING_SUFFIXES,
+                "outbound": "vless-reality-primary",
             },
         ],
     }
