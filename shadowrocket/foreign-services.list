@@ -7,19 +7,34 @@ DOMAIN-SUFFIX,chatgpt.com
 DOMAIN-SUFFIX,anthropic.com
 DOMAIN-SUFFIX,claude.ai
 DOMAIN-SUFFIX,claude.com
+DOMAIN-SUFFIX,anthropicusercontent.com
+DOMAIN-SUFFIX,claudeusercontent.com
 DOMAIN-SUFFIX,perplexity.ai
 DOMAIN-SUFFIX,deepl.com
+DOMAIN-SUFFIX,huggingface.co
+DOMAIN-SUFFIX,hf.co
+DOMAIN-SUFFIX,replicate.com
+DOMAIN-SUFFIX,cursor.com
+DOMAIN-SUFFIX,cursor.sh
 
 # Prod / Collaboration
 DOMAIN-SUFFIX,notion.so
 DOMAIN-SUFFIX,notion.site
 DOMAIN-SUFFIX,figma.com
+DOMAIN-SUFFIX,canva.com
 DOMAIN-SUFFIX,linear.app
 DOMAIN-SUFFIX,slack.com
 DOMAIN-SUFFIX,atlassian.com
 DOMAIN-SUFFIX,trello.com
 DOMAIN-SUFFIX,asana.com
 DOMAIN-SUFFIX,zoom.us
+
+# Vendor support / Logistics
+DOMAIN-SUFFIX,dhl.com
+DOMAIN-SUFFIX,mydhl.express
+DOMAIN-SUFFIX,dhl.de
+DOMAIN-SUFFIX,topeak.com
+DOMAIN-SUFFIX,openrouter.ai
 
 # Dev / Cloud / CDN
 DOMAIN-SUFFIX,github.com
@@ -29,11 +44,18 @@ DOMAIN-SUFFIX,gitlab.com
 DOMAIN-SUFFIX,bitbucket.org
 DOMAIN-SUFFIX,docker.com
 DOMAIN-SUFFIX,docker.io
+DOMAIN-SUFFIX,npmjs.com
+DOMAIN-SUFFIX,npmjs.org
+DOMAIN-SUFFIX,pypi.org
+DOMAIN-SUFFIX,pythonhosted.org
 DOMAIN-SUFFIX,cloudflare.com
 DOMAIN-SUFFIX,workers.dev
 DOMAIN-SUFFIX,vercel.com
 DOMAIN-SUFFIX,netlify.app
 DOMAIN-SUFFIX,herokuapp.com
+DOMAIN-SUFFIX,supabase.com
+DOMAIN-SUFFIX,fly.io
+DOMAIN-SUFFIX,render.com
 
 # Google / YouTube
 DOMAIN-SUFFIX,google.com
@@ -44,6 +66,7 @@ DOMAIN-SUFFIX,ggpht.com
 DOMAIN-SUFFIX,gvt1.com
 DOMAIN-SUFFIX,gvt2.com
 DOMAIN-SUFFIX,youtube.com
+DOMAIN-SUFFIX,youtube-nocookie.com
 DOMAIN-SUFFIX,ytimg.com
 DOMAIN-SUFFIX,googlevideo.com
 
@@ -55,6 +78,15 @@ DOMAIN-SUFFIX,medium.com
 DOMAIN-SUFFIX,substack.com
 DOMAIN-SUFFIX,linkedin.com
 DOMAIN-SUFFIX,snapchat.com
+DOMAIN-SUFFIX,discord.com
+DOMAIN-SUFFIX,discord.gg
+DOMAIN-SUFFIX,discordapp.com
+DOMAIN-SUFFIX,tiktok.com
+DOMAIN-SUFFIX,tiktokcdn.com
+DOMAIN-SUFFIX,tiktokv.com
+DOMAIN-SUFFIX,t.co
+DOMAIN-SUFFIX,x.com
+DOMAIN-SUFFIX,twitter.com
 
 # Почта / безопасность
 DOMAIN-SUFFIX,proton.me
@@ -74,6 +106,7 @@ DOMAIN-SUFFIX,spotify.com
 
 # Pinned by RU direct probe (2026-04-12)
 DOMAIN-SUFFIX,akamai.com
+DOMAIN-SUFFIX,edgesuite.net
 DOMAIN-SUFFIX,americanexpress.com
 DOMAIN-SUFFIX,aws.amazon.com
 DOMAIN-SUFFIX,battlenet.com
@@ -94,15 +127,12 @@ DOMAIN-SUFFIX,ovh.com
 DOMAIN-SUFFIX,payoneer.com
 DOMAIN-SUFFIX,paypal.com
 DOMAIN-SUFFIX,peacocktv.com
-DOMAIN-SUFFIX,render.com
 DOMAIN-SUFFIX,sonyentertainmentnetwork.com
 DOMAIN-SUFFIX,steamstatic.com
 DOMAIN-SUFFIX,ttvnw.net
-DOMAIN-SUFFIX,youtube-nocookie.com
 
 # Strict mode: 183 corpus default->explicit (2026-04-12)
 DOMAIN-SUFFIX,ea.com
-DOMAIN-SUFFIX,fly.io
 DOMAIN-SUFFIX,hp.com
 DOMAIN-SUFFIX,wb.com
 DOMAIN-SUFFIX,bolt.eu
@@ -141,7 +171,6 @@ DOMAIN-SUFFIX,lenovo.com
 DOMAIN-SUFFIX,nbcuni.com
 DOMAIN-SUFFIX,office.com
 DOMAIN-SUFFIX,stripe.com
-DOMAIN-SUFFIX,tiktok.com
 DOMAIN-SUFFIX,booking.com
 DOMAIN-SUFFIX,dropbox.com
 DOMAIN-SUFFIX,expedia.com
